@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, division
 
 import random
 import math
@@ -7,73 +7,81 @@ import math
 f1 = lambda x: x ** 2
 f2 = lambda x: (x - 2) ** 2
 
-energy = lambda x: f1(x) + f2(x)
-#energy = lambda x: (f1(x) + f2(x) - min) / (max - min)
+correct_energy_max = None
+correct_energy_min = None
 
-def p(o, n, t):
+
+def energy(x):
+    global correct_energy_min
+    global correct_energy_max
+    energy_max = 20000400004
+    energy_min = 2
+
+    energy_raw = f1(x) + f2(x)
     try:
-        return math.e * (-1 * (o - n) / t)
+        assert energy_min <= energy_raw, 'energy_min must be less than or equal to %d' % energy_raw
+    except:
+        correct_energy_min = energy_raw
+    try:
+        assert energy_raw <= energy_max, 'energy_max must be greater than or equal to %d' % energy_raw
+    except:
+        correct_energy_max = energy_raw
+
+    rv = (energy_raw - energy_min) / (energy_max - energy_min)
+    return rv
+
+def p(old, new, temp):
+    try:
+        rv = math.e ** (-1 * ((new - old) / temp))
     except ZeroDivisionError:
         return 0
 
+    with open('plog.txt', 'a') as f:
+        f.write(str(rv) + ': {}, {}, {}'.format(old, new, temp) + '\n')
+    return rv
 
-rand = lambda: random.randint(-(10 ** 5), 10 ** 5)
+
+space_min = -(10 ** 5)
+space_max = 10 ** 5
+rand = lambda: random.randint(space_min, space_max)
 
 seed = None
 random.seed(seed)
 
 init = rand()
 
-print(init)
 assert init
 
-energy_max = 1416184202
 
-# state := s0; energy := E(state)                  // Initial state, energy.
-# state_best := s; energy_best := energy                    // Initial "best" solution
 solution = (init, energy(init))
 state = solution
 
-# k := 0                              // Energy evaluation count.
-kmax = 100
-# WHILE k < kmax and energy > emax         // While time remains & not good enough:
+print(str(init) + ' ', end='')
+kmax = 50 * 20
 for k in range(kmax):
-#   state_neighbor := neighbor(s)                 //   Pick some neighbor.
-#   energy_neighbor := E(state_neighbor)                       //   Compute its energy.
-    neighbor_input = random.choice((solution[0] - 1, solution[0] + 1))
+
+    neighbor_input = random.choice(range(
+        max(solution[0] - 500, space_min),
+        min(solution[0] + 500, space_max)
+    ))
     neighbor = (neighbor_input, energy(neighbor_input))
 
-#   IF    energy_neighbor > energy_best                     //   Is this a new best?
-    if neighbor[1] > solution[1]:
-#   THEN  state_best := state_neighbor; energy_best := energy_neighbor          //     Yes, save it.
-#         print "!"
+    if neighbor[1] < solution[1]:
         solution = neighbor
-        energy_best = solution[1]
+        energy_min = solution[1]
         print('!', end='')
-#   FI
 
-#   IF    energy_neighbor < e                      // Should we jump to better?
-    if neighbor[1] > state[1]:
-#   THEN  s := state_neighbor; e := energy_neighbor            //    Yes!
-#         print "+"
+    if neighbor[1] < state[1]:
         state = neighbor
         print('+', end='')
-#   FI
-#   ELSE IF P(e, energy_neighbor, k/kmax) > rand() // Should we jump to worse?
-    elif p(state[1], neighbor[1], k/kmax) > random.random():
+    elif p(state[1], neighbor[1], k/kmax) < random.random():
         state = neighbor
         print('?', end='')
-#   THEN  s := state_neighbor; e := energy_neighbor            //    Yes, change state.
-#         print "?"
-#   FI
 
     print('.', end='')
-#   print "."
     if k % 50 == 0 and k != 0:
-        print('\n' + str(solution[0]), end='')
-#   if k % 50 == 0: print "\n",state_best
-# RETURN state_best                           // Return the best solution found.
+        print('\n' + str(solution[0]) + ' ', end='')
 
 print('\n\n' + str(solution[0]))
-
-print('energy_best = ' + str(energy_best))
+print("min: " + str(correct_energy_min))
+print("emax: " + str(correct_energy_max))
