@@ -1,87 +1,77 @@
 from __future__ import print_function, division
 
+from random import random as rand
 import random
 import math
-
 
 f1 = lambda x: x ** 2
 f2 = lambda x: (x - 2) ** 2
 
-correct_energy_max = None
-correct_energy_min = None
-
 
 def energy(x):
-    global correct_energy_min
-    global correct_energy_max
-    energy_max = 20000400004
-    energy_min = 2
+    energy_max = 20400
+    energy_min = 1
 
-    energy_raw = f1(x) + f2(x)
-    try:
-        assert energy_min <= energy_raw, 'energy_min must be less than or equal to %d' % energy_raw
-    except:
-        correct_energy_min = energy_raw
-    try:
-        assert energy_raw <= energy_max, 'energy_max must be greater than or equal to %d' % energy_raw
-    except:
-        correct_energy_max = energy_raw
+    # assumes the input is something like (x, f1(x), f2(x))
+    energy_raw = x[1] + x[2]
+    if energy_raw < energy_min:
+        print('current energy: {}; energy_min: {}!'.format(energy_raw, energy_min))
+    if energy_raw > energy_max:
+        print('current energy: {}; energy_max: {}!'.format(energy_raw, energy_max))
 
     rv = (energy_raw - energy_min) / (energy_max - energy_min)
+
     return rv
 
 def p(old, new, temp):
     try:
-        rv = math.e ** (-1 * ((new - old) / temp))
+        rv = math.e ** -((new - old) / temp)
     except ZeroDivisionError:
         return 0
+
+    assert 0 <= rv <= 1, '%f, %f, %f, rv = %f' % (old, new, temp, rv)
 
     with open('plog.txt', 'a') as f:
         f.write(str(rv) + ': {}, {}, {}'.format(old, new, temp) + '\n')
     return rv
 
+input_max = 10 ** 2
+input_min = -input_max
+new_input = lambda: random.uniform(input_min, input_max)
 
-space_min = -(10 ** 5)
-space_max = 10 ** 5
-rand = lambda: random.randint(space_min, space_max)
-
-seed = None
-random.seed(seed)
-
-init = rand()
-
-assert init
-
-
-solution = (init, energy(init))
+init = new_input()
+solution = (init, f1(init), f2(init))
 state = solution
+
+jumps = 0
+
+results = { state }
 
 print(str(init) + ' ', end='')
 kmax = 50 * 20
 for k in range(kmax):
+    neighbor_input = new_input()
 
-    neighbor_input = random.choice(range(
-        max(solution[0] - 500, space_min),
-        min(solution[0] + 500, space_max)
-    ))
-    neighbor = (neighbor_input, energy(neighbor_input))
+    neighbor = (neighbor_input, f1(neighbor_input), f2(neighbor_input))
+    results.add(neighbor)
 
-    if neighbor[1] < solution[1]:
+    if energy(neighbor) < energy(solution):
         solution = neighbor
-        energy_min = solution[1]
+        energy_min = energy(solution)
         print('!', end='')
 
-    if neighbor[1] < state[1]:
+    if energy(neighbor) < energy(state):
         state = neighbor
         print('+', end='')
-    elif p(state[1], neighbor[1], k/kmax) < random.random():
+    elif p(energy(state), energy(neighbor), k/kmax) < rand():
         state = neighbor
+        jumps += 1
         print('?', end='')
 
     print('.', end='')
     if k % 50 == 0 and k != 0:
         print('\n' + str(solution[0]) + ' ', end='')
 
-print('\n\n' + str(solution[0]))
-print("min: " + str(correct_energy_min))
-print("emax: " + str(correct_energy_max))
+print('\n\n', str(solution[0]))
+print()
+print('jumps:', jumps, "/", kmax)
