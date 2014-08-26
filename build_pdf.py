@@ -5,20 +5,22 @@ import subprocess
 @click.command()
 @click.option('--hw',
     prompt='Which assignment? (use {} to skip this dialogue)'.format('--hw'),
-    help='assignment number')
+    help='assignment number', type=click.INT)
 @click.option('-o', help='output pdf file', default='witschey.pdf')
+@click.option('-p', help='input pages per output page',
+    default=2, type=click.IntRange(min=1, max=2, clamp=True))
 @click.argument('files', nargs=-1, type=click.Path(exists=True))
-def build_pdf(files, hw, o):
+def build_pdf(files, hw, o, p):
     tmpfilename = '/tmp/hwgen.ps'
     title = '--center-title="csc710sbse: hw{hw}: Witschey"'.format(hw=hw)
     a2ps_cmd = [
         'a2ps',
         '-MLetter',
         title,
-        '-1C',
+        '-{p}C'.format(p=p),
         '--highlight-level=none',
+        # '-q',
         '-o',
-        '-q',
         tmpfilename
     ]
     a2ps_cmd.extend(files)
