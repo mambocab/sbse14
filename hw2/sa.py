@@ -38,8 +38,8 @@ class Model(object):
         return rv
 
     def random_input_vector(self):
-        return tuple(random.uniform(model.input_min, model.input_max)
-            for i in range(model.input_len))
+        return tuple(random.uniform(self.input_min, self.input_max)
+            for i in range(self.input_len))
 
     def __call__(self, *vals):
         energy_raw = sum(self.function(v) for v in vals)
@@ -50,7 +50,6 @@ class Model(object):
                     c=energy_raw, min=self.energy_min, max=self.energy_max
                 )
             )
-
 
         return self.normalize(energy_raw)
 
@@ -102,9 +101,9 @@ def kursawe(t, n=3, a=0.8, b=3):
 
 
 model_table = {
-    'schaffer': Model(schaffer, 1, -100, 100, 0, 20400),
-    'fonseca': Model(fonseca, 3, -4, 4, 0, 2, iterations=2000),
-    'kursawe': Model(kursawe, 3, -5, 5, -24, 20, iterations=2000)
+    'schaffer': Model(schaffer, 1, -100, 100, 0, 20500),
+    'fonseca':  Model(fonseca, 3, -4, 4, 0, 2, iterations=1500),
+    'kursawe':  Model(kursawe, 3, -5, 5, -24, 21, iterations=5000)
 }
 
 try:
@@ -118,7 +117,7 @@ init = model.random_input_vector()
 solution = init
 state = solution
 
-print(pretty_input(init) + ' ', end='')
+print(pretty_input(init) + ': ' + '{: .2f}'.format(model(solution)) + ' ', end='')
 for k in range(model.iterations):
     neighbor = model.random_input_vector()
 
@@ -140,6 +139,6 @@ for k in range(model.iterations):
 
     print('.', end='')
     if k % 50 == 0 and k != 0:
-        print('\n' + pretty_input(solution) + ' ', end='')
+        print('\n' + pretty_input(solution) + ': ' + '{: .2}'.format(energy_min) + ' ', end='')
 
 print()
