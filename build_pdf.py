@@ -13,7 +13,7 @@ import subprocess
 @click.option('--landscape', is_flag=True)
 @click.option('--chars-per-line', help='characters per line')
 @click.argument('files', nargs=-1, type=click.Path(exists=True))
-def build_pdf(files, hw, o, p, landscape):
+def build_pdf(files, hw, o, p, landscape, chars_per_line):
     if not files:
         click.echo('please give file arguments')
         click.exit()
