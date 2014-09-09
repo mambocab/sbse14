@@ -8,7 +8,7 @@ import numpy as np
 
 def pretty_input(t, model=None):
     float_format = lambda x: '{: .2f}'.format(x)
-    str_tuple = tuple(float_format(x).encode(sys.stdout.encoding) for x in t)
+    str_tuple = tuple(float_format(x) for x in t)
     rv = ', '.join(s for s in str_tuple)
     if model:
         return rv + ': ' + '{: .3f}'.format(model(t))
@@ -29,15 +29,13 @@ def fonseca(t, n=3):
 class Model(object):
     def __init__(self, function,
         input_len, input_min, input_max,
-        energy_min, energy_max,
-        iterations=1000):
+        energy_min, energy_max):
         self.function = function
         self.input_max = input_max
         self.input_min = input_min
         self.energy_max = energy_max
         self.energy_min = energy_min
         self.input_len = input_len
-        self.iterations = iterations
 
     def normalize(self, x):
         n = x - self.energy_min
@@ -68,26 +66,13 @@ class Model(object):
 
 class State(object):
 
-    def __init__(self):
-        self._solution = None
-        self._current = None
-
-    @property
-    def solution(self):
-        return self._solution
-    @solution.setter
-    def solution(self, value):
-        if value != self.solution:
-            # print(pretty_input(value, model))
-            self._solution = value
-    
-    @property
-    def current(self):
-        return self._current
-    @current.setter
-    def current(self, value):
-        self._current = value
-
+    def __init__(self, model, max_iterations=5000):
+        self.solution = None
+        self.current  = None
+        self.solution_energy = None
+        self.current_energy  = None
+        self.evals = 0
+        self.max_iterations = max_iterations
 
 def local_search_inputs(bottom, top, n=10):
     chunk_length = (top - bottom) / n
@@ -97,58 +82,73 @@ def local_search_inputs(bottom, top, n=10):
 
 model = Model(fonseca, 3, -4, 4, 0, 20)
 
-state = State()
+def maxwalksat(p=0.5):
+    state = State(model)
 
-state.current = model.random_input_vector()
-state.solution = state.current
+    state.current = model.random_input_vector()
+    state.solution = state.current
+    state.current_energy  = model(state.current)
+    state.solution_energy = model(state.solution)
 
-def main():
-    for i in range(model.iterations):
+    print('MaxWalkSat run, Fonseca Model\np of local search:', p)
+    print(pretty_input(state.current, model=model), end=' ')
 
-        solution_energy = model(state.solution)
-        current_energy  = model(state.current)
+    for i in range(state.max_iterations):
 
-        dimension = random.randint(0, len(state.current) - 1)
         for j in range(20):
-            if .5 < rand():
+            if state.solution_energy < 0.06:
+                print('%')
+                print()
+                print('Best:', state.solution_energy)
+                return
+            if state.evals > state.max_iterations:
+                print('\ntoo many iterations')
+                return
+
+            dimension = random.randint(0, len(state.current) - 1)
+            if p > rand():
                 slist = list(state.current)
                 slist[dimension] = model.random_input()
                 state.current = tuple(slist)
-                pre = state.solution
-                state.solution = min(state.current, state.solution, key=model)
-                if state.solution != pre:
-                    print(pretty_input(state.solution),
-                        'improved by random permutation', sep=': ')
+
+                state.current_energy = model(state.current)
+
+                if state.current_energy < state.solution_energy:
+                    state.solution = state.current
+                    state.solution_energy = state.current_energy
+                    print('+', end='')
+                else:
+                    print('.', end='')
+
+                state.evals += 1
+                if state.evals % 50 == 0:
+                    print('\n{}'.format(
+                        pretty_input(state.current, model=model)), end=' ')
+
             else:
                 for i in local_search_inputs(model.input_min, model.input_max):
                     slist = list(state.current)
                     slist[dimension] = i
                     state.current = tuple(slist)
-                    pre = state.solution
-                    state.solution = min(state.current, state.solution, key=model)
-                    if state.solution != pre:
-                        print(pretty_input(state.solution),
-                            'improved by exploration', sep=': ')
 
+                    state.current_energy = model(state.current)
+
+                    if state.current_energy < state.solution_energy:
+                        state.solution = state.current
+                        state.solution_energy = state.current_energy
+                        print('|', end='')
+                    else:
+                        print('.', end='')
+
+                    state.evals += 1
+                    if state.evals % 50 == 0:
+                        print('\n{}'.format(
+                            pretty_input(state.current, model=model)),
+                            end=' ')
 
 if __name__ == '__main__':
-    main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    maxwalksat(p=0.25)
+    print()
+    maxwalksat(p=0.5)
+    print()
+    maxwalksat(p=0.75)

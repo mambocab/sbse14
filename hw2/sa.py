@@ -68,7 +68,7 @@ def p(old, new, temp):
     except ZeroDivisionError:
         return 0
     rv = math.exp(-exponent)
-    if rv >= 1:
+    if rv > 1:
         raise ValueError('p returning greater than one', rv, old, new, temp)
     return rv
 
@@ -101,9 +101,8 @@ def kursawe(t, n=3, a=0.8, b=3):
 
 
 model_table = {
-    'schaffer': Model(schaffer, 1, -100, 100, 0, 20500),
     'fonseca':  Model(fonseca, 3, -4, 4, 0, 2, iterations=1500),
-    'kursawe':  Model(kursawe, 3, -5, 5, -24, 21, iterations=5000)
+    'kursawe':  Model(kursawe, 3, -5, 5, -24, 21, iterations=1500)
 }
 
 try:
@@ -117,9 +116,16 @@ init = model.random_input_vector()
 solution = init
 state = solution
 
-print(pretty_input(init) + ': ' + '{: .2f}'.format(model(solution)) + ' ', end='')
+print('Simulated Annealing: {}'.format(model_name.title()))
+
+print(pretty_input(init) + ': ' + '{: .2f}'.format(model(solution)) + ' ', 
+    end='')
 for k in range(model.iterations):
-    neighbor = model.random_input_vector()
+    neighbor_candidate = model.random_input_vector()
+    neighbor = tuple([neighbor_candidate[i]
+        if rand() < 0.33 else state[i]
+        for i in range(len(state))
+        ])
 
     solution_energy = model(solution)
     neighbor_energy = model(neighbor)
@@ -139,6 +145,7 @@ for k in range(model.iterations):
 
     print('.', end='')
     if k % 50 == 0 and k != 0:
-        print('\n' + pretty_input(solution) + ': ' + '{: .2}'.format(energy_min) + ' ', end='')
+        print('\n' + pretty_input(solution) + ': ' 
+            + '{: .2}'.format(energy_min) + ' ', end='')
 
 print()
