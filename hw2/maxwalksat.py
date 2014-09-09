@@ -107,12 +107,10 @@ def main():
 
         solution_energy = model(state.solution)
         current_energy  = model(state.current)
-        permutations += 1
 
         dimension = random.randint(0, len(state.current) - 1)
         for j in range(20):
             if .5 < rand():
-                permutations += 1
                 slist = list(state.current)
                 slist[dimension] = model.random_input()
                 state.current = tuple(slist)
@@ -123,7 +121,6 @@ def main():
                         'improved by random permutation', sep=': ')
             else:
                 for i in local_search_inputs(model.input_min, model.input_max):
-                    permutations += 1
                     slist = list(state.current)
                     slist[dimension] = i
                     state.current = tuple(slist)
