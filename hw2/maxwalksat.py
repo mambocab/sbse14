@@ -103,23 +103,16 @@ state.current = model.random_input_vector()
 state.solution = state.current
 
 def main():
-    max_permutations = 9000
-    permutations = 0
-
     for i in range(model.iterations):
 
         solution_energy = model(state.solution)
         current_energy  = model(state.current)
         permutations += 1
-        if permutations == max_permutations:
-            exit('maxed out')
 
         dimension = random.randint(0, len(state.current) - 1)
         for j in range(20):
             if .5 < rand():
                 permutations += 1
-                if permutations == max_permutations:
-                    exit('maxed out')
                 slist = list(state.current)
                 slist[dimension] = model.random_input()
                 state.current = tuple(slist)
@@ -131,8 +124,6 @@ def main():
             else:
                 for i in local_search_inputs(model.input_min, model.input_max):
                     permutations += 1
-                    if permutations == max_permutations:
-                        exit('maxed out')
                     slist = list(state.current)
                     slist[dimension] = i
                     state.current = tuple(slist)
