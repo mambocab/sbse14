@@ -174,6 +174,24 @@ class Num(Log):
         self.lo, self.hi = sys.maxint, sys.minint
         self.lessp = True
 
+    def statistic(f):
+        '''
+        decorator for Num functions that return statistics about contents.
+        if _sorted is False, sort the _cache before calling the wrapped
+        function.
+        '''
+        def wrapper(*args, **kwargs):
+            self = args[0]
+            if not self._sorted:
+                self._cache.sort()
+                self._sorted = True
+            return f(*args, **kwargs)
+
+        wrapper.__name__ = f.__name__
+        wrapper.__doc__  = f.__doc__
+
+        return wrapper
+
     def change(self, x):
         # update lo,hi
         self.lo = min(self.lo, x)
@@ -183,14 +201,11 @@ class Num(Log):
 
     def norm(self,x):
         "normalize the argument with respect to maximum and minimum"
-        return (x - self.lo) / (self.hi - i.lo + 0.000001)
+        if self.hi == self.lo:
+            raise ValueError('hi and lo of {} are equal'.format(self.__name__))
+        return (x - self.lo) / (self.hi - self.lo)
 
-    def sort(self):
-        '''sort if unsorted'''
-        if not self._sorted:
-            self._cache.sort()
-            self._sorted = True
-
+    @statistic
     def generate_report(self):
         return memo(median=self.median(), iqr=self.iqr(),
             lo=self.lo, hi=self.hi)
@@ -200,6 +215,7 @@ class Num(Log):
         nums in the distribution"""
         return self.any() + f*(self.any() - self.any())
 
+    @statistic
     def median(self):
         self.sort()
         n = len(self._cache)
@@ -210,6 +226,7 @@ class Num(Log):
         center_next = max(0, min(center_next, n))
         return (i._cache[center] + i._cache[center_next]) / 2
 
+    @statistic
     def iqr(self):
         self.sort()
         n = len(self._cache)
