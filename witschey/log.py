@@ -97,7 +97,6 @@ class Log(object):
     "Keep a random sample of stuff seen so far."
 
     def __init__(self, inits=None, label=None, max_size=256):
-        print(self.__class__.__name__)
         self._cache            = []
         self._n                = 0
         self._report           = None
@@ -145,7 +144,7 @@ class Log(object):
     def setup(self):
         raise NotImplementedError()
 
-    def _invalidate_statistics():
+    def _invalidate_statistics(self):
         '''
         default implementation. if _valid_statistics is something other than
         a boolean, reimplement!
@@ -192,18 +191,24 @@ A _Num_ is a _Log_ for numbers.
 
 
 """
-class Num(Log):
+class NumberLog(Log):
 
     def __init__(self, *args, **kwargs):
+        super(NumberLog, self).__init__(*args, **kwargs)
+        assert self._n == 0
 
         # set to values that will be immediately overridden
         self.lo, self.hi = sys.maxint, -sys.maxint
-        super(Log, self).__init__(*args, **kwargs)
 
-    def change(self, x):
+    def _change(self, x):
         # update lo,hi
         self.lo = min(self.lo, x)
         self.hi = max(self.hi, x)
+
+    def _prepare_data(self):
+        if not self._valid_statistics:
+            self._cache.sort()
+        self._valid_statistics = True
 
     def norm(self,x):
         "normalize the argument with respect to maximum and minimum"
@@ -211,7 +216,6 @@ class Num(Log):
             raise ValueError('hi and lo of {} are equal'.format(self.__name__))
         return (x - self.lo) / (self.hi - self.lo)
 
-    @statistic
     def generate_report(self):
         return memo(median=self.median(), iqr=self.iqr(),
             lo=self.lo, hi=self.hi)
@@ -223,7 +227,6 @@ class Num(Log):
 
     @statistic
     def median(self):
-        self.sort()
         n = len(self._cache)
         center = n // 2
         if n % 2:
@@ -255,7 +258,7 @@ A _Sym_ is a _Log_ for non-numerics.
 + Generated symbols from the log by returning symbols at the same probability of the frequency counts (see _ish()_).
 
 """
-class Sym(Log):
+class SymbolLog(Log):
 
     @property
     def valid_statistics(self):
