@@ -63,6 +63,7 @@ From that population, we can generate another distribution that is nearly the sa
 """
 # TODO: testify this
 def sym_entropy_demo(n1=10, n2=1000):
+    import json
 
     random.seed(7)
     init_fruit = ['plums'] * (n1*2) + ['grapes'] * n1 + ['pears'] * n1
