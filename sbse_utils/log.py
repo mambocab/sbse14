@@ -93,17 +93,17 @@ from base import memo
 import base
 import functools
 
-class Log():
+class Log(object):
     "Keep a random sample of stuff seen so far."
 
     def __init__(self, inits=None, label=None, max_size=256):
-        self._cache    = []
-        self._n        = 0
-        self._report   = None
-
-        self.label     = label or ''
-        self.max_size  = max_size
-        self.setup()
+        print(self.__class__.__name__)
+        self._cache            = []
+        self._n                = 0
+        self._report           = None
+        self.label             = label or ''
+        self.max_size          = max_size
+        self._valid_statistics = False
         if inits:
             map(self.__iadd__, inits)
 
@@ -129,8 +129,8 @@ class Log():
                 self._cache[self.random_index()] = x
 
         if changed:
-            self._report = None
-            self.change(x)
+            self._invalidate_statistics()
+            self._change(x)
 
         return self
 
@@ -145,14 +145,40 @@ class Log():
     def setup(self):
         raise NotImplementedError()
 
-    def change(self, x):
-        '''called whenever contents are changed.
-        use for updating instance variables, invalidating flags, etc.'''
-        raise NotImplementedError()
+    def _invalidate_statistics():
+        '''
+        default implementation. if _valid_statistics is something other than
+        a boolean, reimplement!
+        '''
+        self._valid_statistics = False
 
     def ish(self, *args, **kwargs):
         raise NotImplementedError()
 
+    def _change(self, x):
+        '''
+        override to add incremental updating functionality
+        '''
+        pass
+
+    def _prepare_data(self):
+        s = '_prepare_data() not implemented for ' + self.__class__.__name__
+        raise NotImplementedError(s)
+
+def statistic(f):
+    '''
+    decorator for log functions that return statistics about contents.
+    if _valid_statistics is False, generate valid stats before calling
+    the wrapped function.
+    '''
+    @functools.wraps(f)
+    def wrapper(*args, **kwargs):
+        self = args[0]
+        if not self._valid_statistics:
+            self._prepare_data()
+        return f(*args, **kwargs)
+
+    return wrapper
 
 
 """
@@ -169,38 +195,15 @@ A _Num_ is a _Log_ for numbers.
 class Num(Log):
 
     def __init__(self, *args, **kwargs):
-        super(Log, self).__init__(*args, **kwargs)
-        self._sorted = False
 
-    def setup(self):
         # set to values that will be immediately overridden
-        self.lo, self.hi = sys.maxint, sys.minint
-        self.lessp = True
-
-    def statistic(f):
-        '''
-        decorator for Num functions that return statistics about contents.
-        if _sorted is False, sort the _cache before calling the wrapped
-        function.
-        '''
-        def wrapper(*args, **kwargs):
-            self = args[0]
-            if not self._sorted:
-                self._cache.sort()
-                self._sorted = True
-            return f(*args, **kwargs)
-
-        wrapper.__name__ = f.__name__
-        wrapper.__doc__  = f.__doc__
-
-        return wrapper
+        self.lo, self.hi = sys.maxint, -sys.maxint
+        super(Log, self).__init__(*args, **kwargs)
 
     def change(self, x):
         # update lo,hi
         self.lo = min(self.lo, x)
         self.hi = max(self.hi, x)
-        # invalidate _sorted flag
-        self._sorted = False
 
     def norm(self,x):
         "normalize the argument with respect to maximum and minimum"
@@ -253,32 +256,29 @@ A _Sym_ is a _Log_ for non-numerics.
 
 """
 class Sym(Log):
-    def setup(self):
-        self._counts = None
-        self._mode = None
 
-    def change(self, x):
+    @property
+    def valid_statistics(self):
+        return self._counts is None
+
+    def _invalidate_statistics(self):
         # `_counts is None` => invalidation of calculated statistics
         # _mode would be a bad idea: what's the 'null' equivalent,
         # when None is a valid index into _counts?
         self._counts = None
 
-    def statistic(f):
-        '''
-        decorator for Sym functions that return statistics about contents.
-        if there isn't a valid _counts, update it before calling the wrapped
-        function.
-        '''
-        def wrapper(*args, **kwargs):
-            self = args[0]
-            if self._counts is None:
-                self._update_counts_and_mode()
-            return f(*args, **kwargs)
+    def _prepare_data(self):
+        counts = {}
+        mode = None
+        mode_count = 0
 
-        wrapper.__name__ = f.__name__
-        wrapper.__doc__  = f.__doc__
+        for x in self._cache:
+            c = counts[x] = counts.get(x, 0) + 1
+            if c > mode_count:
+                mode = x
 
-        return wrapper
+        self._counts, self._mode = counts, mode
+        return self._counts, self._mode
 
     @statistic
     def counts(self):
@@ -317,19 +317,6 @@ class Sym(Log):
             # TODO: understand this equation better
             e -= p * math.log(p, 2) if p else 0
         return e
-
-    def _update_counts_and_mode(self):
-        counts = {}
-        mode = None
-        mode_count = 0
-
-        for x in self._cache:
-            c = counts[x] = counts.get(x, 0) + 1
-            if c > mode_count:
-                mode = x
-
-        self._counts, self._mode = counts, mode
-        return self._counts, self._mode
 
 """
 
@@ -372,7 +359,13 @@ def report_demo(n1=10, n2=1000):
 
 
 if __name__ == "__main__":
-    report_demo()
-    print('='*50)
+    for c in (Sym, Num):
+        print(c.__name__, c().__dict__.keys())
 
+    report_demo()
+    print()
+    print('=' * 50)
+    print()
+
+    sym_entropy_demo()
 
