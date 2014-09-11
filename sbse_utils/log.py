@@ -150,6 +150,9 @@ class Log():
         use for updating instance variables, invalidating flags, etc.'''
         raise NotImplementedError()
 
+    def ish(self, *args, **kwargs):
+        raise NotImplementedError()
+
 
 
 """
