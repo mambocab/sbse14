@@ -1,5 +1,6 @@
 from __future__ import division, print_function, unicode_literals
 import json, random
+import functools
 
 class memo():
     '''adapted from https://github.com/timm/sbse14/wiki/basepy'''
@@ -47,6 +48,20 @@ class memo():
             rv += '\n'
 
         return rv
+
+def memoize(f):
+    'memoizer for single-arg functions'
+    d = {}
+    @functools.wraps()
+    def wrapper(x):
+        try:
+            return d[x]
+        except KeyError:
+            d[x] = f(*args, **kwargs)
+            return d[x]
+
+    return wrapper
+
 
 
 def random_index(x):
