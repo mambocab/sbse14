@@ -1,6 +1,6 @@
 from __future__ import division, unicode_literals
 
-from base import memo, pretty_input, tuple_replace
+from base import memo, tuple_replace
 import random
 import math
 import numpy as np
@@ -52,6 +52,7 @@ class SimulatedAnnealer(Searcher):
                 raise ValueError('p returning greater than one', rv, old, new, temp)
             return rv
 
+        report_append('{: .2}'.format(energy_min) + ' ')
         for k in range(self.iterations):
             neighbor_candidate = self.model.random_input_vector()
             neighbor = tuple(neighbor_candidate[i]
@@ -81,8 +82,7 @@ class SimulatedAnnealer(Searcher):
 
             report_append('.')
             if k % 50 == 0 and k != 0:
-                report_append('\n' + pretty_input(solution) + ': ' 
-                                    + '{: .2}'.format(energy_min) + ' ')
+                report_append('\n' + '{: .2}'.format(energy_min) + ' ')
 
         rv.best = solution_energy
         return rv
@@ -116,8 +116,9 @@ class MaxWalkSat(Searcher):
         state = solution
         current_energy = self.model(state)
         solution_energy = current_energy
-        energy_min = solution_energy
         evals = 0
+
+        report_append('{: .2}'.format(solution_energy) + ' ')
 
         while evals < self.iterations:
 
@@ -143,7 +144,7 @@ class MaxWalkSat(Searcher):
 
                     evals += 1
                     if evals % 50 == 0:
-                        report_append('\n{}'.format(solution_energy))
+                        report_append('\n{: .2}'.format(solution_energy) + ' ')
 
                 else:
                     for j in self.local_search_inputs(
@@ -164,7 +165,7 @@ class MaxWalkSat(Searcher):
 
                         evals += 1
                         if evals % 50 == 0:
-                            report_append('\n{}'.format(state))
+                            report_append('\n{: .2}'.format(solution_energy) + ' ')
 
             rv.best = solution_energy
             return rv
