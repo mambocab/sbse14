@@ -23,6 +23,8 @@ class IndependentVariable(object):
 
         return f(self.min, self.max)
 
+IV = IndependentVariable
+
 class Model(object):
     def __init__(self, independents=None, dependents=None
         energy_min=None, energy_max=None):
@@ -74,9 +76,8 @@ class Model(object):
 
 class Fonseca(Model):
 
-    def __init__(self):
-
-        ivs = tuple(IndependentVariable(min=-4, max=4) for _ in xrange(2))
+    def __init__(self, ivs=3):
+        self.ivs = tuple(IV(min=-4, max=4) for _ in xrange(ivs - 1))
 
         def f1(xs):
             e = sum((x - (1 / memo_sqrt(x))) ** 2 for x in xs)
