@@ -46,8 +46,7 @@ class Model(object):
         return rv
 
     def random_input_vector(self):
-        return tuple(random.uniform(self.input_min, self.input_max)
-            for i in range(self.input_len))
+        return tuple(x() for x in self.ivs)
 
     def __call__(self, v, vector=False, norm=True):
         energies = tuple(y(v) for y in self.ys)
