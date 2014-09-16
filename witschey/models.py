@@ -116,4 +116,19 @@ class Schaffer(Model):
         f2 = lambda xs: sum((x - 2) ** 2 for x in xs)
 
         super(Schaffer, self).__init__(independents=ivs, dependents=(f1, f2))
-        
+
+class ZDT1(Model):
+    def __init__(self, ivs=30):
+
+        def f1(xs):
+            return xs[0]
+
+        def g(xs):
+            return 1 + 9 * sum(xs[1:]) / (len(xs) - 1)
+
+        def f2(xs):
+            gxs = g(xs)
+            return gxs * (1 - math.sqrt(xs[0] / gxs))
+
+        ivs = tuple(IV(min=0, max=1) for _ in xrange(30))
+        super(ZDT1, self).__init__(independents=ivs, dependents=(f1, f2))
