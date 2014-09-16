@@ -53,7 +53,8 @@ class SimulatedAnnealer(Searcher):
                 return 0
             rv = math.exp(-exponent)
             if rv > 1:
-                raise ValueError('p returning greater than one', rv, old, new, temp)
+                raise ValueError('p returning greater than one',
+                    rv, old, new, temp)
             return rv
 
         report_append('{: .2}'.format(energy_min) + ' ')
@@ -113,7 +114,7 @@ class MaxWalkSat(Searcher):
 
     def run(self, text_report=True):
         rv = memo(report='')
-        def report_append(s):
+        def report(s):
             if text_report:
                 rv.report += s
 
@@ -124,13 +125,13 @@ class MaxWalkSat(Searcher):
         solution_energy = current_energy
         evals = 0
 
-        report_append('{: .2}'.format(solution_energy) + ' ')
+        report('{: .2}'.format(solution_energy) + ' ')
 
         while evals < self.iterations:
 
             for j in range(20):
                 if solution_energy < 0.06:
-                    report_append('%\n')
+                    report('%\n')
                 if evals > self.iterations:
                     break
 
@@ -144,13 +145,13 @@ class MaxWalkSat(Searcher):
                     if current_energy < solution_energy:
                         solution = state
                         solution_energy = current_energy
-                        report_append('+')
+                        report('+')
                     else:
-                        report_append('.')
+                        report('.')
 
                     evals += 1
                     if evals % 50 == 0:
-                        report_append('\n{: .2}'.format(solution_energy) + ' ')
+                        report('\n{: .2}'.format(solution_energy) + ' ')
 
                 else:
                     for j in self.local_search_inputs(
@@ -165,13 +166,13 @@ class MaxWalkSat(Searcher):
                         if current_energy < solution_energy:
                             solution = state
                             solution_energy = current_energy
-                            report_append('|')
+                            report('|')
                         else:
-                            report_append('.')
+                            report('.')
 
                         evals += 1
                         if evals % 50 == 0:
-                            report_append('\n{: .2}'.format(solution_energy) + ' ')
+                            report('\n{: .2}'.format(solution_energy) + ' ')
 
             rv.best = solution_energy
             return rv
