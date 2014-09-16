@@ -74,7 +74,6 @@ class Model(object):
 
 
 class Fonseca(Model):
-
     def __init__(self, ivs=3):
         self.ivs = tuple(IV(min=-4, max=4) for _ in xrange(ivs - 1))
 
