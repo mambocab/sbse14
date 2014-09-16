@@ -84,9 +84,13 @@ class Fonseca(Model):
             e = sum((x - (1 / memo_sqrt(i+1))) ** 2 for i, x in enumerate(xs))
             return 1 - math.exp(-e)
 
+        self.f1 = f1
+
         def f2(xs):
             e = sum((x + (1 / memo_sqrt(i+1))) ** 2 for i, x in enumerate(xs))
             return 1 - math.exp(-e)
+
+        self.f2 = f2
 
         super(Fonseca, self).__init__(independents=ivs, dependents=(f1, f2))
 
@@ -103,32 +107,37 @@ class Kursawe(Model):
                 rv += -10 * math.exp(exponent)
             return rv
 
+        self.f1 = f1
+
         def f2(xs):
             f = lambda x: (math.fabs(x)**self.a) + (5 * math.sin(x)**self.b)
             return sum(f(x) for x in xs)
+
+        self.f2 = f2
 
         super(Kursawe, self).__init__(independents=ivs, dependents=(f1, f2))
 
 class Schaffer(Model):
     def __init__(self, ivs=1):
-        ivs = (IV(min=-10^5, max=10^5),)
-        f1 = lambda xs: sum(x ** 2 for x in xs)
-        f2 = lambda xs: sum((x - 2) ** 2 for x in xs)
+        ivs = tuple(IV(min=-10^5, max=10^5) for _ in xrange(ivs))
+        self.f1 = lambda xs: sum(x ** 2 for x in xs)
+        self.f2 = lambda xs: sum((x - 2) ** 2 for x in xs)
 
-        super(Schaffer, self).__init__(independents=ivs, dependents=(f1, f2))
+        super(Schaffer, self).__init__(
+            independents=ivs,dependents=(self.f1, self.f2))
 
 class ZDT1(Model):
     def __init__(self, ivs=30):
 
-        def f1(xs):
-            return xs[0]
+        f1 = lambda xs: xs[0]
+        self.f1 = f1
 
-        def g(xs):
-            return 1 + 9 * sum(xs[1:]) / (len(xs) - 1)
+        g = lambda xs: 1 + 9 * sum(xs[1:]) / (len(xs) - 1)
 
         def f2(xs):
             gxs = g(xs)
             return gxs * (1 - math.sqrt(xs[0] / gxs))
+        self.f2 = f2
 
         ivs = tuple(IV(min=0, max=1) for _ in xrange(30))
         super(ZDT1, self).__init__(independents=ivs, dependents=(f1, f2))
