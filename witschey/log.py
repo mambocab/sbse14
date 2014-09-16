@@ -116,7 +116,7 @@ class Log(object):
         changed = False
 
         # if cache has room, add item
-        if len(self._cache) < self.max_size:
+        if self.max_size is None or len(self._cache) < self.max_size:
             changed = True
             self._cache.append(x)
         # cache is full: maybe replace an old item
@@ -163,6 +163,14 @@ class Log(object):
     def _prepare_data(self):
         s = '_prepare_data() not implemented for ' + self.__class__.__name__
         raise NotImplementedError(s)
+
+    @staticmethod
+    def log_for(t):
+        if t == int or t == float or isinstance(t, (int, float)):
+            return NumberLog()
+        else:
+            return SymbolLog()
+
 
 def statistic(f):
     '''
@@ -234,6 +242,10 @@ class NumberLog(Log):
         center_next = center + 1
         center_next = max(0, min(center_next, n))
         return (i._cache[center] + i._cache[center_next]) / 2
+
+    def mean(self):
+        n = len(self._cache)
+        return sum(self._cache) / n
 
     @statistic
     def iqr(self):
