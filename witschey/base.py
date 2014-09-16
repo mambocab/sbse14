@@ -22,13 +22,14 @@ class memo():
         d = lambda o: o.__dict__
         return json.dumps(self, default=d, sort_keys=True, indent=indent)
 
-    def to_str(self, depth=0, indent=4, d=None):
+    def to_str(self, depth=0, indent=4, sep='\u2192', d=None):
         return self._to_str(
             depth=depth,
             indent=indent,
+            sep=sep,
             d = self.__dict__ if d is None else d)
 
-    def _to_str(self, depth, indent, d):
+    def _to_str(self, depth, indent, d, sep):
         after = []
         reps = []
         rv = ''
@@ -39,7 +40,7 @@ class memo():
             else:
                 if callable(val):
                     val = val.__name__ + '()'
-                reps.append('{} \u2192 {}'.format(k, val))
+                reps.append('{}{}{}'.format(k, sep, val))
         rv += ' ' * depth * indent
         rv += ', '.join(reps)
         rv += '\n'
