@@ -1,5 +1,7 @@
+from __future__ import print_function
+
 from base import memo, memoize
-import math.sqrt
+import math
 import random
 
 @memoize
@@ -26,13 +28,13 @@ class IndependentVariable(object):
 IV = IndependentVariable
 
 class Model(object):
-    def __init__(self, independents=None, dependents=None
+    def __init__(self, independents=None, dependents=None,
         energy_min=None, energy_max=None, enforce_energy_constraints=False):
         if independents is None or dependents is None:
             raise ValueError
 
-        self.xs = inputs
-        self.ys = lambda: raise NotImplementedError
+        self.xs = independents
+        self.ys = dependents
         self.energy_max = energy_max
         self.energy_min = energy_min
         self.enforce_energy_constraints = enforce_energy_constraints
@@ -41,30 +43,30 @@ class Model(object):
         n = x - self.energy_min
         d = self.energy_max - self.energy_min
         try:
-            rv = n / d
+            return n / d
         except ZeroDivisionError:
-            raise ValueError("model's max and min energy are the same!")
-        return rv
+            return 0.5
 
     def random_input_vector(self):
-        return tuple(x() for x in self.ivs)
+        return tuple(x() for x in self.xs)
 
-    def __call__(self, v, vector=False, norm=True):
-        energies = tuple(y(v) for y in self.ys)
+    def __call__(self, v, vector=False, norm=False):
+        energy_vector = tuple(y(v) for y in self.ys)
         energy_total = sum(energy_vector)
 
-        energy_errmsg ='current energy {} not in range [{}, {}]'.format(
-            energy_raw, self.energy_min, self.energy_max))
+        if self.enforce_energy_constraints:
+            energy_errmsg ='current energy {} not in range [{}, {}]'.format(
+                energy_total, self.energy_min, self.energy_max)
 
-        if self.energy_min is None or self.energy_min > energy_raw:
+        if self.energy_min is None or self.energy_min > energy_total:
             if self.enforce_energy_constraints:
                 raise ValueError(energy_errmsg)
-            self.energy_min = energy_raw
+            self.energy_min = energy_total
 
-        if self.energy_max is None or energy_raw > self.energy_max:
+        if self.energy_max is None or energy_total > self.energy_max:
             if self.enforce_energy_constraints:
                 raise ValueError(energy_errmsg)
-            self.energy_max = energy_raw
+            self.energy_max = energy_total
 
         if vector:
             return energy_vector
@@ -76,29 +78,42 @@ class Model(object):
 
 class Fonseca(Model):
     def __init__(self, ivs=3):
-        self.ivs = tuple(IV(min=-4, max=4) for _ in xrange(ivs - 1))
+        ivs = tuple(IV(min=-4, max=4) for _ in xrange(ivs - 1))
 
         def f1(xs):
-            e = sum((x - (1 / memo_sqrt(x))) ** 2 for x in xs)
+            e = sum((x - (1 / memo_sqrt(i+1))) ** 2 for i, x in enumerate(xs))
             return 1 - math.exp(-e)
 
         def f2(xs):
-            e = sum((x + (1 / memo_sqrt(x))) ** 2 for x in xs)
+            e = sum((x + (1 / memo_sqrt(i+1))) ** 2 for i, x in enumerate(xs))
             return 1 - math.exp(-e)
 
         super(Fonseca, self).__init__(independents=ivs, dependents=(f1, f2))
 
 class Kursawe(Model):
-    def __init__(self):
+    def __init__(self, ivs=3, a=0.8, b=3):
         ivs = tuple(IV(min=-5, max=5) for _ in xrange(ivs - 1))
+        self.a = a
+        self.b = b
 
         def f1(xs):
             rv = 0
             for i in xrange(len(xs) - 1):
-                exponent = (-0.2) * math.sqrt(t[i] ** 2 + t[i+1] ** 2)
+                exponent = (-0.2) * math.sqrt(xs[i] ** 2 + xs[i+1] ** 2)
                 rv += -10 * math.exp(exponent)
             return rv
 
         def f2(xs):
-            f = lambda x: (math.fabs(x) ** a) + (5 * math.sin(x) ** b)
+            f = lambda x: (math.fabs(x)**self.a) + (5 * math.sin(x)**self.b)
             return sum(f(x) for x in xs)
+
+        super(Kursawe, self).__init__(independents=ivs, dependents=(f1, f2))
+
+class Schaffer(Model):
+    def __init__(self, ivs=1):
+        ivs = (IV(min=-10^5, max=10^5),)
+        f1 = lambda xs: sum(x ** 2 for x in xs)
+        f2 = lambda xs: sum((x - 2) ** 2 for x in xs)
+
+        super(Schaffer, self).__init__(independents=ivs, dependents=(f1, f2))
+        
