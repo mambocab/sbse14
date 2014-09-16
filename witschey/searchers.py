@@ -6,19 +6,23 @@ import math
 import numpy as np
 
 class Searcher(object):
-    def __init__(self, iterations, model):
-        self.iterations = iterations
+    def __init__(self, model, *args, **kw):
+        self.iterations = kw['iterations']
         self.model = model
+        kw.setdefault('seed', 123)
+        self.spec = memo(**kw)
 
 class SimulatedAnnealer(Searcher):
-    def __init__(self, model, iterations=1000, p_mutation=1/3, *args, **kwargs):
-        super(SimulatedAnnealer, self).__init__(
-            iterations=iterations,
-            model=model,
-            *args, **kwargs
-            )
+    def __init__(self, model, *args, **kw):
+        self.p_mutation = kw.setdefault('p_mutation', 1/3)
+        kw.setdefault('iterations', 1000)
 
-        self.p_mutation = p_mutation
+        super(SimulatedAnnealer, self).__init__(
+            model=model,
+            *args, **kw
+            )
+        self.spec.__dict__.update(kw)
+
 
     def run(self, text_report=True):
         rv = memo(report='')
@@ -53,6 +57,7 @@ class SimulatedAnnealer(Searcher):
             return rv
 
         report_append('{: .2}'.format(energy_min) + ' ')
+
         for k in range(self.iterations):
             neighbor_candidate = self.model.random_input_vector()
             neighbor = tuple(neighbor_candidate[i]
@@ -89,14 +94,15 @@ class SimulatedAnnealer(Searcher):
 
 class MaxWalkSat(Searcher):
 
-    def __init__(self, model, iterations=1000, p_mutation=1/3,
-        *args, **kwargs):
+    def __init__(self, model, *args, **kw):
+        kw.setdefault('iterations', 1000)
+        self.p_mutation = kw.setdefault('p_mutation', 1/3)
+
         super(MaxWalkSat, self).__init__(
-            iterations=iterations,
             model=model,
-            *args, **kwargs
+            *args, **kw
             )
-        self.p_mutation = p_mutation
+        self.spec.__dict__.update(kw)
 
     def local_search_inputs(self, bottom, top, n=10):
         chunk_length = (top - bottom) / n
