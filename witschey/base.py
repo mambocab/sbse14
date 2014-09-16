@@ -8,7 +8,8 @@ def pretty_input(t):
     return ', '.join(s for s in str_tuple)
 
 def pairs(xs):
-    yield p for p in zip(xs[:-1], xs[1:])
+    for p in zip(xs[:-1], xs[1:]):
+        yield p
 
 class memo():
     '''adapted from https://github.com/timm/sbse14/wiki/basepy'''
