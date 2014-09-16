@@ -27,7 +27,7 @@ IV = IndependentVariable
 
 class Model(object):
     def __init__(self, independents=None, dependents=None
-        energy_min=None, energy_max=None):
+        energy_min=None, energy_max=None, enforce_energy_constraints=False):
         if independents is None or dependents is None:
             raise ValueError
 
@@ -35,6 +35,7 @@ class Model(object):
         self.ys = lambda: raise NotImplementedError
         self.energy_max = energy_max
         self.energy_min = energy_min
+        self.enforce_energy_constraints = enforce_energy_constraints
 
     def normalize(self, x):
         n = x - self.energy_min
@@ -52,18 +53,18 @@ class Model(object):
         energies = tuple(y(v) for y in self.ys)
         energy_total = sum(energy_vector)
 
-        ok_energy = True
-        if self.energy_min is not None and self.energy_min < energy_raw:
-            ok_energy = False
-        if self.energy_max is not None and energy_raw > self.energy_max:
-            ok_energy = False
+        energy_errmsg ='current energy {} not in range [{}, {}]'.format(
+            energy_raw, self.energy_min, self.energy_max))
 
-        if not ok_energy:
-            raise ValueError(
-                'current energy {} not in range [{}, {}]'.format(
-                        energy_raw, self.energy_min, self.energy_max
-                    )
-                )
+        if self.energy_min is None or self.energy_min > energy_raw:
+            if self.enforce_energy_constraints:
+                raise ValueError(energy_errmsg)
+            self.energy_min = energy_raw
+
+        if self.energy_max is None or energy_raw > self.energy_max:
+            if self.enforce_energy_constraints:
+                raise ValueError(energy_errmsg)
+            self.energy_max = energy_raw
 
         if vector:
             return energy_vector
