@@ -7,6 +7,8 @@ def pretty_input(t):
     str_tuple = tuple(float_format(x).encode(sys.stdout.encoding) for x in t)
     return ', '.join(s for s in str_tuple)
 
+def pairs(xs):
+    yield p for p in zip(xs[:-1], xs[1:])
 
 class memo():
     '''adapted from https://github.com/timm/sbse14/wiki/basepy'''
