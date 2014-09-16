@@ -253,6 +253,46 @@ class NumberLog(Log):
         n = len(self._cache)
         return self._cache[int(n*.75)] - self._cache[int(n*.5)]
 
+    def total(self):
+        return sum(self._cache)
+
+    @statistic
+    def xtile(self, lo=0, hi=0.001,
+            width=50,
+            chops=[0.1, 0.3, 0.5, 0.7, 0.9],
+            marks=["-", " ", " ", "-", " "],
+            bar="|", star="*",
+            show=" %3.2f"):
+        """The function _xtile_ takes a list of (possibly)
+        unsorted numbers and presents them as a horizontal
+        xtile chart (in ascii format). The default is a 
+        contracted _quintile_ that shows the 
+        10,30,50,70,90 breaks in the data (but this can be 
+        changed- see the optional flags of the function).
+        """
+
+        lo = min(lo,self._cache[0])
+        hi = max(hi,self._cache[-1])
+
+        pos = lambda p: self._cache[int(len(self._cache) * p)]
+        place = lambda x: min(width-1, int(width * float((x - lo))/(hi - lo)))
+        pretty = lambda xs: ', '.join([show % x for x in xs])
+
+        what    = [pos(p)   for p in chops]
+        where   = [place(n) for n in  what]
+
+        out     = [' '] * width
+
+        for one,two in base.pairs(where):
+            for i in range(one, two): 
+                out[i] = marks[0]
+            marks = marks[1:]
+
+        out[int(width / 2)]  = bar
+        out[place(pos(0.5))] = star
+
+        return ''.join(out) +  "," +  pretty(what)
+
 """
 
 WARNING: the call to _sorted_ in _report()_ makes this code
