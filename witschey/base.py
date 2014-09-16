@@ -62,7 +62,8 @@ def memoize(f):
 
     return wrapper
 
-
+def tuple_replace(t, replace_at, value):
+    return tuple(value if i == replace_at else v for i, v in t.enumerate)
 
 def random_index(x):
     if isinstance(x, list):
