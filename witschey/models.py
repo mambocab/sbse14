@@ -89,17 +89,17 @@ class Fonseca(Model):
 
         super(Fonseca, self).__init__(independents=ivs, dependents=(f1, f2))
 
-# def kursawe(t, n=3, a=0.8, b=3):
-#     assert len(t) == n
+class Kursawe(Model):
+    def __init__(self):
+        ivs = tuple(IV(min=-5, max=5) for _ in xrange(ivs - 1))
 
-#     f1 = 0
-#     for i in range(n - 1):
-#         exponent = (-0.2) * math.sqrt(t[i] ** 2 + t[i+1] ** 2)
-#         f1 += -10 * math.exp(exponent)
+        def f1(xs):
+            rv = 0
+            for i in xrange(len(xs) - 1):
+                exponent = (-0.2) * math.sqrt(t[i] ** 2 + t[i+1] ** 2)
+                rv += -10 * math.exp(exponent)
+            return rv
 
-#     e = lambda x: (math.fabs(x) ** a) + (5 * math.sin(x) ** b)
-#     f2 = sum(e(x) for x in t)
-
-#     return f1 + f2
-
-
+        def f2(xs):
+            f = lambda x: (math.fabs(x) ** a) + (5 * math.sin(x) ** b)
+            return sum(f(x) for x in xs)
