@@ -8,24 +8,31 @@ import random
 from datetime import datetime
 from time import clock
 
-
-
 def run(r=20, seed=10):
     print(datetime.now())
-    outputs = []
     for klass in (Schaffer, Fonseca, Kursawe, ZDT1):
+        xtiles = []
         print("\n", klass.__name__, sep='')
+        print('-' * 50)
         for searcher in (SimulatedAnnealer, MaxWalkSat):
             random.seed(seed)
             n = NumberLog(max_size=None)
+            times = NumberLog(max_size=None)
+            print(searcher.__name__)
             for _ in range(r):
-                print(klass.__name__, searcher.__name__, sep=': ')
                 start_time = clock()
-                out = searcher(klass()).run()
-                print('time: {:.4f}s'.format(clock() - start_time))
-                print(out.report, end='\n\n')
+                s = searcher(klass())
+                out = s.run(text_report=False)
+                times += clock() - start_time
                 n += out.best
-            print(searcher.__name__ + ':', '{: .4f}'.format(n.mean()))
+            print(s.spec.to_str(sep=': '))
+
+            print('Best: {: .4f}'.format(n.mean()))
+            print('total time: {:.3f}s'.format(times.total()),
+                'mean time: {:.3f}s'.format(times.mean()), sep='\t')
+            print(n.xtile(width=30), sep='\n')
+            print('\n')
+        print('=' * 50 + '\n', '=' * 50, sep='')
 
 if __name__ == '__main__':
     run()
