@@ -81,15 +81,3 @@ def random_index(x):
     if isinstance(x, dict):
         return random.choice(x.keys)
     raise ValueError('{} is not a list or dict'.format(x))
-
-def memo_demo():
-    m = memo(
-        lol=memo(
-            whatever=34, omg="i can't even",
-            cache=memo(
-                empty='too bad', sucka='mc')),
-            d={'this': 'is', 'a': 'dict'})
-    print(m.to_str())
-
-if __name__ == '__main__':
-    memo_demo()
