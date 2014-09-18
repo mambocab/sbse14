@@ -16,7 +16,7 @@ class MaxWalkSat(Searcher):
             model=model,
             *args, **kw
             )
-        self.spec.__dict__.update(kw)
+        self.spec(kw)
 
     def local_search_inputs(self, bottom, top, n=10):
         chunk_length = (top - bottom) / n
