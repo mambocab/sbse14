@@ -1,6 +1,6 @@
 from __future__ import division, print_function, unicode_literals
 
-import json, random, functools, sys
+import json, random, functools, sys, math
 
 def pretty_input(t):
     float_format = lambda x: '{: .2f}'.format(x)
@@ -71,6 +71,10 @@ def memoize(f):
             return d[x]
 
     return wrapper
+
+@memoize
+def memo_sqrt(x):
+    return math.sqrt(x)
 
 def tuple_replace(t, replace_at, value):
     return tuple(value if i == replace_at else v for i, v in enumerate(t))
