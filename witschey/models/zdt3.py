@@ -4,7 +4,7 @@
 from __future__ import division
 
 from model import Model
-from base import memo_sqrt
+from witschey.base import memo_sqrt
 import math
 
 class ZDT3(Model):
