@@ -8,8 +8,6 @@ from witschey.base import memo
 
 class SimulatedAnnealer(Searcher):
     def __init__(self, model, *args, **kw):
-        self.p_mutation = kw.setdefault('p_mutation', 1/3)
-        kw.setdefault('iterations', 1000)
 
         super(SimulatedAnnealer, self).__init__(
             model=model,
@@ -53,10 +51,10 @@ class SimulatedAnnealer(Searcher):
 
         report_append('{: .2}'.format(energy_min) + ' ')
 
-        for k in range(self.iterations):
+        for k in range(self.spec.iterations):
             neighbor_candidate = self.model.random_input_vector()
             neighbor = tuple(neighbor_candidate[i]
-                if random.random() < self.p_mutation else v
+                if random.random() < self.spec.p_mutation else v
                 for i, v in enumerate(state))
 
             solution_energy = self.model(solution)
@@ -75,7 +73,7 @@ class SimulatedAnnealer(Searcher):
                 good_idea = p(
                     self.model.normalize(current_energy),
                     self.model.normalize(neighbor_energy),
-                    k / self.iterations)
+                    k / self.spec.iterations)
                 if good_idea < random.random():
                     state = neighbor
                     report_append('?')
