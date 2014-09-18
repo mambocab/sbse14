@@ -16,6 +16,17 @@ class memo():
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
+    def __call__(self, *args, **kwargs):
+        for d in args:
+            if isinstance(d, dict):
+                self.__dict__.update(d)
+            elif isinstance(d, memo):
+                self.__dict__.update(d.__dict__)
+            else:
+                raise ValueError(str(d) + " is not a dictionary!")
+
+        self.__dict__.update(**kwargs)
+
     # from http://stackoverflow.com/a/15538391/3408454
     def to_JSON(self, indent=None):
         'adapted from from http://stackoverflow.com/a/15538391/3408454'
@@ -30,7 +41,7 @@ class memo():
             sep=sep,
             d = self.__dict__ if d is None else d)
 
-    def _to_str(self, depth, indent, d, sep):
+    def _to_str(self, depth, indent, sep, d):
         after = []
         reps = []
         rv = ''
@@ -52,7 +63,7 @@ class memo():
             rv += '{}:\n'.format(k)
             k = d[k]
             k = k if isinstance(k, dict) else k.__dict__
-            rv += self._to_str(depth=depth+1, indent=indent, d=k)
+            rv += self._to_str(depth=depth+1, indent=indent, sep=sep, d=k)
             rv += ' ' * depth * indent
             rv += '}'
             rv += '\n'
@@ -85,3 +96,5 @@ def random_index(x):
     if isinstance(x, dict):
         return random.choice(x.keys)
     raise ValueError('{} is not a list or dict'.format(x))
+
+The = memo(SimulatedAnnealer=memo(iterations=1000, p_mutation=1/3))
