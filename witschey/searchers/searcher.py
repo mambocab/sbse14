@@ -4,8 +4,6 @@ from witschey.base import memo, The
 
 from datetime import datetime
 
-print(The.to_str())
-
 class Searcher(object):
 
     def __new__(cls, *args, **kwargs):
