@@ -9,14 +9,7 @@ from witschey.base import memo, tuple_replace
 class MaxWalkSat(Searcher):
 
     def __init__(self, model, *args, **kw):
-        kw.setdefault('iterations', 1000)
-        self.p_mutation = kw.setdefault('p_mutation', 1/3)
-
-        super(MaxWalkSat, self).__init__(
-            model=model,
-            *args, **kw
-            )
-        self.spec(kw)
+        super(MaxWalkSat, self).__init__(model=model, *args, **kw)
 
     def local_search_inputs(self, bottom, top, n=10):
         chunk_length = (top - bottom) / n
