@@ -40,16 +40,16 @@ class MaxWalkSat(Searcher):
 
         report('{: .2}'.format(solution_energy) + ' ')
 
-        while evals < self.iterations:
+        while evals < self.spec.iterations:
 
             for j in range(20):
                 if solution_energy < 0.06:
                     report('%\n')
-                if evals > self.iterations:
+                if evals > self.spec.iterations:
                     break
 
                 dimension = random.randint(0, len(state) - 1)
-                if self.p_mutation > random.random():
+                if self.spec.p_mutation > random.random():
                     state = tuple_replace(state,
                         dimension, self.model.xs[dimension]())
 
