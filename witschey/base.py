@@ -97,4 +97,6 @@ def random_index(x):
         return random.choice(x.keys)
     raise ValueError('{} is not a list or dict'.format(x))
 
-The = memo(SimulatedAnnealer=memo(iterations=1000, p_mutation=1/3))
+The = memo()
+The(SimulatedAnnealer=memo(iterations=1000, p_mutation=1/3))
+The(MaxWalkSat=memo(iterations=1000, p_mutation=1/3))
