@@ -18,14 +18,14 @@ class Searcher(object):
         # if there are global options for this class in The
         if hasattr(The, name):
             # add them to the spec
-            o.spec(getattr(The, name))
+            future_self.spec(getattr(The, name))
 
         # then, add the kwargs to the constructor call to spec.
         # NB: this happens after adding options from The, so 
         #     call-specific options override the globals
-        o.spec(**kwargs)
+        future_self.spec(**kwargs)
 
-        return o
+        return future_self
 
     def __init__(self, model, *args, **kw):
         self.model = model
