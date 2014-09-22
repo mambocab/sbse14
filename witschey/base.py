@@ -16,17 +16,6 @@ class memo():
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
-    def __call__(self, *args, **kwargs):
-        for d in args:
-            if isinstance(d, dict):
-                self.__dict__.update(d)
-            elif isinstance(d, memo):
-                self.__dict__.update(d.__dict__)
-            else:
-                raise ValueError(str(d) + " is not a dictionary!")
-
-        self.__dict__.update(**kwargs)
-
     # from http://stackoverflow.com/a/15538391/3408454
     def to_JSON(self, indent=None):
         'adapted from from http://stackoverflow.com/a/15538391/3408454'
@@ -97,6 +86,6 @@ def random_index(x):
         return random.choice(x.keys)
     raise ValueError('{} is not a list or dict'.format(x))
 
-The = memo()
-The(SimulatedAnnealer=memo(iterations=1000, p_mutation=1/3))
-The(MaxWalkSat=memo(iterations=1000, p_mutation=1/3))
+The = memo(
+    SimulatedAnnealer=memo(iterations=1000, p_mutation=1/3)
+    MaxWalkSat=memo(iterations=1000, p_mutation=1/3))
