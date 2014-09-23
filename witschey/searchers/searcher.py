@@ -15,10 +15,11 @@ class Searcher(object):
         # and the initialization time
         d = dict(searcher=name, initialized=datetime.now())
 
-        # if there are global options for this class in The
-        if hasattr(The, name):
-            # add them to the dict
-            d.update(getattr(The, name).__dict__)
+        # if there are global options for this class or its bases in The
+        for k in [name] + [k.__name__ for k in cls.__bases__]:
+            if hasattr(The, k):
+                # add them to the dict
+                d.update(getattr(The, k).__dict__)
 
         # then, add the kwargs to the constructor call to the dict.
         # NB: this happens after adding options from The, so 
@@ -30,7 +31,5 @@ class Searcher(object):
 
         return future_self
 
-    def __init__(self, model, log_outputs=False, *args, **kw):
+    def __init__(self, model, *args, **kw):
         self.model = model
-        self.log_outputs = False
-
