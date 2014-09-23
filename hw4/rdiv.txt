@@ -1,5 +1,5 @@
 
-❯ python -m hw4.hw4
+$ python -m hw4.hw4
 
 rank ,         name ,    med   ,  iqr
 ----------------------------------------------------
