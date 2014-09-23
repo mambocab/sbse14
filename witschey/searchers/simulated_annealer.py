@@ -19,8 +19,7 @@ class SimulatedAnnealer(Searcher):
         init = self.model.random_input_vector()
         solution = init
         state = solution
-        solution_energy = self.model(solution)
-        energy_min = solution_energy
+        rv.best = self.model(solution)
 
 
         def p(old, new, temp):
@@ -43,7 +42,7 @@ class SimulatedAnnealer(Searcher):
                     rv, old, new, temp)
             return rv
 
-        report_append('{: .2}'.format(energy_min) + ' ')
+        report_append('{: .2}'.format(rv.best) + ' ')
 
         for k in range(self.spec.iterations):
             neighbor_candidate = self.model.random_input_vector()
@@ -51,13 +50,14 @@ class SimulatedAnnealer(Searcher):
                 if random.random() < self.spec.p_mutation else v
                 for i, v in enumerate(state))
 
-            solution_energy = self.model(solution)
+            rv.best = self.model(solution)
             neighbor_energy = self.model(neighbor)
             current_energy  = self.model(state)
 
-            if neighbor_energy < solution_energy:
+
+            if neighbor_energy < rv.best:
                 solution = neighbor
-                energy_min = solution_energy
+                rv.best = neighbor_energy
                 report_append('!')
 
             if neighbor_energy < current_energy:
@@ -76,6 +76,5 @@ class SimulatedAnnealer(Searcher):
             if k % 50 == 0 and k != 0:
                 report_append('\n' + '{: .2}'.format(energy_min) + ' ')
 
-        rv.best = solution_energy
         return rv
 
