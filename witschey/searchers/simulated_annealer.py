@@ -8,12 +8,7 @@ from witschey.base import memo
 
 class SimulatedAnnealer(Searcher):
     def __init__(self, model, *args, **kw):
-
-        super(SimulatedAnnealer, self).__init__(
-            model=model,
-            *args, **kw
-            )
-        self.spec.__dict__.update(kw)
+        super(SimulatedAnnealer, self).__init__(model=model, *args, **kw)
 
 
     def run(self, text_report=True):
