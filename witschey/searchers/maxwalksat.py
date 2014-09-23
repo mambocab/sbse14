@@ -36,8 +36,6 @@ class MaxWalkSat(Searcher):
         while evals < self.spec.iterations:
 
             for j in range(20):
-                if solution_energy < 0.06:
-                    report('%')
                 if evals > self.spec.iterations:
                     break
 
