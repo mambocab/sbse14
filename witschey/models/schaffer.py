@@ -7,9 +7,12 @@ from independent_variable import IndependentVariable as IV
 class Schaffer(Model):
     def __init__(self, ivs=1):
         ivs = tuple(IV(min=-10^5, max=10^5) for _ in xrange(ivs))
-        self.f1 = lambda xs: sum(x ** 2 for x in xs)
-        self.f2 = lambda xs: sum((x - 2) ** 2 for x in xs)
+        # we use def instead of lambdas so the functions keep their __name__s
+        def f1(xs):
+            return sum(x ** 2 for x in xs)
+        def f2(xs):
+            return sum((x - 2) ** 2 for x in xs)
 
         super(Schaffer, self).__init__(
-            independents=ivs,dependents=(self.f1, self.f2))
+            independents=ivs,dependents=(f1, f2))
 

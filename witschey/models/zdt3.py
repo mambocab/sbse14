@@ -14,11 +14,11 @@ class ZDT3(Model):
 
     def __init__(self, ivs=30):
 
-        self.g = lambda xs: 1 + 9 * sum(xs[1:]) / (len(xs) - 1)
-        g = self.g
+        def g(xs):
+            return 1 + 9 * sum(xs[1:]) / (len(xs) - 1)
 
-        self.f1 = lambda xs: xs[0]
-        f1 = self.f1
+        def f1(xs):
+            return xs[0]
 
         def f2(xs):
             gxs = g(xs)

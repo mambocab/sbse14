@@ -16,12 +16,8 @@ class Fonseca(Model):
             e = sum((x - (1 / memo_sqrt(i+1))) ** 2 for i, x in enumerate(xs))
             return 1 - math.exp(-e)
 
-        self.f1 = f1
-
         def f2(xs):
             e = sum((x + (1 / memo_sqrt(i+1))) ** 2 for i, x in enumerate(xs))
             return 1 - math.exp(-e)
-
-        self.f2 = f2
 
         super(Fonseca, self).__init__(independents=ivs, dependents=(f1, f2))

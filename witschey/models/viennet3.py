@@ -18,8 +18,6 @@ class Viennet3(Model):
             b = math.sin(x_1sq + x_2sq)
             return a + x_2sq + b
 
-        self.f1 = f1
-
         def f2(xs):
             x_1 = xs[0]
             x_2 = xs[1]
@@ -29,8 +27,6 @@ class Viennet3(Model):
 
             return a + b + 15
 
-        self.f2 = f2
-
         def f3(xs):
             x_1sq = xs[0] ** 2
             x_2sq = xs[1] ** 2
@@ -39,8 +35,6 @@ class Viennet3(Model):
             b = 1.1 * math.exp(-x_1sq - x_2sq)
 
             return a - b
-
-        self.f3 = f3
 
         ivs = (IV(min=-3, max=3), IV(min=-3, max=3))
 

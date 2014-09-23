@@ -20,12 +20,8 @@ class Kursawe(Model):
                 rv += -10 * math.exp(exponent)
             return rv
 
-        self.f1 = f1
-
         def f2(xs):
             f = lambda x: (math.fabs(x)**self.a) + (5 * math.sin(x)**self.b)
             return sum(f(x) for x in xs)
-
-        self.f2 = f2
 
         super(Kursawe, self).__init__(independents=ivs, dependents=(f1, f2))
