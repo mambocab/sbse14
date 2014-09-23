@@ -262,7 +262,7 @@ class NumberLog(Log):
             chops=[0.1, 0.3, 0.5, 0.7, 0.9],
             marks=["-", " ", " ", "-", " "],
             bar="|", star="*",
-            show=" %3.2f"):
+            show=" {: >6.2f}"):
         """The function _xtile_ takes a list of (possibly)
         unsorted numbers and presents them as a horizontal
         xtile chart (in ascii format). The default is a 
@@ -276,7 +276,7 @@ class NumberLog(Log):
 
         pos = lambda p: self._cache[int(len(self._cache) * p)]
         place = lambda x: min(width-1, int(width * float((x - lo))/(hi - lo)))
-        pretty = lambda xs: ', '.join([show % x for x in xs])
+        pretty = lambda xs: ','.join([show.format(x) for x in xs])
 
         what    = [pos(p)   for p in chops]
         where   = [place(n) for n in  what]
