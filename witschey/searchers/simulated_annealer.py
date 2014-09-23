@@ -2,9 +2,12 @@ from __future__ import division
 
 import random
 import math
+from collections import defaultdict
 
 from searcher import Searcher
 from witschey.base import memo
+from witschey.log import NumberLog
+
 
 class SimulatedAnnealer(Searcher):
     def __init__(self, model, *args, **kw):
@@ -12,6 +15,9 @@ class SimulatedAnnealer(Searcher):
 
     def run(self, text_report=True):
         rv = memo(report='')
+        if self.spec.log_eras:
+            rv.era_logs = {f.__name__: defaultdict(NumberLog)
+                for f in self.model.ys}
         def report_append(s):
             if text_report:
                 rv.report += s
@@ -73,8 +79,14 @@ class SimulatedAnnealer(Searcher):
                     report_append('?')
 
             report_append('.')
-            if k % 50 == 0 and k != 0:
-                report_append('\n' + '{: .2}'.format(energy_min) + ' ')
+            if self.spec.log_eras:
+                era = k // self.spec.era_length
+                for f, v in zip(self.model.ys, self.model(neighbor, vector=True)):
+                    rv.era_logs[f.__name__][era] += v
+
+
+            if k % self.spec.era_length == 0 and k != 0:
+                report_append('\n' + '{: .2}'.format(rv.best) + ' ')
 
         return rv
 
