@@ -30,6 +30,7 @@ class Searcher(object):
 
         return future_self
 
-    def __init__(self, model, *args, **kw):
+    def __init__(self, model, log_outputs=False, *args, **kw):
         self.model = model
+        self.log_outputs = False
 
