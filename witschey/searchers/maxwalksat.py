@@ -2,9 +2,11 @@ from __future__ import division
 
 import random
 import numpy as np
+from collections import defaultdict
 
 from searcher import Searcher
 from witschey.base import memo, tuple_replace
+from witschey.log import NumberLog
 
 class MaxWalkSat(Searcher):
 
@@ -20,6 +22,11 @@ class MaxWalkSat(Searcher):
 
     def run(self, text_report=True):
         rv = memo(report='')
+
+        if self.spec.log_eras:
+            rv.era_logs = {f.__name__: defaultdict(NumberLog)
+                for f in self.model.ys}
+
         def report(s):
             if text_report:
                 rv.report += s
@@ -54,7 +61,13 @@ class MaxWalkSat(Searcher):
                         report('.')
 
                     evals += 1
-                    if evals % 50 == 0:
+
+                    if self.spec.log_eras:
+                        era = evals // self.spec.era_length
+                        for f, v in zip(self.model.ys, self.model(state, vector=True)):
+                            rv.era_logs[f.__name__][era] += v
+
+                    if evals % self.spec.era_length == 0:
                         report('\n{: .2}'.format(solution_energy) + ' ')
 
                 else:
@@ -74,8 +87,14 @@ class MaxWalkSat(Searcher):
                         else:
                             report('.')
 
+                        if self.spec.log_eras:
+                            era = evals // self.spec.era_length
+                            for f, v in zip(self.model.ys, self.model(state, vector=True)):
+                                rv.era_logs[f.__name__][era] += v
+
+
                         evals += 1
-                        if evals % 50 == 0:
+                        if evals % self.spec.era_length == 0:
                             report('\n{: .2}'.format(solution_energy) + ' ')
 
         rv.best = solution_energy
