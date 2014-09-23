@@ -238,10 +238,10 @@ class NumberLog(Log):
         n = len(self._cache)
         center = n // 2
         if n % 2:
-            return i._cache[center]
+            return self._cache[center]
         center_next = center + 1
         center_next = max(0, min(center_next, n))
-        return (i._cache[center] + i._cache[center_next]) / 2
+        return (self._cache[center] + self._cache[center_next]) / 2
 
     def mean(self):
         n = len(self._cache)
