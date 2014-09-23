@@ -23,7 +23,7 @@ class ZDT3(Model):
         def f2(xs):
             gxs = g(xs)
             a = 1 - memo_sqrt(xs[0] / gxs) - (xs[0] / gxs)
-            a *= math.sin(10 * math.PI * xs[0])
+            a *= math.sin(10 * math.pi * xs[0])
             return gxs * a
 
         ivs = (IV(min=0, max=1) for _ in xrange(30))
