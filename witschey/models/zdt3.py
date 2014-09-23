@@ -3,9 +3,12 @@
 
 from __future__ import division
 
-from model import Model
-from witschey.base import memo_sqrt
 import math
+
+from model import Model
+from independent_variable import IndependentVariable as IV
+from witschey.base import memo_sqrt
+
 
 class ZDT3(Model):
 
