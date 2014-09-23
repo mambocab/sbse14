@@ -10,7 +10,6 @@ class SimulatedAnnealer(Searcher):
     def __init__(self, model, *args, **kw):
         super(SimulatedAnnealer, self).__init__(model=model, *args, **kw)
 
-
     def run(self, text_report=True):
         rv = memo(report='')
         def report_append(s):
