@@ -11,19 +11,22 @@ class Searcher(object):
         future_self = super(Searcher, cls).__new__(cls, *args, **kwargs)
 
         name = cls.__name__
-        # give our object a spec, initialized with searcher's name
+        # initialize a dict with searcher's name
         # and the initialization time
-        future_self.spec = memo(searcher=name, initialized=datetime.now())
+        d = dict(searcher=name, initialized=datetime.now())
 
         # if there are global options for this class in The
         if hasattr(The, name):
-            # add them to the spec
-            future_self.spec(getattr(The, name))
+            # add them to the dict
+            d.update(getattr(The, name).__dict__)
 
-        # then, add the kwargs to the constructor call to spec.
+        # then, add the kwargs to the constructor call to the dict.
         # NB: this happens after adding options from The, so 
         #     call-specific options override the globals
-        future_self.spec(**kwargs)
+        d.update(kwargs)
+
+        # set our spec with the contents of the dict
+        future_self.spec = memo(**d)
 
         return future_self
 
