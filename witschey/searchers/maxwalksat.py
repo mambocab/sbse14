@@ -80,5 +80,5 @@ class MaxWalkSat(Searcher):
                         if evals % 50 == 0:
                             report('\n{: .2}'.format(solution_energy) + ' ')
 
-            rv.best = solution_energy
-            return rv
+        rv.best = solution_energy
+        return rv
