@@ -29,6 +29,12 @@ def run(r=20, seed=10, text_report=False):
             if text_report:
                 print(out.report)
 
+            if hasattr(out, 'era_logs'):
+                for fname, logs in sorted(out.era_logs.iteritems()):
+                    print('<', fname)
+                    for era, log in logs.iteritems():
+                        print(era, log.xtile(width=20), sep='\t')
+
             print('Best: {: .4f}'.format(n.mean()))
             print('total time: {:.3f}s'.format(times.total()),
                 'mean time: {:.3f}s'.format(times.mean()), sep='\t')
