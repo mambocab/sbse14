@@ -10,10 +10,12 @@ from witschey.log import NumberLog
 
 def run(r=20, seed=10, text_report=False):
     print(datetime.now())
-    for klass in (Schaffer, Fonseca, Kursawe, ZDT1, ZDT3, Viennet3):
+    for klass in (Schaffer,):
+    # for klass in (Schaffer, Fonseca, Kursawe, ZDT1, ZDT3, Viennet3):
         xtiles = []
         print("\n", klass.__name__, sep='')
         print('-' * 50)
+        # for searcher in (SimulatedAnnealer,):
         for searcher in (SimulatedAnnealer, MaxWalkSat):
             random.seed(seed)
             n = NumberLog(max_size=None)
@@ -38,6 +40,7 @@ def run(r=20, seed=10, text_report=False):
             print('Best: {: .4f}'.format(n.mean()))
             print('total time: {:.3f}s'.format(times.total()),
                 'mean time: {:.3f}s'.format(times.mean()), sep='\t')
+
             print(n.xtile(width=30), sep='\n')
             print('\n')
         print('=' * 50 + '\n', '=' * 50, sep='')
