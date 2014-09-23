@@ -1,3 +1,5 @@
+from independent_variable import IndependentVariable
+
 from schaffer import Schaffer
 from kursawe import Kursawe
 from fonseca import Fonseca
