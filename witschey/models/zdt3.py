@@ -26,7 +26,7 @@ class ZDT3(Model):
             a *= math.sin(10 * math.pi * xs[0])
             return gxs * a
 
-        ivs = (IV(min=0, max=1) for _ in xrange(30))
+        ivs = tuple(IV(min=0, max=1) for _ in xrange(30))
 
         super(ZDT3, self).__init__(independents=ivs, dependents=(f1, f2, g))
 
