@@ -33,9 +33,16 @@ def run(r=20, seed=10, text_report=False):
 
             if hasattr(out, 'era_logs'):
                 for fname, logs in sorted(out.era_logs.iteritems()):
+                    print()
                     print('<', fname)
-                    for era, log in logs.iteritems():
-                        print(era, log.xtile(width=20), sep='\t')
+                    lo = min(logs.values(), key=lambda a: a.lo).lo
+                    hi = max(logs.values(), key=lambda a: a.hi).lo
+                    for era in range(max(logs.keys())):
+                        width = 20
+                        if era in logs:
+                            rep = logs[era].xtile(width=width, lo=lo, hi=hi)
+                        else: rep = 'x' * width
+                        print(era, rep, sep='\t')
 
             print('Best: {: .4f}'.format(n.mean()))
             print('total time: {:.3f}s'.format(times.total()),
