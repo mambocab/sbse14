@@ -65,6 +65,10 @@ class SimulatedAnnealer(Searcher):
                 solution = neighbor
                 rv.best = neighbor_energy
                 report_append('!')
+                if self.spec.log_eras:
+                    era = k // self.spec.era_length
+                    for f, v in zip(self.model.ys, self.model(neighbor, vector=True)):
+                        rv.era_logs[f.__name__][era] += v
 
             if neighbor_energy < current_energy:
                 state = neighbor
@@ -79,10 +83,6 @@ class SimulatedAnnealer(Searcher):
                     report_append('?')
 
             report_append('.')
-            if self.spec.log_eras:
-                era = k // self.spec.era_length
-                for f, v in zip(self.model.ys, self.model(neighbor, vector=True)):
-                    rv.era_logs[f.__name__][era] += v
 
 
             if k % self.spec.era_length == 0 and k != 0:
