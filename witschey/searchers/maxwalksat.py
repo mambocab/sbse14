@@ -23,13 +23,24 @@ class MaxWalkSat(Searcher):
     def run(self, text_report=True):
         rv = memo(report='')
 
-        if self.spec.log_eras:
+        log_eras = self.spec.log_eras or self.spec.terminate_early
+
+        if log_eras:
             rv.era_logs = {f.__name__: defaultdict(NumberLog)
                 for f in self.model.ys}
 
         def report(s):
             if text_report:
                 rv.report += s
+
+        def end_era(log_value):
+            report('\n{: .2}'.format(log_value) + ' ')
+
+        def log_era(evals, era_length, dependents_outputs):
+            era = evals // era_length
+            for f, v in dependents_outputs:
+                rv.era_logs[f.__name__][era] += v
+
 
         init = self.model.random_input_vector()
         solution = init
@@ -57,10 +68,9 @@ class MaxWalkSat(Searcher):
                         solution = state
                         solution_energy = current_energy
                         report('+')
-                        if self.spec.log_eras:
-                            era = evals // self.spec.era_length
-                            for f, v in zip(self.model.ys, self.model(state, vector=True)):
-                                rv.era_logs[f.__name__][era] += v
+                        if log_eras:
+                            log_era(evals, self.spec.era_length,
+                                zip(self.model.ys, self.model(state)))
                     else:
                         report('.')
 
@@ -68,7 +78,7 @@ class MaxWalkSat(Searcher):
 
 
                     if evals % self.spec.era_length == 0:
-                        report('\n{: .2}'.format(solution_energy) + ' ')
+                        end_era(solution_energy)
 
                 else:
                     for j in self.local_search_inputs(
@@ -84,16 +94,15 @@ class MaxWalkSat(Searcher):
                             solution = state
                             solution_energy = current_energy
                             report('|')
-                            if self.spec.log_eras:
-                                era = evals // self.spec.era_length
-                                for f, v in zip(self.model.ys, self.model(state, vector=True)):
-                                    rv.era_logs[f.__name__][era] += v
+                            if log_eras:
+                                log_era(evals, self.spec.era_length,
+                                    zip(self.model.ys, self.model(state)))
                         else:
                             report('.')
 
                         evals += 1
                         if evals % self.spec.era_length == 0:
-                            report('\n{: .2}'.format(solution_energy) + ' ')
+                            end_era(solution_energy)
 
         rv.best = solution_energy
         return rv
