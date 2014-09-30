@@ -33,3 +33,6 @@ class Searcher(object):
 
     def __init__(self, model, *args, **kw):
         self.model = model
+
+    def run(*args, **kwargs):
+        raise NotImplementedError()
