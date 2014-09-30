@@ -265,6 +265,12 @@ class NumberLog(Log):
     def total(self):
         return sum(self._cache)
 
+    def better(self, log2):
+        if not self._cache or not log2._cache: return False
+        if self.median() < log2.median(): return True
+        if self.iqr() < log2.iqr(): return True
+        return False
+
     @statistic
     def xtile(self, lo=0, hi=0.001,
             width=50,
