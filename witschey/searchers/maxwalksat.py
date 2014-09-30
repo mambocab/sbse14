@@ -51,10 +51,12 @@ class MaxWalkSat(Searcher):
 
         report('{: .2}'.format(solution_energy) + ' ')
 
+
         while evals < self.spec.iterations:
+            if self.terminate: break
 
             for j in range(20):
-                if evals > self.spec.iterations:
+                if evals > self.spec.iterations or self.terminate:
                     break
 
                 dimension = random.randint(0, len(state) - 1)
@@ -68,9 +70,6 @@ class MaxWalkSat(Searcher):
                         solution = state
                         solution_energy = current_energy
                         report('+')
-                        if log_eras:
-                            log_era(evals, self.spec.era_length,
-                                zip(self.model.ys, self.model(state)))
                     else:
                         report('.')
 
@@ -78,13 +77,15 @@ class MaxWalkSat(Searcher):
 
 
                     if evals % self.spec.era_length == 0:
-                        end_era(solution_energy)
+                        end_era(evals, self.spec.era_length, solution_energy)
 
                 else:
                     for j in self.local_search_inputs(
                         self.model.xs[dimension].min,
                         self.model.xs[dimension].max
                         ):
+                        if self.terminate: break
+
                         state = tuple_replace(state,
                             dimension, self.model.xs[dimension]())
 
@@ -94,15 +95,15 @@ class MaxWalkSat(Searcher):
                             solution = state
                             solution_energy = current_energy
                             report('|')
-                            if log_eras:
-                                log_era(evals, self.spec.era_length,
-                                    zip(self.model.ys, self.model(state)))
                         else:
                             report('.')
 
                         evals += 1
                         if evals % self.spec.era_length == 0:
-                            end_era(solution_energy)
+                            end_era(evals, self.spec.era_length, solution_energy)
+                if log_eras:
+                    log_era(evals, self.spec.era_length,
+                        zip(self.model.ys, self.model(solution)))
 
         rv.best = solution_energy
         return rv
