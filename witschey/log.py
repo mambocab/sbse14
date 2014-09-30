@@ -112,6 +112,10 @@ class Log(object):
     def __iadd__(self, x):
         if x is None:
             return x
+
+        if isinstance(x, Log):
+            map(self.__iadd__, x._cache)
+
         self._n += 1
         changed = False
 
@@ -132,6 +136,10 @@ class Log(object):
             self._change(x)
 
         return self
+
+    def __add__(self, x):
+        inits = self._cache + x._cache
+        return NumberLog(inits=inits, label='generated via __add__', max_size=None)
 
     def any(self):
         return random.choice(self._cache)
