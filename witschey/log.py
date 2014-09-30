@@ -259,7 +259,6 @@ class NumberLog(Log):
 
     @statistic
     def iqr(self):
-        self.sort()
         n = len(self._cache)
         return self._cache[int(n*.75)] - self._cache[int(n*.5)]
 
