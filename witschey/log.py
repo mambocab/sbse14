@@ -286,8 +286,11 @@ class NumberLog(Log):
         changed- see the optional flags of the function).
         """
 
-        lo = min(lo,self._cache[0])
-        hi = max(hi,self._cache[-1])
+        lo = min(lo, self._cache[0])
+        hi = max(hi, self._cache[-1])
+        if hi == lo:
+            hi = hi + .001 # ugh
+
 
         pos = lambda p: self._cache[int(len(self._cache) * p)]
         place = lambda x: min(width-1, int(width * float((x - lo))/(hi - lo)))
