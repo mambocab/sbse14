@@ -48,8 +48,10 @@ class SimulatedAnnealer(Searcher):
             return rv
 
         report_append('{: .2}'.format(rv.best) + ' ')
+        self.lives = 4
 
         for k in range(self.spec.iterations):
+            if self.lives <= 0: break
             neighbor_candidate = self.model.random_input_vector()
             neighbor = tuple(neighbor_candidate[i]
                 if random.random() < self.spec.p_mutation else v
@@ -64,10 +66,6 @@ class SimulatedAnnealer(Searcher):
                 solution = neighbor
                 rv.best = neighbor_energy
                 report_append('!')
-                if self.spec.log_eras:
-                    era = k // self.spec.era_length
-                    for f, v in zip(self.model.ys, self.model(neighbor)):
-                        rv.era_logs[f.__name__][era] += v
 
             if neighbor_energy < current_energy:
                 state = neighbor
@@ -83,9 +81,23 @@ class SimulatedAnnealer(Searcher):
 
             report_append('.')
 
+            if self.spec.log_eras or self.spec.terminate_early:
+                era = k // self.spec.era_length
+                for f, v in zip(self.model.ys, self.model(solution)):
+                    rv.era_logs[f.__name__][era] += v
 
             if k % self.spec.era_length == 0 and k != 0:
                 report_append('\n' + '{: .2}'.format(rv.best) + ' ')
+
+                self.lives -= 1
+                eras = k // self.spec.era_length
+
+                for logs in rv.era_logs.values():
+                    if eras not in logs: break
+                    if len(logs.keys()) < 2: break
+
+                    prev_log = logs[logs.keys().index(eras) - 1]
+                    if logs[eras].better(prev_log): self.lives += 1
 
         return rv
 
