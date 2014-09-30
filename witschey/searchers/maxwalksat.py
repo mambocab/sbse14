@@ -24,6 +24,7 @@ class MaxWalkSat(Searcher):
         rv = memo(report='')
 
         log_eras = self.spec.log_eras or self.spec.terminate_early
+        self.lives = 4
 
         if log_eras:
             rv.era_logs = {f.__name__: defaultdict(NumberLog)
@@ -33,8 +34,23 @@ class MaxWalkSat(Searcher):
             if text_report:
                 rv.report += s
 
-        def end_era(log_value):
+        self.terminate = False
+        def end_era(evals, era_length, log_value):
             report('\n{: .2}'.format(log_value) + ' ')
+
+            self.lives -= 1
+            eras = evals // era_length
+
+
+            for logs in rv.era_logs.values():
+                if eras not in logs: break
+                if len(logs.keys()) < 2: break
+
+                prev_log = logs[logs.keys().index(eras) - 1]
+                if logs[eras].better(prev_log): self.lives += 1
+
+            if self.lives <= 0: self.terminate = True
+
 
         def log_era(evals, era_length, dependents_outputs):
             era = evals // era_length
