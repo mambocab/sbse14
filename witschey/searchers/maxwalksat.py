@@ -57,15 +57,15 @@ class MaxWalkSat(Searcher):
                         solution = state
                         solution_energy = current_energy
                         report('+')
+                        if self.spec.log_eras:
+                            era = evals // self.spec.era_length
+                            for f, v in zip(self.model.ys, self.model(state, vector=True)):
+                                rv.era_logs[f.__name__][era] += v
                     else:
                         report('.')
 
                     evals += 1
 
-                    if self.spec.log_eras:
-                        era = evals // self.spec.era_length
-                        for f, v in zip(self.model.ys, self.model(state, vector=True)):
-                            rv.era_logs[f.__name__][era] += v
 
                     if evals % self.spec.era_length == 0:
                         report('\n{: .2}'.format(solution_energy) + ' ')
@@ -84,14 +84,12 @@ class MaxWalkSat(Searcher):
                             solution = state
                             solution_energy = current_energy
                             report('|')
+                            if self.spec.log_eras:
+                                era = evals // self.spec.era_length
+                                for f, v in zip(self.model.ys, self.model(state, vector=True)):
+                                    rv.era_logs[f.__name__][era] += v
                         else:
                             report('.')
-
-                        if self.spec.log_eras:
-                            era = evals // self.spec.era_length
-                            for f, v in zip(self.model.ys, self.model(state, vector=True)):
-                                rv.era_logs[f.__name__][era] += v
-
 
                         evals += 1
                         if evals % self.spec.era_length == 0:
