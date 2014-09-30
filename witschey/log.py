@@ -243,13 +243,15 @@ class NumberLog(Log):
 
     @statistic
     def median(self):
+        # implementation from http://stackoverflow.com/a/10482734/3408454
         n = len(self._cache)
-        center = n // 2
+
         if n % 2:
-            return self._cache[center]
-        center_next = center + 1
-        center_next = max(0, min(center_next, n))
-        return (self._cache[center] + self._cache[center_next]) / 2
+            return self._cache[n // 2]
+
+        return (self._cache[n // 2] + self._cache[n // 2 - 1]) / 2
+
+
 
     def mean(self):
         n = len(self._cache)
