@@ -24,7 +24,7 @@ class Model(object):
     def random_input_vector(self):
         return tuple(x() for x in self.xs)
 
-    def __call__(self, v, vector=False, norm=False):
+    def __call__(self, v, norm=False):
         energy_vector = tuple(y(v) for y in self.ys)
         energy_total = sum(energy_vector)
 
@@ -42,10 +42,7 @@ class Model(object):
                 raise ValueError(energy_errmsg)
             self.energy_max = energy_total
 
-        if vector:
-            return energy_vector
-        if norm:
-            return self.normalize(energy_total)
+        return energy_vector
 
-        return energy_total
-
+    def energy(self, energy_vector):
+        return sum(energy_vector)

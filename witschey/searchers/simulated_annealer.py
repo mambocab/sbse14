@@ -56,9 +56,9 @@ class SimulatedAnnealer(Searcher):
                 if random.random() < self.spec.p_mutation else v
                 for i, v in enumerate(state))
 
-            rv.best = self.model(solution)
-            neighbor_energy = self.model(neighbor)
-            current_energy  = self.model(state)
+            rv.best = self.model.energy(self.model(solution))
+            neighbor_energy = self.model.energy(self.model(neighbor))
+            current_energy  = self.model.energy(self.model(state))
 
 
             if neighbor_energy < rv.best:
@@ -67,7 +67,7 @@ class SimulatedAnnealer(Searcher):
                 report_append('!')
                 if self.spec.log_eras:
                     era = k // self.spec.era_length
-                    for f, v in zip(self.model.ys, self.model(neighbor, vector=True)):
+                    for f, v in zip(self.model.ys, self.model(neighbor)):
                         rv.era_logs[f.__name__][era] += v
 
             if neighbor_energy < current_energy:

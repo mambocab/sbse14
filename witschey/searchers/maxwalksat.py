@@ -34,7 +34,7 @@ class MaxWalkSat(Searcher):
         init = self.model.random_input_vector()
         solution = init
         state = solution
-        current_energy = self.model(state)
+        current_energy = self.model.energy(self.model(state))
         solution_energy = current_energy
         evals = 0
 
@@ -51,7 +51,7 @@ class MaxWalkSat(Searcher):
                     state = tuple_replace(state,
                         dimension, self.model.xs[dimension]())
 
-                    current_energy = self.model(state)
+                    current_energy = self.model.energy(self.model(state))
 
                     if current_energy < solution_energy:
                         solution = state
