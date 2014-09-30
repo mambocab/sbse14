@@ -25,8 +25,7 @@ class SimulatedAnnealer(Searcher):
         init = self.model.random_input_vector()
         solution = init
         state = solution
-        rv.best = self.model(solution)
-
+        rv.best = self.model.energy(self.model(solution))
 
         def p(old, new, temp):
             """
