@@ -16,13 +16,6 @@ class memo():
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
-    # from http://stackoverflow.com/a/15538391/3408454
-    def to_JSON(self, indent=None):
-        'adapted from from http://stackoverflow.com/a/15538391/3408454'
-
-        d = lambda o: o.__dict__
-        return json.dumps(self, default=d, sort_keys=True, indent=indent)
-
     def to_str(self, depth=0, indent=4, sep='\u2192', d=None):
         return self._to_str(
             depth=depth,
