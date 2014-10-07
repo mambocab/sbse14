@@ -1,0 +1,1521 @@
+%!PS-Adobe-3.0
+%%Title: outs.txt
+%%For: Jim Witschey
+%%Creator: a2ps version 4.14
+%%CreationDate: Mon Oct  6 20:14:24 2014
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 13
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 20.000000 def
+/fnfs 15 def
+/bfs 9.810126 def
+/cw 5.886076 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 126.400000 mul
+def
+/ph
+   516.993656 th add
+def
+/pmw 0 def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+] def
+/y [
+  pmh ph add 0 mul ph add
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 5 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (############# Part 3 #############) p n
+0 T (2014-10-06 20:02:44.540058) N
+0 T () N
+0 T (Schaffer) N
+(5) # (--------------------------------------------------) N
+0 T (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.540153, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: False) N
+0 T () N
+0 T ( 2.1e+02 ?..!+..!+....!+.!+..?.!+..?.?.....?.+....!+.......?...+.....?..?.+.?.+......) N
+(10) # ( 2.2 ..?.+...+......?..+....?...+..........?.....?......+....+..?.+.) N
+0 T ( 2.2 .?...+.?...+....?.+......?.?....+.+.....?..+.?..+......+.......?..) N
+0 T ( 2.2 ........+...?.?..+..+.....?..?.+...................?.......) N
+0 T ( 2.2 +.....?....?.+.....+..?.+......?..+..+.?.......+..?.+.+....+...+...) N
+0 T ( 2.2 ) N
+(15) # () N
+0 T (Best:  2.1666) N
+0 T (total time: 0.012s) S 24 T (mean time: 0.012s) N
+0 T (               |             *,   2.17,   2.17,   2.17,   2.17,   2.17) N
+0 T () N
+(20) # () N
+0 T (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.552281, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: False) N
+0 T () N
+0 T ( 2.1e+02 ..........++.....................+................) N
+(25) # ( 2.0 ..................................................) N
+0 T ( 2.0 ..................................................) N
+0 T ( 2.0 ..................................................) N
+0 T ( 2.0 ) N
+0 T () N
+(30) # (Best:  2.0079) N
+0 T (total time: 0.005s) S 24 T (mean time: 0.005s) N
+0 T (               |             *,   2.01,   2.01,   2.01,   2.01,   2.01) N
+0 T () N
+0 T () N
+(35) # (==================================================) N
+0 T (==================================================) N
+0 T () N
+0 T (Fonseca) N
+0 T (--------------------------------------------------) N
+(40) # (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.556945, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: False) N
+0 T () N
+0 T ( 2.0 ?.!+.?.?.+..?..+...!+.?..?....+..+.?..?..+.?.+.......+...?...+.?.?.+..+.+.....) N
+0 T ( 1.6 !+...?.?...+....+.+..+..?.+..+..+.?..+.+..?.+.?.!+..?..?..........?.+.+.+..+.) N
+(45) # ( 1.0 ..?...+..+.........?.+...+...+....?..+.+..?..+...+.?..+......+..+..) N
+0 T ( 1.0 ...+..?..+.....+.?.+.?.....+.+.+.+.+.?.?......+...+..........?.+....) N
+0 T ( 1.0 ..+.......+......+.?.+..+...+.......+....?...?....+....+.....?.) N
+0 T ( 1.0 +.?........+..?....+.?..+.+..?.+.?....+.......+................) N
+0 T ( 1.0 ) N
+("csc710sbse: hw4: Witschey") (Page 1/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (1/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(50) # () p n
+0 T (Best:  1.0313) N
+0 T (total time: 0.019s) S 24 T (mean time: 0.019s) N
+0 T (               |             *,   1.03,   1.03,   1.03,   1.03,   1.03) N
+0 T () N
+(55) # () N
+0 T (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.576150, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: False) N
+0 T () N
+0 T ( 2.0 +....................+............................) N
+(60) # ( 1.9 ..................................................) N
+0 T ( 1.9 ..............+...................................) N
+0 T ( 1.9 ..................................................) N
+0 T ( 1.9 ) N
+0 T () N
+(65) # (Best:  1.8788) N
+0 T (total time: 0.006s) S 24 T (mean time: 0.006s) N
+0 T (               |             *,   1.88,   1.88,   1.88,   1.88,   1.88) N
+0 T () N
+0 T () N
+(70) # (==================================================) N
+0 T (==================================================) N
+0 T () N
+0 T (Kursawe) N
+0 T (--------------------------------------------------) N
+(75) # (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.582077, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: False) N
+0 T () N
+0 T ( 2.3 ?.!+.!+...!+.!+.?...?.+.?........+.+..+...?.!+.!+.?.!+..?.?..+.?.+.?..+.+.+..?..+.?...?.) N
+0 T (-1.1e+01 .+..?.?.+..?.?.+...+.+..+..?.+..+..+.?..+.?..!+..?...?.?..+......+...?..+..+.) N
+(80) # (-1.3e+01 ..+..?..+..?..?.+.....?...+..+....?.?...+...+...?.+.?..?..+.?.+.....+..) N
+0 T (-1.3e+01 ....?.?.+.+.+.+...+.!+.?.?.+..?...?.+...?....+..?.+.?........+.?.+.......) N
+0 T (-1.3e+01 +..?.?.+..?.+.+....?....+.?..+...+...?.....?.+.+...?.+.+.........?..+..) N
+0 T (-1.3e+01 ?.?.+....+.?.+.......+.....+..+..?..+.......?..+..+......?.+.+..?...) N
+0 T (-1.3e+01 ..+..............+.?....+..?...+..?.....+...+.?.+.+.+.+....+...?.+.) N
+(85) # (-1.3e+01 ....?.+.+..+...?..+.+.+......+..?...?....+...+...!+...?..+...+..+....) N
+0 T (-1.4e+01 .....?..+..?...+...?.....?.+....+.+..+................+.....?.) N
+0 T (-1.4e+01 .+.?....+............?.?..?.+.+.......?......+.+..+....?.+..+....) N
+0 T (-1.4e+01 .....+....?.+...?.+.+.?.+...?.+..+....+..?.?..?.+..+...?.+..?.?..+......) N
+0 T (-1.4e+01 ) N
+(90) # () N
+0 T (Best: -13.5806) N
+0 T (total time: 0.034s) S 24 T (mean time: 0.034s) N
+0 T (*              |              , -13.58, -13.58, -13.58, -13.58, -13.58) N
+0 T () N
+(95) # () N
+0 T (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.657892, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: False) N
+0 T () N
+("csc710sbse: hw4: Witschey") (Page 2/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (2/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T ( 2.3 +.................................................) p n
+(100) # (-1.3 ................................+.................) N
+0 T (-2.4 ............................+.....................) N
+0 T (-2.7 ..................................................) N
+0 T (-2.7 ) N
+0 T () N
+(105) # (Best: -2.6944) N
+0 T (total time: 0.006s) S 24 T (mean time: 0.006s) N
+0 T (*              |              ,  -2.69,  -2.69,  -2.69,  -2.69,  -2.69) N
+0 T () N
+0 T () N
+(110) # (==================================================) N
+0 T (==================================================) N
+0 T () N
+0 T (ZDT1) N
+0 T (--------------------------------------------------) N
+(115) # (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.663673, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: False) N
+0 T () N
+0 T ( 9.6 !+.?.?.?.!+.!+.!+.?.?.?.?.+.?.+.?.?.+.+.?.+.?.?.?.+.+.+.?.+.?.?.+.?.+.+.?..?.?.+.?.+..+.?.+...?.+.+.+.) N
+0 T ( 7.6 +.?.?.?.?.?.+.?.?.?.?..+.+.+.?.+.?.+.+.+.?.?.?.+.?..?.+.?.+.+.+.?.+.+.?.?.+.+.?...+..?..+.?..) N
+(120) # ( 7.6 +.+.?.+.+..?.?.+.+.?.+...?.+...+..?.+.+.+...?.+.?.+.+.+..!+.?.....+.!+..?..?.+....+.) N
+0 T ( 7.4 +.?..+.?.?.+.+.+.+..+..?.?.+.?..+.+.+...?.+...+.?....+.+..+..?.?.+.+...?...?.?.+.?.) N
+0 T ( 7.4 +.+.?..+.+.+.?.+.?.+.+.+..?..+....+..+.!+....?.+....?...?...+.+.?.?.+...?.+.+...) N
+0 T ( 7.2 .+.?.+..+.?.+.......?..?.?.+.?..+.?.+.?.?.+.+.+.+.?.+.+.+.+.+.....+...?.+.+..?..+.) N
+0 T ( 7.2 .+..+.?.+.+.?.?.+.+...+..?..+.?.+..+.?.+.+..+...+..?..?....?.+.+.!+....?......) N
+(125) # ( 6.6 .?....+.......?..+.+.?.+..+.?...+.?..+.+...+...+.?......?.?.+..+...+...) N
+0 T ( 6.6 .?......+.+.+.+....?..+...+..?..+...+......+...?..+..?.+.?.+..?.+.?.+.+.+.) N
+0 T ( 6.6 +..+....+..?...+...+.+...?.?....?.?.+.+....?..+....+..+.......?....+.) N
+0 T ( 6.6 ) N
+0 T () N
+(130) # (Best:  6.6039) N
+0 T (total time: 0.049s) S 24 T (mean time: 0.049s) N
+0 T (               |             *,   6.60,   6.60,   6.60,   6.60,   6.60) N
+0 T () N
+0 T () N
+(135) # (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.713266, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: False) N
+0 T () N
+0 T ( 9.6 +...............................+...........++....) N
+0 T ( 8.7 ..................................................) N
+(140) # ( 8.7 ..................................................) N
+0 T ( 8.7 ..................................................) N
+0 T ( 8.7 ) N
+0 T () N
+0 T (Best:  8.7068) N
+(145) # (total time: 0.005s) S 24 T (mean time: 0.005s) N
+0 T (               |             *,   8.71,   8.71,   8.71,   8.71,   8.71) N
+0 T () N
+0 T () N
+("csc710sbse: hw4: Witschey") (Page 3/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (3/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (4) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (==================================================) p n
+(150) # (==================================================) N
+0 T () N
+0 T (ZDT3) N
+0 T (--------------------------------------------------) N
+0 T (SimulatedAnnealer) N
+(155) # (era_length: 50, initialized: 2014-10-06 20:02:44.718164, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: False) N
+0 T () N
+0 T ( 1.6 ?.?.+.?.+.?.?.+.?.?.?.+.+.+..+.+.+.?.+..+.?.+.?.+.?.+..?.+.?.+.!+..?.+.?.+..+.+.+.+..+.?.+.+.+..) N
+0 T ( 1.1 .?.+..+.?.+.+...?.?.+..?.+.+.+.+.+.?..?.?.+.+.+.?.?.?.+..+.?..+.+..+.+..?.+.+.?.+.?.?..?.) N
+0 T ( 1.1 +..?.+..?.+..+.?..+..?.+...+.+.?..?.?.?.?.+.+...?.+.+..+.?.+.+..+...+.?.+...+.?..?.) N
+(160) # ( 1.1 +.?.+..?..+.+.+.+.+.?.+.?..+.+.+.+.+.+.?.+...+.+..?...+.?.?.?.+..+.+..?.+..?.+.+.+..+..) N
+0 T ( 1.1 +.?..+.?...+.+.?.+.+....?.?....?....?....+..?.+..+.+.+.?...+...+..?.+.+.?.+.?.) N
+0 T ( 1.1 +.+..+.+.?.+.+....+...?.+..+.+.+.+.?...?..+..+.+.+.+.+...+.?.?..?.+.+..+.+.+.?.+.+.+.) N
+0 T ( 1.1 .?.+.+..+.+.?.?.+...?.+.?.+..+..+..+.+.?.+.+.+...+....+.+...+..?.?.+.?..+.+.+....) N
+0 T ( 1.1 ) N
+(165) # () N
+0 T (Best:  1.1469) N
+0 T (total time: 0.036s) S 24 T (mean time: 0.036s) N
+0 T (               |             *,   1.15,   1.15,   1.15,   1.15,   1.15) N
+0 T () N
+(170) # () N
+0 T (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.754609, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: False) N
+0 T () N
+0 T ( 1.6 +...............................+...........++....) N
+(175) # ( 1.5 ..................................................) N
+0 T ( 1.5 ..................................................) N
+0 T ( 1.5 ..................................................) N
+0 T ( 1.5 ) N
+0 T () N
+(180) # (Best:  1.5060) N
+0 T (total time: 0.006s) S 24 T (mean time: 0.006s) N
+0 T (               |             *,   1.51,   1.51,   1.51,   1.51,   1.51) N
+0 T () N
+0 T () N
+(185) # (==================================================) N
+0 T (==================================================) N
+0 T () N
+0 T (Viennet3) N
+0 T (--------------------------------------------------) N
+(190) # (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.806509, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: False) N
+0 T () N
+0 T ( 2.8e+01 ?.!+.!+...?.?..?...+...!+....!+..?...?.?.?..+.?.+.?.+..?.+...?.?..+.?.?.+..+.+...+..) N
+0 T ( 1.6e+01 ....?.+.+.+.+.+...+..?.+..?.+.+.?..+.?......+...?..+.+...?.+.?..?..+..+.+..+.) N
+(195) # ( 1.6e+01 ..?.....+...?.+.....+.?..+..+...+..+.?.?..+.+.?.+.?....+.?..+...+.+.....) N
+0 T ( 1.6e+01 .+....+...?.....+..+.?..+.....+......+...?.+...+.+......+...?.+...) N
+0 T ( 1.6e+01 ?...+.......+..?....+..+....?..+..+.....+...?.+..........+...+..) N
+("csc710sbse: hw4: Witschey") (Page 4/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (4/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T ( 1.6e+01 ..........?.+......?..+.....?..+..+..+......+.?.+......?...+...) p n
+0 T ( 1.6e+01 .+......?.+..+...?...+.+..+.+...?.+..+.+..?....+.+...+...?.....+..+...) N
+(200) # ( 1.6e+01 ) N
+0 T () N
+0 T (Best:  16.0571) N
+0 T (total time: 0.028s) S 24 T (mean time: 0.028s) N
+0 T (               |             *,  16.06,  16.06,  16.06,  16.06,  16.06) N
+(205) # () N
+0 T () N
+0 T (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:44.836958, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: False) N
+0 T () N
+(210) # ( 2.8e+01 +.................................................) N
+0 T ( 1.7e+01 ..................................................) N
+0 T ( 1.7e+01 ..................................................) N
+0 T ( 1.7e+01 ..................................................) N
+0 T ( 1.7e+01 ) N
+(215) # () N
+0 T (Best:  17.4286) N
+0 T (total time: 0.004s) S 24 T (mean time: 0.004s) N
+0 T (               |             *,  17.43,  17.43,  17.43,  17.43,  17.43) N
+0 T () N
+(220) # () N
+0 T (==================================================) N
+0 T (==================================================) N
+0 T (############# Part 5 #############) N
+0 T (2014-10-06 20:02:44.841486) N
+(225) # () N
+0 T (Schaffer) N
+0 T (--------------------------------------------------) N
+0 T (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:45.359971, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: True) N
+(230) # () N
+0 T ( 2.3e+01 ?....?.+......?.+....?..?...!+.?....+.?...?.+.?.+.!+....?....?.....?.+...) N
+0 T ( 2.7 ............?.......+.....+......+.....?.?...+......+.?..+..) N
+0 T ( 2.7 ..?....+...+....?..+.+..!+.............?..?.........+.+....+.?..) N
+0 T ( 2.0 ...+.?....+.......?....?...+.+...?.+......+...........?..+.?..+.) N
+(235) # ( 2.0 ?..+.........+...?..+...?.+........!+.............?.....+....) N
+0 T ( 2.0 .?..+.....+.?.........+.?.+...+...+...?..+........+......+..?..+.) N
+0 T ( 2.0 .?.?..+...+.+.....+...?.......?...?......+.?.....+..?......+.?.+..) N
+0 T ( 2.0 .....?.......+....?...+........+.......?.?..+..?.....+...+..+.) N
+0 T ( 2.0 ?......+.?.....+........+...?.?........+.+.................) N
+(240) # ( 2.0 ) N
+0 T () N
+0 T (Best:  2.0504) N
+0 T (total time: 0.533s) S 24 T (mean time: 0.018s) N
+0 T (               |         *-   ,   2.00,   2.00,   2.01,   2.04,   2.17) N
+(245) # () N
+0 T () N
+0 T (MaxWalkSat) N
+("csc710sbse: hw4: Witschey") (Page 5/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (5/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (6) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (era_length: 50, initialized: 2014-10-06 20:02:45.490455, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) p n
+0 T (earcher: MaxWalkSat, terminate_early: True) N
+0 T () N
+(250) # ( 2.8e+01 ..................................................) N
+0 T ( 2.8e+01 ..................................................) N
+0 T ( 2.8e+01 ...................................++..........+..) N
+0 T ( 2.1 ..................................................) N
+0 T ( 2.1 ) N
+(255) # () N
+0 T (Best:  9.3754) N
+0 T (total time: 0.112s) S 24 T (mean time: 0.004s) N
+0 T (  *   -------- |              ,   2.01,   2.22,   4.32,  10.55,  23.34) N
+0 T () N
+(260) # () N
+0 T (==================================================) N
+0 T (==================================================) N
+0 T () N
+0 T (Fonseca) N
+(265) # (--------------------------------------------------) N
+0 T (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:46.314736, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: True) N
+0 T () N
+0 T ( 2.0 !+...!+.?.!+.?......+.+.?.+....+....+...!+.!+.?..?...+..?..+..!+.?.+.?..+.?..+.!+.?.+.) N
+(270) # ( 1.2 +.?...?.+..+..?...+.....+....+..?.?..+...?.....+..?......+..?.+.+.?...) N
+0 T ( 1.2 !+.?.?.+.?....+...+.+.+.+..?.+.+..?....?..+.+.?.+.?...+.?.+...............) N
+0 T ( 1.1 ..+..+......?.+.?.+.+....+.+.?....+...+.......+....+...?.+..?......) N
+0 T ( 1.1 ...+.?.+.+.........?..+..?.......+......?.+..+..+.?..+.+.....+..?..) N
+0 T ( 1.1 +..?....+..?.+.?.+.......+....?..+.?.+....?..+.....+..+..?...+......) N
+(275) # ( 1.1 ) N
+0 T () N
+0 T (Best:  1.0431) N
+0 T (total time: 0.828s) S 24 T (mean time: 0.028s) N
+0 T (               |         *    ,   1.00,   1.02,   1.03,   1.05,   1.10) N
+(280) # () N
+0 T () N
+0 T (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:46.538240, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: True) N
+0 T () N
+(285) # ( 2.0 ....................+.............................) N
+0 T ( 2.0 ..............+...............................+...) N
+0 T ( 1.1 ..................................................) N
+0 T ( 1.1 ..................................................) N
+0 T ( 1.1 ) N
+(290) # () N
+0 T (Best:  1.4332) N
+0 T (total time: 0.168s) S 24 T (mean time: 0.006s) N
+0 T (               |-- *    ----- ,   1.08,   1.21,   1.33,   1.62,   1.95) N
+0 T () N
+(295) # () N
+0 T (==================================================) N
+("csc710sbse: hw4: Witschey") (Page 6/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (6/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (==================================================) p n
+0 T () N
+0 T (Kursawe) N
+(300) # (--------------------------------------------------) N
+0 T (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:47.297577, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: True) N
+0 T () N
+0 T ( 0.64 ?.!+.!+..?...+....?.?.?....?.+.!+.?.?....?..?..+...?.+.?..+.+.?.+....+..?.+.+.?.?..) N
+(305) # (-8.5 +.?.+....?..+....?..?....+..?.+..+......+....?.+.+.?..+..?..+.+.....+..) N
+0 T (-8.5 ?....+..?...+.?.+.+..?...?.+...+..!+.?..?.?...+.?.+.......+.?.?...+.....+.) N
+0 T (-9.4 .+......?...+...+...+..+.?.....+....+..+.+....?....?.+.?.....+...?.) N
+0 T (-9.4 +.+..+.........?..+..?..+.+..?.!+.?..+.?...+....+..+.?.+....+.?.+.+..?..+..) N
+0 T (-1.2e+01 ?..+..?.?....?...+..........?...+...+..+..+.?.?..+..+....?..?...+.+.+.) N
+(310) # (-1.2e+01 .+.?..?.+...+.+.+...?.+..?.+.+......?.+.+.?.+.+.?......?.+..?.?.....+.+...?.) N
+0 T (-1.2e+01 .+..?.+.....?.+.+.+.+.......+....?.?.+.......+.?..+.?..+....+.......) N
+0 T (-1.2e+01 ) N
+0 T () N
+0 T (Best: -12.6202) N
+(315) # (total time: 0.774s) S 24 T (mean time: 0.026s) N
+0 T (  *--          |              , -13.58, -13.31, -12.55, -12.26, -11.27) N
+0 T () N
+0 T () N
+0 T (MaxWalkSat) N
+(320) # (era_length: 50, initialized: 2014-10-06 20:02:47.475659, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: True) N
+0 T () N
+0 T ( 0.74 ..................................................) N
+0 T ( 0.74 ............+++...................................) N
+0 T (-1.2e+01 ..................................................) N
+(325) # (-1.2e+01 ..................................................) N
+0 T (-1.2e+01 ) N
+0 T () N
+0 T (Best: -8.1993) N
+0 T (total time: 0.156s) S 24 T (mean time: 0.005s) N
+(330) # (   ----    *   | ------       , -11.94, -10.25,  -8.49,  -5.72,  -3.07) N
+0 T () N
+0 T () N
+0 T (==================================================) N
+0 T (==================================================) N
+(335) # () N
+0 T (ZDT1) N
+0 T (--------------------------------------------------) N
+0 T (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:49.258319, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: True) N
+(340) # () N
+0 T ( 9.3 !+.?.!+.?.!+.?.+.+.!+.?.?.?.?.?.+.+.+.+.+.+.?.+.?.+.?.?.+.?.+.?.?.?.+.+.?..+.?.+.?.?.+.?.+.?.+.+.?.+.?.?.) N
+0 T ( 8.2 ?.+.?.+..+.?.?.+.?.?.+.+.+.?.+.+...?.+.+.!+.!+.?.+.?.+.+.+.?.?.+...+..?.+.?.?.+.+.+.?.+.?.+.+.?.) N
+0 T ( 7.5 ?.+.+.?..+.+.?.?.+..+.?..?.?.+.+.+.+..+.?.+.?.+.?.+...+..+.+..?....?.+.+.+..?..+...?.) N
+0 T ( 7.5 +..+.+.?....?...?.+..?.+.?.+.+.+..?.+..+.?.+.+...+.?.?.+.+..?.?.+.?..?.+.+.?.?.+.+.+.+.) N
+(345) # ( 7.5 +..+.+.+.?.+.?.+....+.?.+.?.?.+..+.?.+.+.+...?.+.?...+..?.+..?.+.+...?.+.?..+.+.?...) N
+("csc710sbse: hw4: Witschey") (Page 7/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (7/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (8) 8
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T ( 7.5 ..?.+...+.?.+.+.+..?.+.+..?.+.+.+.+....?..?...+.+.?.+..?..+...+.+.?.?..+.+..+..+.) p n
+0 T ( 7.5 ) N
+0 T () N
+0 T (Best:  6.9392) N
+(350) # (total time: 1.784s) S 24 T (mean time: 0.059s) N
+0 T (               |         - *- ,   6.56,   6.73,   6.90,   7.15,   7.46) N
+0 T () N
+0 T () N
+0 T (MaxWalkSat) N
+(355) # (era_length: 50, initialized: 2014-10-06 20:02:49.490820, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: True) N
+0 T () N
+0 T ( 9.6 ..................................................) N
+0 T ( 9.6 ..................................................) N
+0 T ( 9.6 ..+.....................++........................) N
+(360) # ( 8.6 ..................................................) N
+0 T ( 8.6 ) N
+0 T () N
+0 T (Best:  9.0866) N
+0 T (total time: 0.197s) S 24 T (mean time: 0.007s) N
+(365) # (               |         * -  ,   8.43,   8.66,   9.11,   9.53,  10.03) N
+0 T () N
+0 T () N
+0 T (==================================================) N
+0 T (==================================================) N
+(370) # () N
+0 T (ZDT3) N
+0 T (--------------------------------------------------) N
+0 T (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:51.139423, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: True) N
+(375) # () N
+0 T ( 5.8 ?.!+.?.?.?.?.?.?.?.!+.?.+.+.+.?..?.+.?.?.+.+.?.?.+.?.?.+.!+.?.+.?.?..+.+.!+.?.+.+.?.?...+.+.?.?.+.?..) N
+0 T ( 4.7 !+..?.?.+.+.+.!+.!+..!+......!+..?.?.?.?.?.+..+.+.!+.?.?..+.+.?.?..+.+..+.?.+..+..?.+.+.?.?.) N
+0 T ( 2.1 +..!+.!+.!+...!+.?.+.+.?..?...+...+.+.+.!+...?.?.+.?...?.+..+.?..+.+.+.?.+.+.+.+.+..?.+..) N
+0 T ( 1.1 ...?..+...?.+.?.+.?..?.+..?..+..+...?..?.?.+.+...?.+....+.+.+.?..?.?..+.+.+.+.?.) N
+(380) # ( 1.1 ?.?......+.+.?.?.+..+...+.+.+.?.+.+.+.?.+.+...?.?.+.+.?...+....?.+.+.+.+..?.+.?.+.?.) N
+0 T ( 1.1 +.+.?.+.+.+.+.+.?.+..?.+.+.+.+..+.?..+.?.+.?.+...+.+.?..+...+.+.+.....+.+..+..?.+...) N
+0 T ( 1.1 +.+...+.?.?..+.+..+..+..?.?.+.+.+.+.+.+..+.+..?..+.+.+...+.+.+..+.+.?.......?.+..) N
+0 T ( 1.1 +...?....+....?.?.+.+.+.?.+..+..?.+..+..+...........?..+.+.+.....+.?...) N
+0 T ( 1.1 +....+.+.+.+..+.+..+..?.+....?.+.+....+.+.+..?.+..?..+.....+.+.+.+.?.+..+....) N
+(385) # ( 1.1 ..?....+......+.?..+.+......?.+.....+..?..+....+.+.?.+..+...?.+...+..) N
+0 T ( 1.1 ) N
+0 T () N
+0 T (Best:  1.1790) N
+0 T (total time: 1.623s) S 24 T (mean time: 0.054s) N
+(390) # (               |       -*--   ,   1.10,   1.13,   1.16,   1.21,   1.29) N
+0 T () N
+0 T () N
+0 T (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:51.399857, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: True) N
+("csc710sbse: hw4: Witschey") (Page 8/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (8/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (9) 9
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(395) # () p n
+0 T ( 5.7 ..................................................) N
+0 T ( 5.7 ..................................................) N
+0 T ( 5.7 ..................................................) N
+0 T ( 5.7 ..................................................) N
+(400) # ( 5.7 ) N
+0 T () N
+0 T (Best:  5.1809) N
+0 T (total time: 0.206s) S 24 T (mean time: 0.007s) N
+0 T (      -----   *|   ------     ,   2.28,   3.98,   5.01,   6.50,   8.65) N
+(405) # () N
+0 T () N
+0 T (==================================================) N
+0 T (==================================================) N
+0 T () N
+(410) # (Viennet3) N
+0 T (--------------------------------------------------) N
+0 T (SimulatedAnnealer) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:52.368551, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: SimulatedAnnealer, terminate_early: True) N
+0 T () N
+(415) # ( 2.7e+01 !+...?.?..+.!+...!+..?.+.!+.?.......?.....?.....+..?.?.+...+.+.?..+.?.+...+...) N
+0 T ( 1.6e+01 ...?.+..?..?.+.....?....?..?..+..+.+....+......?....?.?..+..?.+...+.+.) N
+0 T ( 1.6e+01 ?..+....?...+.+...?.+...+...+..?..+..+.?...+.?..+.+......?....+.!+.....) N
+0 T ( 1.6e+01 ?..?.?..+..+..+.?.....+...+..?.?..+..+.......+..?...+.....?..+.+..+...) N
+0 T ( 1.6e+01 ..?.?.+..?.+....+..........?..+..+..+......?.?...+.+.+.?.+.........) N
+(420) # ( 1.6e+01 .?....?.+.+...?..+.+..............?.+...+.+....+..?.?..+..+......+.) N
+0 T ( 1.6e+01 ....................?.+.?...........?..+.+......?..?...+...) N
+0 T ( 1.6e+01 +.....?...+.+.+.+...?.?.?..+.+.........+....................+.?.) N
+0 T ( 1.6e+01 ) N
+0 T () N
+(425) # (Best:  16.0871) N
+0 T (total time: 0.967s) S 24 T (mean time: 0.032s) N
+0 T (               |            * ,  15.98,  16.00,  16.03,  16.07,  16.47) N
+0 T () N
+0 T () N
+(430) # (MaxWalkSat) N
+0 T (era_length: 50, initialized: 2014-10-06 20:02:52.543769, iterations: 1000, log_eras: True, p_mutation: 0.333333333333, s) N
+0 T (earcher: MaxWalkSat, terminate_early: True) N
+0 T () N
+0 T ( 2.2e+01 ..................................................) N
+0 T ( 2.2e+01 ..............+...................................) N
+(435) # ( 1.9e+01 .......+..............................++..........) N
+0 T ( 1.7e+01 ..................................................) N
+0 T ( 1.7e+01 ) N
+0 T () N
+0 T (Best:  17.7627) N
+(440) # (total time: 0.151s) S 24 T (mean time: 0.005s) N
+0 T (               |    -*---     ,  16.38,  16.89,  17.30,  17.86,  20.49) N
+0 T () N
+0 T () N
+0 T (==================================================) N
+("csc710sbse: hw4: Witschey") (Page 9/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (9/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (10) 10
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(445) # (==================================================) p n
+0 T (############# Part 6 #############) N
+0 T () N
+0 T (rank ,         name ,    med   ,  iqr ) N
+0 T (----------------------------------------------------) N
+(450) # (   1 ,          SA  ,       3  ,     0 \(*              |              \), 3.62,  3.62,  3.71,  3.71,  3.89) N
+0 T (   2 ,          SA  ,       3  ,     0 \(*              |              \), 3.83,  3.83,  3.83,  3.83,  3.83) N
+0 T (   3 ,          SA  ,       3  ,     0 \( *             |              \), 3.97,  3.97,  3.97,  3.97,  3.97) N
+0 T (   4 ,          SA  ,       4  ,     0 \(  *            |              \), 4.20,  4.20,  4.20,  4.20,  4.29) N
+0 T (   4 ,          SA  ,       4  ,     0 \(  *            |              \), 4.21,  4.21,  4.21,  4.21,  4.21) N
+(455) # (   5 ,          SA  ,       4  ,     0 \(  *            |              \), 4.26,  4.26,  4.26,  4.26,  4.26) N
+0 T (   6 ,          SA  ,       4  ,     0 \(  *            |              \), 4.31,  4.31,  4.31,  4.31,  4.31) N
+0 T (   6 ,          SA  ,       4  ,     0 \(  *            |              \), 4.31,  4.31,  4.31,  4.31,  4.31) N
+0 T (   7 ,          SA  ,       4  ,     0 \(  *            |              \), 4.36,  4.36,  4.36,  4.36,  4.36) N
+0 T (   8 ,          SA  ,       4  ,     0 \(   *           |              \), 4.55,  4.55,  4.55,  4.55,  4.55) N
+(460) # (   9 ,          SA  ,       4  ,     0 \(   *           |              \), 4.58,  4.58,  4.58,  4.58,  4.58) N
+0 T (   9 ,          SA  ,       4  ,     0 \(   *           |              \), 4.58,  4.58,  4.58,  4.58,  4.58) N
+0 T (  10 ,          SA  ,       4  ,     0 \(   *           |              \), 4.69,  4.69,  4.69,  4.69,  4.69) N
+0 T (  10 ,          SA  ,       4  ,     0 \(   *           |              \), 4.69,  4.69,  4.69,  4.69,  4.69) N
+0 T (  11 ,          SA  ,       4  ,     0 \(    *          |              \), 4.74,  4.74,  4.74,  4.74,  4.74) N
+(465) # (  11 ,          SA  ,       4  ,     0 \(    *          |              \), 4.75,  4.75,  4.75,  4.75,  4.75) N
+0 T (  12 ,          SA  ,       4  ,     0 \(    *          |              \), 4.79,  4.79,  4.79,  4.85,  4.92) N
+0 T (  12 ,          SA  ,       4  ,     0 \(    *          |              \), 4.97,  4.97,  4.97,  4.97,  4.97) N
+0 T (  13 ,          SA  ,       5  ,     0 \(     *         |              \), 5.06,  5.06,  5.06,  5.06,  5.06) N
+0 T (  14 ,          SA  ,       5  ,     0 \(     *         |              \), 5.09,  5.09,  5.09,  5.09,  5.09) N
+(470) # (  15 ,          SA  ,       5  ,     0 \(     *         |              \), 5.21,  5.21,  5.21,  5.21,  5.21) N
+0 T (  15 ,          SA  ,       5  ,     0 \(      *        |              \), 5.37,  5.37,  5.37,  5.37,  5.37) N
+0 T (  15 ,          SA  ,       5  ,     0 \(      *        |              \), 5.40,  5.40,  5.40,  5.40,  5.40) N
+0 T (  16 ,          SA  ,       5  ,     0 \(       *       |              \), 5.62,  5.62,  5.62,  5.62,  5.62) N
+0 T (  16 ,          SA  ,       5  ,     0 \(       *       |              \), 5.70,  5.70,  5.70,  5.70,  5.70) N
+(475) # (  16 ,          SA  ,       5  ,     0 \(        *      |              \), 5.94,  5.94,  5.94,  5.94,  5.94) N
+0 T (  16 ,          SA  ,       5  ,     0 \(        *      |              \), 5.94,  5.94,  5.94,  5.94,  5.94) N
+0 T (  17 ,          SA  ,       6  ,     0 \(         *     |              \), 6.38,  6.38,  6.38,  6.38,  6.38) N
+0 T (  17 ,          MWS ,       6  ,     0 \(         *     |              \), 6.39,  6.39,  6.39,  6.39,  6.39) N
+0 T (  18 ,          SA  ,       6  ,     0 \(          *    |              \), 6.42,  6.42,  6.42,  6.42,  6.42) N
+(480) # (  18 ,          SA  ,       6  ,     0 \(          *    |              \), 6.44,  6.44,  6.44,  6.44,  6.44) N
+0 T (  18 ,          SA  ,       6  ,     0 \(          *    |              \), 6.45,  6.45,  6.45,  6.45,  6.45) N
+0 T (  18 ,          SA  ,       6  ,     0 \(          *    |              \), 6.52,  6.52,  6.52,  6.52,  6.52) N
+0 T (  19 ,          SA  ,       6  ,     0 \(          *    |              \), 6.62,  6.62,  6.62,  6.62,  6.62) N
+0 T (  19 ,          SA  ,       6  ,     0 \(          *    |              \), 6.66,  6.66,  6.66,  6.66,  6.66) N
+(485) # (  19 ,          SA  ,       6  ,     0 \(          *    |              \), 6.66,  6.66,  6.66,  6.66,  6.66) N
+0 T (  19 ,          SA  ,       6  ,     0 \(          *    |              \), 6.67,  6.67,  6.67,  6.67,  6.67) N
+0 T (  19 ,          SA  ,       6  ,     0 \(          *    |              \), 6.67,  6.67,  6.67,  6.67,  6.67) N
+0 T (  20 ,          SA  ,       6  ,     0 \(           *   |              \), 6.69,  6.69,  6.69,  6.69,  6.69) N
+0 T (  20 ,          SA  ,       6  ,     0 \(           *   |              \), 6.71,  6.71,  6.71,  6.71,  6.71) N
+(490) # (  20 ,          SA  ,       6  ,     0 \(           *   |              \), 6.72,  6.72,  6.72,  6.72,  6.72) N
+0 T (  21 ,          SA  ,       6  ,     0 \(           *   |              \), 6.76,  6.76,  6.76,  6.76,  6.76) N
+0 T (  21 ,          SA  ,       6  ,     0 \(           *   |              \), 6.82,  6.82,  6.82,  6.82,  6.82) N
+0 T (  22 ,          SA  ,       6  ,     0 \(           *   |              \), 6.86,  6.86,  6.86,  6.86,  6.86) N
+0 T (  22 ,          SA  ,       6  ,     0 \(           *   |              \), 6.90,  6.90,  6.90,  6.90,  6.90) N
+(495) # (  23 ,          SA  ,       6  ,     0 \(           *   |              \), 6.92,  6.92,  6.92,  6.92,  6.92) N
+0 T (  23 ,          SA  ,       6  ,     0 \(           *   |              \), 6.93,  6.93,  6.93,  6.93,  6.93) N
+("csc710sbse: hw4: Witschey") (Page 10/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (10/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (11) 11
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (  24 ,          SA  ,       6  ,     0 \(            *  |              \), 6.96,  6.96,  6.96,  6.96,  6.96) p n
+0 T (  24 ,          SA  ,       6  ,     0 \(            *  |              \), 6.96,  6.96,  6.96,  6.96,  6.96) N
+0 T (  25 ,          SA  ,       7  ,     0 \(            *  |              \), 7.04,  7.04,  7.04,  7.04,  7.04) N
+(500) # (  25 ,          SA  ,       7  ,     0 \(            *  |              \), 7.06,  7.06,  7.06,  7.06,  7.06) N
+0 T (  25 ,          SA  ,       7  ,     0 \(            *  |              \), 7.06,  7.06,  7.06,  7.06,  7.06) N
+0 T (  25 ,          SA  ,       7  ,     0 \(            *  |              \), 7.06,  7.06,  7.06,  7.06,  7.06) N
+0 T (  25 ,          SA  ,       7  ,     0 \(            *  |              \), 7.06,  7.06,  7.06,  7.06,  7.06) N
+0 T (  25 ,          SA  ,       7  ,     0 \(            *  |              \), 7.07,  7.07,  7.07,  7.07,  7.07) N
+(505) # (  26 ,          SA  ,       7  ,     0 \(            *  |              \), 7.09,  7.09,  7.09,  7.09,  7.09) N
+0 T (  26 ,          SA  ,       7  ,     0 \(            *  |              \), 7.10,  7.10,  7.10,  7.10,  7.10) N
+0 T (  26 ,          SA  ,       7  ,     0 \(            *  |              \), 7.10,  7.10,  7.10,  7.10,  7.10) N
+0 T (  26 ,          SA  ,       7  ,     0 \(            *  |              \), 7.10,  7.10,  7.10,  7.10,  7.10) N
+0 T (  26 ,          SA  ,       7  ,     0 \(            *  |              \), 7.11,  7.11,  7.11,  7.11,  7.11) N
+(510) # (  26 ,          SA  ,       7  ,     0 \(            *  |              \), 7.11,  7.11,  7.11,  7.11,  7.11) N
+0 T (  27 ,          SA  ,       7  ,     0 \(            *  |              \), 7.12,  7.12,  7.12,  7.12,  7.12) N
+0 T (  27 ,          SA  ,       7  ,     0 \(            *  |              \), 7.13,  7.13,  7.13,  7.13,  7.13) N
+0 T (  27 ,          SA  ,       7  ,     0 \(            *  |              \), 7.13,  7.13,  7.13,  7.13,  7.13) N
+0 T (  27 ,          SA  ,       7  ,     0 \(            *  |              \), 7.14,  7.14,  7.14,  7.14,  7.14) N
+(515) # (  28 ,          SA  ,       7  ,     0 \(            *  |              \), 7.16,  7.16,  7.16,  7.16,  7.16) N
+0 T (  28 ,          SA  ,       7  ,     0 \(            *  |              \), 7.18,  7.18,  7.18,  7.18,  7.18) N
+0 T (  28 ,          SA  ,       7  ,     0 \(            *  |              \), 7.18,  7.18,  7.18,  7.18,  7.18) N
+0 T (  28 ,          SA  ,       7  ,     0 \(            *  |              \), 7.19,  7.19,  7.19,  7.19,  7.19) N
+0 T (  28 ,          SA  ,       7  ,     0 \(            *  |              \), 7.20,  7.20,  7.20,  7.20,  7.20) N
+(520) # (  29 ,          SA  ,       7  ,     0 \(             * |              \), 7.24,  7.24,  7.24,  7.24,  7.24) N
+0 T (  29 ,          SA  ,       7  ,     0 \(             * |              \), 7.25,  7.25,  7.25,  7.25,  7.25) N
+0 T (  29 ,          SA  ,       7  ,     0 \(             * |              \), 7.26,  7.26,  7.26,  7.26,  7.26) N
+0 T (  29 ,          SA  ,       7  ,     0 \(             * |              \), 7.26,  7.26,  7.26,  7.26,  7.26) N
+0 T (  30 ,          SA  ,       7  ,     0 \(             * |              \), 7.28,  7.28,  7.28,  7.28,  7.28) N
+(525) # (  30 ,          SA  ,       7  ,     0 \(             * |              \), 7.28,  7.28,  7.28,  7.28,  7.28) N
+0 T (  31 ,          SA  ,       7  ,     0 \(             * |              \), 7.31,  7.31,  7.31,  7.31,  7.31) N
+0 T (  31 ,          SA  ,       7  ,     0 \(             * |              \), 7.31,  7.31,  7.31,  7.31,  7.31) N
+0 T (  31 ,          SA  ,       7  ,     0 \(             * |              \), 7.31,  7.31,  7.31,  7.31,  7.31) N
+0 T (  31 ,          SA  ,       7  ,     0 \(             * |              \), 7.34,  7.34,  7.34,  7.34,  7.34) N
+(530) # (  32 ,          SA  ,       7  ,     0 \(             * |              \), 7.37,  7.37,  7.37,  7.37,  7.37) N
+0 T (  32 ,          SA  ,       7  ,     0 \(             * |              \), 7.38,  7.38,  7.38,  7.38,  7.38) N
+0 T (  33 ,          SA  ,       7  ,     0 \(             * |              \), 7.44,  7.44,  7.44,  7.44,  7.44) N
+0 T (  33 ,          SA  ,       7  ,     0 \(             * |              \), 7.45,  7.45,  7.45,  7.45,  7.45) N
+0 T (  34 ,          SA  ,       7  ,     0 \(              *|              \), 7.51,  7.51,  7.51,  7.51,  7.51) N
+(535) # (  34 ,          SA  ,       7  ,     0 \(              *|              \), 7.56,  7.56,  7.56,  7.56,  7.56) N
+0 T (  34 ,          SA  ,       7  ,     0 \(              *|              \), 7.57,  7.57,  7.57,  7.57,  7.57) N
+0 T (  35 ,          SA  ,       7  ,     0 \(              *|              \), 7.76,  7.76,  7.76,  7.76,  7.76) N
+0 T (  35 ,          SA  ,       7  ,     0 \(              *|              \), 7.77,  7.77,  7.77,  7.77,  7.77) N
+0 T (  35 ,          MWS ,       7  ,     0 \(               *              \), 7.92,  7.92,  7.92,  7.92,  7.92) N
+(540) # (  36 ,          MWS ,       8  ,     0 \(               |*             \), 8.15,  8.15,  8.15,  8.15,  8.15) N
+0 T (  36 ,          MWS ,       8  ,     0 \(               |*             \), 8.16,  8.16,  8.16,  8.16,  8.16) N
+0 T (  36 ,          MWS ,       8  ,     0 \(               |*             \), 8.19,  8.19,  8.19,  8.19,  8.19) N
+0 T (  36 ,          MWS ,       8  ,     0 \(               |*             \), 8.20,  8.20,  8.20,  8.20,  8.20) N
+0 T (  36 ,          MWS ,       8  ,     0 \(               |*             \), 8.21,  8.21,  8.21,  8.21,  8.21) N
+(545) # (  36 ,          MWS ,       8  ,     0 \(               |*             \), 8.31,  8.31,  8.31,  8.31,  8.31) N
+0 T (  37 ,          MWS ,       8  ,     0 \(               | *            \), 8.41,  8.41,  8.41,  8.41,  8.41) N
+0 T (  37 ,          MWS ,       8  ,     0 \(               | *            \), 8.42,  8.42,  8.42,  8.42,  8.42) N
+0 T (  37 ,          SA  ,       8  ,     0 \(               | *            \), 8.43,  8.43,  8.43,  8.43,  8.43) N
+("csc710sbse: hw4: Witschey") (Page 11/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (11/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (12) 12
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (  37 ,          MWS ,       8  ,     0 \(               | *            \), 8.45,  8.45,  8.45,  8.45,  8.45) p n
+(550) # (  38 ,          SA  ,       8  ,     0 \(               | *            \), 8.47,  8.47,  8.47,  8.47,  8.47) N
+0 T (  38 ,          MWS ,       8  ,     0 \(               | *            \), 8.48,  8.48,  8.48,  8.48,  8.48) N
+0 T (  39 ,          MWS ,       8  ,     0 \(               | *            \), 8.49,  8.49,  8.49,  8.49,  8.49) N
+0 T (  39 ,          MWS ,       8  ,     0 \(               | *            \), 8.50,  8.50,  8.50,  8.50,  8.50) N
+0 T (  40 ,          MWS ,       8  ,     0 \(               | *            \), 8.51,  8.51,  8.51,  8.51,  8.51) N
+(555) # (  40 ,          MWS ,       8  ,     0 \(               | *            \), 8.53,  8.53,  8.53,  8.53,  8.53) N
+0 T (  41 ,          MWS ,       8  ,     0 \(               | *            \), 8.58,  8.58,  8.58,  8.58,  8.58) N
+0 T (  41 ,          MWS ,       8  ,     0 \(               | *            \), 8.58,  8.58,  8.58,  8.58,  8.58) N
+0 T (  41 ,          MWS ,       8  ,     0 \(               | *            \), 8.59,  8.59,  8.59,  8.59,  8.59) N
+0 T (  41 ,          MWS ,       8  ,     0 \(               | *            \), 8.59,  8.59,  8.59,  8.59,  8.59) N
+(560) # (  41 ,          MWS ,       8  ,     0 \(               | *            \), 8.60,  8.60,  8.60,  8.60,  8.60) N
+0 T (  41 ,          MWS ,       8  ,     0 \(               | *            \), 8.62,  8.62,  8.62,  8.62,  8.62) N
+0 T (  42 ,          MWS ,       8  ,     0 \(               |  *           \), 8.67,  8.67,  8.67,  8.67,  8.67) N
+0 T (  42 ,          MWS ,       8  ,     0 \(               |  *           \), 8.68,  8.68,  8.68,  8.68,  8.68) N
+0 T (  43 ,          MWS ,       8  ,     0 \(               |  *           \), 8.73,  8.73,  8.73,  8.73,  8.73) N
+(565) # (  43 ,          MWS ,       8  ,     0 \(               |  *           \), 8.74,  8.74,  8.74,  8.74,  8.74) N
+0 T (  43 ,          MWS ,       8  ,     0 \(               |  *           \), 8.81,  8.81,  8.81,  8.81,  8.81) N
+0 T (  44 ,          MWS ,       8  ,     0 \(               |   *          \), 8.91,  8.91,  8.91,  8.91,  8.91) N
+0 T (  44 ,          MWS ,       8  ,     0 \(               |   *          \), 8.92,  8.92,  8.92,  8.92,  8.92) N
+0 T (  45 ,          MWS ,       8  ,     0 \(               |   *          \), 8.94,  8.94,  8.94,  8.94,  8.94) N
+(570) # (  45 ,          MWS ,       8  ,     0 \(               |   *          \), 8.95,  8.95,  8.95,  8.95,  8.95) N
+0 T (  46 ,          MWS ,       9  ,     0 \(               |   *          \), 9.04,  9.04,  9.04,  9.04,  9.04) N
+0 T (  46 ,          MWS ,       9  ,     0 \(               |   *          \), 9.05,  9.05,  9.05,  9.05,  9.05) N
+0 T (  46 ,          MWS ,       9  ,     0 \(               |   *          \), 9.07,  9.07,  9.07,  9.07,  9.07) N
+0 T (  47 ,          MWS ,       9  ,     0 \(               |   *          \), 9.10,  9.10,  9.10,  9.10,  9.10) N
+(575) # (  47 ,          MWS ,       9  ,     0 \(               |   *          \), 9.12,  9.12,  9.12,  9.12,  9.12) N
+0 T (  48 ,          MWS ,       9  ,     0 \(               |    *         \), 9.20,  9.20,  9.20,  9.20,  9.20) N
+0 T (  48 ,          MWS ,       9  ,     0 \(               |    *         \), 9.21,  9.21,  9.21,  9.21,  9.21) N
+0 T (  48 ,          MWS ,       9  ,     0 \(               |    *         \), 9.21,  9.21,  9.21,  9.21,  9.21) N
+0 T (  49 ,          MWS ,       9  ,     0 \(               |    *         \), 9.25,  9.25,  9.25,  9.25,  9.25) N
+(580) # (  49 ,          MWS ,       9  ,     0 \(               |    *         \), 9.26,  9.26,  9.26,  9.26,  9.26) N
+0 T (  49 ,          MWS ,       9  ,     0 \(               |    *         \), 9.29,  9.29,  9.29,  9.29,  9.29) N
+0 T (  50 ,          MWS ,       9  ,     0 \(               |    *         \), 9.37,  9.37,  9.37,  9.37,  9.37) N
+0 T (  50 ,          MWS ,       9  ,     0 \(               |    *         \), 9.37,  9.37,  9.37,  9.37,  9.37) N
+0 T (  51 ,          MWS ,       9  ,     0 \(               |    *         \), 9.38,  9.38,  9.38,  9.38,  9.38) N
+(585) # (  51 ,          MWS ,       9  ,     0 \(               |    *         \), 9.39,  9.39,  9.39,  9.39,  9.39) N
+0 T (  52 ,          MWS ,       9  ,     0 \(               |    *         \), 9.42,  9.42,  9.42,  9.42,  9.42) N
+0 T (  52 ,          MWS ,       9  ,     0 \(               |    *         \), 9.43,  9.43,  9.43,  9.43,  9.43) N
+0 T (  52 ,          MWS ,       9  ,     0 \(               |    *         \), 9.43,  9.43,  9.43,  9.43,  9.43) N
+0 T (  52 ,          MWS ,       9  ,     0 \(               |    *         \), 9.45,  9.45,  9.45,  9.45,  9.45) N
+(590) # (  53 ,          MWS ,       9  ,     0 \(               |     *        \), 9.48,  9.48,  9.48,  9.48,  9.48) N
+0 T (  53 ,          MWS ,       9  ,     0 \(               |     *        \), 9.51,  9.51,  9.51,  9.51,  9.51) N
+0 T (  53 ,          MWS ,       9  ,     0 \(               |     *        \), 9.54,  9.54,  9.54,  9.54,  9.54) N
+0 T (  54 ,          MWS ,       9  ,     0 \(               |     *        \), 9.67,  9.67,  9.67,  9.67,  9.67) N
+0 T (  54 ,          MWS ,       9  ,     0 \(               |     *        \), 9.72,  9.72,  9.72,  9.72,  9.72) N
+(595) # (  54 ,          MWS ,       9  ,     0 \(               |      *       \), 9.83,  9.83,  9.83,  9.83,  9.83) N
+0 T (  55 ,          MWS ,       9  ,     0 \(               |      *       \), 9.89,  9.89,  9.89,  9.89,  9.89) N
+0 T (  55 ,          MWS ,       9  ,     0 \(               |      *       \), 9.91,  9.91,  9.91,  9.91,  9.91) N
+0 T (  55 ,          MWS ,       9  ,     0 \(               |      *       \), 9.94,  9.94,  9.94,  9.94,  9.94) N
+0 T (  56 ,          MWS ,       9  ,     0 \(               |      *       \), 9.97,  9.97,  9.97,  9.97,  9.97) N
+(600) # (  56 ,          MWS ,      10  ,     0 \(               |      *       \),10.00, 10.00, 10.00, 10.00, 10.00) N
+("csc710sbse: hw4: Witschey") (Page 12/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (12/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (13) 13
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 4.120253 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (  57 ,          MWS ,      10  ,     0 \(               |       *      \),10.02, 10.02, 10.02, 10.02, 10.02) p n
+0 T (  57 ,          MWS ,      10  ,     0 \(               |       *      \),10.05, 10.05, 10.05, 10.05, 10.05) N
+0 T (  58 ,          MWS ,      10  ,     0 \(               |       *      \),10.10, 10.10, 10.10, 10.10, 10.10) N
+0 T (  58 ,          MWS ,      10  ,     0 \(               |       *      \),10.16, 10.16, 10.16, 10.16, 10.16) N
+(605) # (  58 ,          MWS ,      10  ,     0 \(               |       *      \),10.17, 10.17, 10.17, 10.17, 10.17) N
+0 T (  59 ,          MWS ,      10  ,     0 \(               |       *      \),10.23, 10.23, 10.23, 10.23, 10.23) N
+0 T (  59 ,          MWS ,      10  ,     0 \(               |       *      \),10.25, 10.25, 10.25, 10.25, 10.25) N
+0 T (  59 ,          MWS ,      10  ,     0 \(               |       *      \),10.25, 10.25, 10.25, 10.25, 10.25) N
+0 T (  60 ,          MWS ,      10  ,     0 \(               |        *     \),10.33, 10.33, 10.33, 10.33, 10.33) N
+(610) # (  60 ,          MWS ,      10  ,     0 \(               |        *     \),10.35, 10.35, 10.35, 10.35, 10.35) N
+0 T (  60 ,          MWS ,      10  ,     0 \(               |        *     \),10.35, 10.35, 10.35, 10.35, 10.35) N
+0 T (  60 ,          MWS ,      10  ,     0 \(               |        *     \),10.36, 10.36, 10.36, 10.36, 10.36) N
+0 T (  60 ,          MWS ,      10  ,     0 \(               |        *     \),10.42, 10.42, 10.42, 10.42, 10.42) N
+0 T (  61 ,          MWS ,      10  ,     0 \(               |        *     \),10.54, 10.54, 10.54, 10.54, 10.54) N
+(615) # (  61 ,          MWS ,      10  ,     0 \(               |        *     \),10.55, 10.55, 10.55, 10.55, 10.55) N
+0 T (  62 ,          MWS ,      10  ,     0 \(               |         *    \),10.58, 10.58, 10.58, 10.58, 10.58) N
+0 T (  62 ,          MWS ,      10  ,     0 \(               |         *    \),10.59, 10.59, 10.59, 10.59, 10.59) N
+0 T (  62 ,          MWS ,      10  ,     0 \(               |         *    \),10.60, 10.60, 10.60, 10.60, 10.60) N
+0 T (  63 ,          MWS ,      10  ,     0 \(               |         *    \),10.67, 10.67, 10.67, 10.67, 10.67) N
+(620) # (  63 ,          MWS ,      10  ,     0 \(               |         *    \),10.69, 10.69, 10.69, 10.69, 10.69) N
+0 T (  64 ,          MWS ,      10  ,     0 \(               |         *    \),10.77, 10.77, 10.77, 10.77, 10.77) N
+0 T (  64 ,          MWS ,      10  ,     0 \(               |         *    \),10.77, 10.77, 10.77, 10.77, 10.77) N
+0 T (  64 ,          MWS ,      10  ,     0 \(               |         *    \),10.78, 10.78, 10.78, 10.78, 10.78) N
+0 T (  64 ,          MWS ,      10  ,     0 \(               |          *   \),10.89, 10.89, 10.89, 10.89, 10.89) N
+(625) # (  64 ,          MWS ,      10  ,     0 \(               |          *   \),10.99, 10.99, 10.99, 10.99, 10.99) N
+0 T (  65 ,          MWS ,      11  ,     0 \(               |           *  \),11.15, 11.15, 11.15, 11.15, 11.15) N
+0 T (  65 ,          MWS ,      11  ,     0 \(               |           *  \),11.30, 11.30, 11.30, 11.30, 11.30) N
+0 T (  65 ,          MWS ,      11  ,     0 \(               |           *  \),11.36, 11.36, 11.36, 11.36, 11.36) N
+0 T (  65 ,          MWS ,      11  ,     0 \(               |             *\),11.96, 11.96, 11.96, 11.96, 11.96) N
+(630) # (None) N
+("csc710sbse: hw4: Witschey") (Page 13/13) (Oct 06, 14 20:03) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw4/outs.txt) (13/13) (Monday October 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

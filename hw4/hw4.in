@@ -1,0 +1,1 @@
+-c .setpdfwrite -f hw4/wide.ps hw4/code.ps
