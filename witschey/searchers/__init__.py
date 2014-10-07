@@ -1,5 +1,4 @@
 from searcher import Searcher
-from simulated_annealer import SimulatedAnnealer ; del simulated_annealer
-from maxwalksat import MaxWalkSat ; del maxwalksat
-
-del searcher
+from simulated_annealer import SimulatedAnnealer
+from maxwalksat import MaxWalkSat
+from genetic_algorithm import GeneticAlgorithm
