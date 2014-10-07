@@ -152,6 +152,10 @@ class Log(object):
     def setup(self):
         raise NotImplementedError()
 
+    def contents(self):
+        # slow, but most generic copy implementation
+        return copy.deepcopy(self._cache)
+
     def _invalidate_statistics(self):
         '''
         default implementation. if _valid_statistics is something other than
@@ -225,6 +229,9 @@ class NumberLog(Log):
         if not self._valid_statistics:
             self._cache.sort()
         self._valid_statistics = True
+
+    def contents(self):
+        return list(self._cache)
 
     def norm(self,x):
         "normalize the argument with respect to maximum and minimum"
