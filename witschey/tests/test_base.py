@@ -1,3 +1,5 @@
+import collections
+
 from witschey import base
 from unittest import TestCase
 
@@ -5,7 +7,7 @@ import types
 
 class TestPairs(TestCase):
     def test_type(self):
-        assert type(base.pairs([1,2])) == types.GeneratorType
+        assert isinstance(base.pairs([1,2]), collections.Iterable)
 
     def test_empty(self):
         assert list(base.pairs([])) == []
