@@ -80,6 +80,9 @@ def random_index(x):
     raise ValueError('{} is not a list or dict'.format(x))
 
 The = memo(
-    Searcher=memo(era_length=50, log_eras=True, terminate_early=True),
-    SimulatedAnnealer=memo(iterations=1000, p_mutation=1/3),
-    MaxWalkSat=memo(iterations=1000, p_mutation=1/3))
+    Searcher=memo(era_length=50, log_eras=True, terminate_early=True,
+        iterations=1000, p_mutation=1/3),
+    SimulatedAnnealer=memo(),
+    MaxWalkSat=memo(),
+    GeneticAlgorithm=memo(population_size=50)
+    )
