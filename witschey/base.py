@@ -1,6 +1,6 @@
 from __future__ import division, print_function, unicode_literals
 
-import json, random, functools, sys, math
+import json, random, functools, sys, math, itertools
 
 def pretty_input(t):
     float_format = lambda x: '{: .2f}'.format(x)
@@ -8,7 +8,10 @@ def pretty_input(t):
     return ', '.join(s for s in str_tuple)
 
 def pairs(xs):
-    for p in zip(xs[:-1], xs[1:]):
+    # from https://docs.python.org/2/library/itertools.html
+    a, b = itertools.tee(xs)
+    next(b, None)
+    for p in itertools.izip(a, b):
         yield p
 
 class memo():
