@@ -16,8 +16,11 @@ class SimulatedAnnealer(Searcher):
     def run(self, text_report=True):
         rv = memo(report='')
         if self.spec.log_eras:
-            rv.era_logs = {f.__name__: defaultdict(NumberLog)
-                for f in self.model.ys}
+            rv.era_logs_by_objective = {
+                f.__name__: defaultdict(NumberLog)
+                for f in self.model.ys
+            }
+            rv.era_logs_best_energy = defaultdict(NumberLog)
         def report_append(s):
             if text_report:
                 rv.report += s
@@ -84,7 +87,8 @@ class SimulatedAnnealer(Searcher):
             if self.spec.log_eras or self.spec.terminate_early:
                 era = k // self.spec.era_length
                 for f, v in zip(self.model.ys, self.model(solution)):
-                    rv.era_logs[f.__name__][era] += v
+                    rv.era_logs_best_energy[era] += rv.best
+                    rv.era_logs_by_objective[f.__name__][era] += v
 
             if k % self.spec.era_length == 0 and k != 0:
                 report_append('\n' + '{: .2}'.format(rv.best) + ' ')
@@ -92,7 +96,7 @@ class SimulatedAnnealer(Searcher):
                 self.lives -= 1
                 eras = k // self.spec.era_length
 
-                for logs in rv.era_logs.values():
+                for logs in rv.era_logs_by_objective.values():
                     if eras not in logs: break
                     if len(logs.keys()) < 2: break
 
