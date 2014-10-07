@@ -18,9 +18,26 @@ class GeneticAlgorithm(Searcher):
         #nothing happens! Hooray! TODO
         return child
 
-    def crossover(self, parent1, parent2, crossover):
-        #BECAUSE REASONS OK TODO
-        return parent1, parent2
+    def crossover(self, parent1, parent2, crossovers=1):
+        if crossovers < 1:
+            raise ValueError('cannot have fewer than 1 crossover')
+        if len(parent1) != len(parent2):
+            raise ValueError('parents must be same length to breed')
+
+        if crossovers == 1:
+            xpt = random.choice(range(1, len(parent1 - 1)))
+            return itertools.chain(parent1[:xpt], parent2[xpt:])
+
+        x_pts = sorted(random.sample(range(1, len(parent1) - 1), crossovers))
+        x_pts = itertools.chain((0,), x_pts, (None,))
+
+        ugh_mom_dad = itertools.cycle((parent1, parent2))
+        segments = []
+
+        for pts, parent in itertools.izip(base.pairs(x_pts), ugh_mom_dad):
+            segments.append(itertools.islice(parent, pts[0], pts[1]))
+
+        return tuple(itertools.chain(*segments))
     
     def select_parents(self, population): #all possible parents
         xs = itertools.combinations(population, 2)
