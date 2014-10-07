@@ -42,18 +42,13 @@ class GeneticAlgorithm(Searcher):
                 parents = self.select_parents(population)
                 children = []
                 for parent1, parent2 in parents:
-                    child1, child2 = self.Crossover(parent1, parent2, myOpt.  ga_crossover  )
-                    children.append(self.Mutate(child1, pMutate))
-                    children.append(self.Mutate(child2, pMutate))
+                    child1, child2 = self.crossover(parent1, parent2, myOpt.  ga_crossover  )
+                    children.append(self.mutate(child1, p_mutation))
+                    children.append(self.mutate(child2, p_mutation))
                 eBest = min([c.energy for c in children])
                 population = children
                 k += 1
             eList.append(eBest)
             #some "is significantly better" termination logic here
-        
-        return min(eList), True
 
-  def printOptions(self):
-    print "GA Options:"
-    print "popSize:", myOpt.ga_pop_size, "Crossover:", myOpt.ga_crossover 
-    print "Gens:", myOpt.ga_gen_list
+        return min(eList), True
