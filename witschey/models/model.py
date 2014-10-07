@@ -1,5 +1,9 @@
+from __future__ import division, print_function
+
 # all adapted from Dr. Tim Menzies' model code:
 # https://github.com/timm/sbse14/blob/master/models.py
+
+import abc
 
 class Model(object):
     # allows us to get all subclasses with __subclasses__()
