@@ -22,10 +22,10 @@ class GeneticAlgorithm(Searcher):
         #BECAUSE REASONS OK TODO
         return parent1, parent2
     
-    def select_parents(self, pop): #all possible parents
-        a = itertools.combinations(pop, 2)
-        b = itertools.combinations(reversed(pop), 2)
-        return set(a).union(set(b))
+    def select_parents(self, population): #all possible parents
+        xs = itertools.combinations(population, 2)
+        ys = itertools.combinations(reversed(population), 2)
+        return list(set(a).union(set(b)))
 
     def run(self, text_report=True):
         p_mutation = 1 / len(self.model.xs)
