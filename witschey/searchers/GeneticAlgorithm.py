@@ -29,10 +29,10 @@ class GeneticAlgorithm(Searcher):
 
     def run(self, text_report=True):
         p_mutation = 1 / len(self.model.xs)
-        riv = self.model.random_input_vector
-        XVarBest = riv()
+        rand_vect = self.model.random_input_vector
+        XVarBest = rand_vect()
+        population = [rand_vect() for _ in xrange(self.spec.population_size)]
         eList = []
-        population = [riv() for _ in self.spec.population_size]
         stop = False
 
         k = 1
