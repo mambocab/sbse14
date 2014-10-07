@@ -1,8 +1,8 @@
-from __future__ import division
+from __future__ import division, print_function
 
-#Structure from SA Lecture
-import sys, re, random, math, itertools
+import itertools, random
 
+from witschey import base
 from searcher import Searcher
 
 # adapted from Chris Theisen's code
