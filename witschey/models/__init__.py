@@ -1,3 +1,4 @@
+from model import Model
 from independent_variable import IndependentVariable; del independent_variable
 from schaffer import Schaffer; del schaffer
 from kursawe import Kursawe; del kursawe

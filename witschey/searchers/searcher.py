@@ -3,8 +3,11 @@ from __future__ import division, unicode_literals
 from witschey.base import memo, The
 
 from datetime import datetime
+import abc
 
 class Searcher(object):
+    # allows us to get all subclasses with __subclasses__()
+    __metaclass__ = abc.ABCMeta
 
     def __new__(cls, *args, **kwargs):
         # construct our object
