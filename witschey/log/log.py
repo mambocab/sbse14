@@ -1,7 +1,10 @@
 from __future__ import division, print_function
+
 import random, functools
+
+from witschey import base
+
 from witschey.base import memo
-import witschey.base
 
 class Log(object):
     """Keep a random sample of stuff seen so far. Based on Dr. Menzies'
