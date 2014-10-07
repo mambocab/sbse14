@@ -13,7 +13,7 @@ class DTLZ7(Model):
         # h/t http://stackoverflow.com/a/13184536/3408454
         # dynamically generate these suckers
         fs = []
-        for x in range(ivs - 1)
+        for x in range(ivs - 1):
             f = lambda xs: xs[x]
             f.__name__ = 'f' + str(x + 1)
             fs.append(f)
