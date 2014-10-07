@@ -11,8 +11,8 @@ from searcher import Searcher
 #http://www.cleveralgorithms.com/nature-inspired/evolution/genetic_algorithm.html
 class GeneticAlgorithm(Searcher):
 
-    def __init__(self, model *args, **kw):
-        super(GA, self).__init__(model=model, *args, **kw)
+    def __init__(self, model, *args, **kw):
+        super(GeneticAlgorithm, self).__init__(model=model, *args, **kw)
 
     def mutate(self, child, pMut):
         #nothing happens! Hooray! TODO
