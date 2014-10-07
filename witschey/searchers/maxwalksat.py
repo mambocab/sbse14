@@ -27,8 +27,9 @@ class MaxWalkSat(Searcher):
         self.lives = 4
 
         if log_eras:
-            rv.era_logs = {f.__name__: defaultdict(NumberLog)
+            rv.era_logs_by_objective = {f.__name__: defaultdict(NumberLog)
                 for f in self.model.ys}
+            rv.era_logs_best_energy = defaultdict(NumberLog)
 
         def report(s):
             if text_report:
@@ -42,7 +43,7 @@ class MaxWalkSat(Searcher):
             eras = evals // era_length
 
 
-            for logs in rv.era_logs.values():
+            for logs in rv.era_logs_by_objective.values():
                 if eras not in logs: break
                 if len(logs.keys()) < 2: break
 
@@ -55,17 +56,18 @@ class MaxWalkSat(Searcher):
         def log_era(evals, era_length, dependents_outputs):
             era = evals // era_length
             for f, v in dependents_outputs:
-                rv.era_logs[f.__name__][era] += v
+                rv.era_logs_by_objective[f.__name__][era] += v
+                rv.era_logs_best_energy[era] += rv.best
 
 
         init = self.model.random_input_vector()
         solution = init
         state = solution
         current_energy = self.model.energy(self.model(state))
-        solution_energy = current_energy
+        rv.best = current_energy
         evals = 0
 
-        report('{: .2}'.format(solution_energy) + ' ')
+        report('{: .2}'.format(rv.best) + ' ')
 
 
         while evals < self.spec.iterations:
@@ -82,9 +84,9 @@ class MaxWalkSat(Searcher):
 
                     current_energy = self.model.energy(self.model(state))
 
-                    if current_energy < solution_energy:
+                    if current_energy < rv.best:
                         solution = state
-                        solution_energy = current_energy
+                        rv.best = current_energy
                         report('+')
                     else:
                         report('.')
@@ -93,7 +95,7 @@ class MaxWalkSat(Searcher):
 
 
                     if evals % self.spec.era_length == 0:
-                        end_era(evals, self.spec.era_length, solution_energy)
+                        end_era(evals, self.spec.era_length, rv.best)
 
                 else:
                     for j in self.local_search_inputs(
@@ -107,19 +109,19 @@ class MaxWalkSat(Searcher):
 
                         current_energy = self.model(state)
 
-                        if current_energy < solution_energy:
+                        if current_energy < rv.best:
                             solution = state
-                            solution_energy = current_energy
+                            rv.best = current_energy
                             report('|')
                         else:
                             report('.')
 
                         evals += 1
                         if evals % self.spec.era_length == 0:
-                            end_era(evals, self.spec.era_length, solution_energy)
+                            end_era(evals, self.spec.era_length, rv.best)
                 if log_eras:
                     log_era(evals, self.spec.era_length,
                         zip(self.model.ys, self.model(solution)))
 
-        rv.best = solution_energy
+        rv.evaluations = evals
         return rv
