@@ -80,7 +80,8 @@ def random_index(x):
     raise ValueError('{} is not a list or dict'.format(x))
 
 The = memo(
-    Searcher=memo(era_length=50, log_eras=True, terminate_early=True,
+    Searcher=memo(era_length=50, terminate_early=True,
+        log_eras_energy=True, log_eras_by_objective=True,
         iterations=1000, p_mutation=1/3),
     SimulatedAnnealer=memo(),
     MaxWalkSat=memo(),
