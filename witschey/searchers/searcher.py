@@ -38,7 +38,7 @@ class Searcher(object):
         return future_self
 
     def __init__(self, model, *args, **kw):
-        self.model = model
+        self.model = model()
 
     def run(*args, **kwargs):
         raise NotImplementedError()
