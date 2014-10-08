@@ -9,12 +9,13 @@ from searcher import Searcher
 #     his code provided the shell that I worked in and styled to my liking
 #Structure from:
 #http://www.cleveralgorithms.com/nature-inspired/evolution/genetic_algorithm.html
+
 class GeneticAlgorithm(Searcher):
 
     def __init__(self, model, *args, **kw):
         super(GeneticAlgorithm, self).__init__(model=model, *args, **kw)
 
-    def mutate(self, child, pMut):
+    def mutate(self, child):
         #nothing happens! Hooray! TODO
         return child
 
@@ -24,42 +25,41 @@ class GeneticAlgorithm(Searcher):
         if len(parent1) != len(parent2):
             raise ValueError('parents must be same length to breed')
 
-        if crossovers == 1:
-            xpt = random.choice(range(1, len(parent1 - 1)))
-            return itertools.chain(parent1[:xpt], parent2[xpt:])
-
         x_pts = sorted(random.sample(range(1, len(parent1) - 1), crossovers))
         x_pts = itertools.chain((0,), x_pts, (None,))
 
         ugh_mom_dad = itertools.cycle((parent1, parent2))
-        segments = []
 
-        for pts, parent in itertools.izip(base.pairs(x_pts), ugh_mom_dad):
-            segments.append(itertools.islice(parent, pts[0], pts[1]))
+        segments = [itertools.islice(parent, p[0], p[1])
+            for parent, p in itertools.izip(ugh_mom_dad, base.pairs(x_pts))]
 
         return tuple(itertools.chain(*segments))
     
     def select_parents(self, population): #all possible parents
         xs = itertools.combinations(population, 2)
         ys = itertools.combinations(reversed(population), 2)
-        return list(set(a).union(set(b)))
+        return random.sample(set(a).union(set(b)), self.spec.population_size)
 
     def run(self, text_report=True):
         p_mutation = 1 / len(self.model.xs)
         rand_vect = self.model.random_input_vector
-        XVarBest = rand_vect()
         population = [rand_vect() for _ in xrange(self.spec.population_size)]
         eList = []
         stop = False
+
+        state = {
+            'best':    {'xs': None, 'ys': None, 'energy': None},
+            'current': {'xs': None, 'ys': None, 'energy': None}
+            }
 
         k = 1
         for gens in myOpt.ga_gen_list:
             eBest = 1
             while k < gens:
-                parents = self.select_parents(population)
+                parent_pairs = self.select_parents(population)
                 children = []
-                for parent1, parent2 in parents:
-                    child1, child2 = self.crossover(parent1, parent2, myOpt.  ga_crossover  )
+                for parent1, parent2 in parent_pairs:
+                    child = self.crossover(parent1, parent2)
                     children.append(self.mutate(child1, p_mutation))
                     children.append(self.mutate(child2, p_mutation))
                 eBest = min([c.energy for c in children])
