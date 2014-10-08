@@ -16,6 +16,10 @@ def pairs(xs):
 
 class memo():
     '''adapted from https://github.com/timm/sbse14/wiki/basepy'''
+
+    # def __new__(self, **kwargs):
+    #     return namedtuple('memo', kwargs.keys())
+
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
