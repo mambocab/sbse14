@@ -16,8 +16,8 @@ class GeneticAlgorithm(Searcher):
         super(GeneticAlgorithm, self).__init__(model=model, *args, **kw)
 
     def mutate(self, child):
-        #nothing happens! Hooray! TODO
-        return child
+        i = base.random_index(child)
+        return base.tuple_replace(child, i, self.model.xs[i]())
 
     def crossover(self, parent1, parent2, crossovers=1):
         if crossovers < 1:
