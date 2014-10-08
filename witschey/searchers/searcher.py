@@ -1,9 +1,12 @@
 from __future__ import division, unicode_literals
 
 from witschey.base import memo, The
+from witschey.models import Model
 
+from collections import OrderedDict
 from datetime import datetime
 import abc
+from types import NoneType
 
 class Searcher(object):
     # allows us to get all subclasses with __subclasses__()
@@ -39,3 +42,51 @@ class Searcher(object):
 
     def run(*args, **kwargs):
         raise NotImplementedError()
+
+class SearcherConfig(object):
+
+    def __init__(self, searcher=None, model=None, **kwargs):
+        self.searcher, self.model = searcher, model
+        self._kw_dict = kwargs
+
+    def get_searcher(self, searcher=None, model=None, **kwargs):
+        s = searcher or self.searcher
+        m = model or self.model
+        kw = self._kw_dict.copy().update(kwargs) or {}
+
+        return s(m, **kw)
+
+    @property
+    def searcher(self):
+        return self._searcher
+    @searcher.setter
+    def searcher(self, value):
+        if isinstance(value, NoneType) or issubclass(value, Searcher):
+            self._searcher = value
+        else:
+            raise TypeError('{} is not a Searcher or None'.format(value))
+
+    @property
+    def model(self):
+        return self._model
+    @model.setter
+    def model(self, value):
+        if isinstance(value, NoneType) or issubclass(value, Model):
+            self._model = value
+        else:
+            raise TypeError('{} is not a Model or None'.format(value))
+
+    def update(self, searcher=None, model=None, **kwargs):
+        if searcher is not None: self.searcher = searcher
+        if model    is not None: self.model    = model
+        self._kw_dict.update(kwargs)
+
+    def as_dict(self):
+        "gives back a dict with the searcher and model first"
+        return OrderedDict(searcher=self._searcher,
+            model=self._model, **self._kw_dict)
+
+    def __repr__(self):
+        kw_string = ', '.join('{0}={1}'.format(k, v)
+                for k, v in self.as_dict().iteritems())
+        return '{0}({1})'.format(self.__class__.__name__, kw_string)
