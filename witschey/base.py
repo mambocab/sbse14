@@ -43,13 +43,13 @@ class memo():
         rv += '\n'
 
         for k in after:
-            ''.join([' ' * depth * indent,
+            rv += ''.join([' ' * depth * indent,
                 '{ {}:\n'.format(k),
                 str(d[k]),
                 str(k) if isinstance(k, dict) else k.__dict__,
                 self._to_str(depth=depth+1, indent=indent, sep=sep, d=k),
                 ' ' * depth * indent,
-                '}\n']
+                '}\n'])
 
         return rv
 
