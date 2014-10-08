@@ -19,7 +19,7 @@ class memo():
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
-    def to_str(self, depth=0, indent=4, sep='\u2192', d=None):
+    def to_str(self, depth=0, indent=4, sep=': ', d=None):
         return self._to_str(
             depth=depth,
             indent=indent,
@@ -43,15 +43,13 @@ class memo():
         rv += '\n'
 
         for k in after:
-            rv += ' ' * depth * indent
-            rv += '{ '
-            rv += '{}:\n'.format(k)
-            k = d[k]
-            k = k if isinstance(k, dict) else k.__dict__
-            rv += self._to_str(depth=depth+1, indent=indent, sep=sep, d=k)
-            rv += ' ' * depth * indent
-            rv += '}'
-            rv += '\n'
+            ''.join([' ' * depth * indent,
+                '{ {}:\n'.format(k),
+                str(d[k]),
+                str(k) if isinstance(k, dict) else k.__dict__,
+                self._to_str(depth=depth+1, indent=indent, sep=sep, d=k),
+                ' ' * depth * indent,
+                '}\n']
 
         return rv
 
