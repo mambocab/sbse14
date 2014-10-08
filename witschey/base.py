@@ -86,9 +86,8 @@ def random_index(x):
 
 The = memo(
     Searcher=memo(era_length=50, terminate_early=True,
-        log_eras_energy=True, log_eras_by_objective=True,
+        log_eras_energy=False, log_eras_by_objective=False,
         iterations=1000, p_mutation=1/3),
     SimulatedAnnealer=memo(),
     MaxWalkSat=memo(),
-    GeneticAlgorithm=memo(population_size=50)
-    )
+    GeneticAlgorithm=memo(population_size=50))
