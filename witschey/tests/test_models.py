@@ -1,7 +1,9 @@
-from __future__ import division
+from __future__ import division, print_function
+
+from unittest import TestCase
+from nose.tools import assert_equal, assert_in, assert_true
 
 from witschey import models
-from unittest import TestCase
 
 class TestSchaffer(TestCase):
     def setUp(self):
@@ -32,3 +34,26 @@ class TestSchaffer(TestCase):
         assert f2((0,)) == 4
         assert f2([2]) == 0
         assert f2((0, 0)) == 8
+
+class TestDTLZ7(TestCase):
+
+    def correct_names(self, m):
+        z = zip((f.__name__ for f in m.ys),
+            ('f{}'.format(x) for x in range(1, len(m.ys) + 1)))
+        for act, corr in z:
+            assert_equal(act, corr)
+
+    def generated_fs_correct(self, x):
+        m = models.DTLZ7(x)
+        assert_equal(len(m.ys), x)
+        self.correct_names(m)
+
+    def test_default_fs(self):
+        m = models.DTLZ7()
+        assert_equal(len(m.ys), 20)
+
+        self.correct_names(m)
+
+    def test_generated_fs(self):
+        self.generated_fs_correct(30)
+        self.generated_fs_correct(100)
