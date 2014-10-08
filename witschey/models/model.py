@@ -3,11 +3,11 @@ from __future__ import division, print_function
 # all adapted from Dr. Tim Menzies' model code:
 # https://github.com/timm/sbse14/blob/master/models.py
 
-import abc
+from abc import ABCMeta, abstractmethod
 
 class Model(object):
     # allows us to get all subclasses with __subclasses__()
-    __metaclass__ = abc.ABCMeta
+    __metaclass__ = ABCMeta
 
     def __init__(self, independents=None, dependents=None,
         energy_min=None, energy_max=None, enforce_energy_constraints=False):
