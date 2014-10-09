@@ -54,6 +54,7 @@ class GeneticAlgorithm(Searcher):
         pop_size = self.spec.population_size
         init_xs = tuple(rand_vect() for _ in xrange(pop_size))
         energy = lambda x: x.energy
+        report = (base.StringBuilder() if text_report else base.NullObject())
 
         population = tuple(compute_model_io(self.model, xs) for xs in init_xs)
 
@@ -71,13 +72,24 @@ class GeneticAlgorithm(Searcher):
                     self.mutate(xs)
                 child = SearchIO(xs, ys, self.model.energy(ys))
                 children.append(child)
+
             best_in_pop = min(children, key=energy)
 
+            prev_best_energy = best.energy
             best = min(best, best_in_pop, key=energy)
+
+            report += str(best.energy)
+            # passing an iterable so it isn't calculated for NullStringBuilder
+            report += ('+' if x.energy < prev_best_energy else '.'
+                for x in children)
+            report += '\n'
 
             population = children
             evals += len(population)
             if evals > self.spec.iterations: break
             #some "is significantly better" termination logic here
 
-        return memo(best=best.energy, evals=evals)
+        rv = memo(best=best.energy, evals=evals)
+        if report: rv.report = report.as_str()
+
+        return rv
