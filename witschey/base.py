@@ -75,11 +75,11 @@ def tuple_replace(t, replace_at, value):
     return tuple(value if i == replace_at else v for i, v in enumerate(t))
 
 def random_index(x):
-    if isinstance(x, list):
+    if isinstance(x, (list, tuple)):
         return random.randint(0, len(x) - 1)
     if isinstance(x, dict):
         return random.choice(x.keys)
-    raise ValueError('{} is not a list or dict'.format(x))
+    raise ValueError('{} is not a list, tuple or dict'.format(x))
 
 The = memo(
     Searcher=memo(era_length=50, terminate_early=True,
