@@ -110,8 +110,7 @@ class StringBuilder(object):
 
 class NullObject(object):
     __slots__ = ()
-    def __init__(self, *parents, **kw):
-        return super(NullObject, self).__init__()
+    def __init__(self, *args, **kw):         return None
     def __getattribute__(self, *name, **kw): return self
     def __setattr__(self, *args, **kw):      return self
     def __iadd__(self, *args, **kw):         return self
