@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 
-import itertools, random
+import itertools, random, collections
 
 from witschey import base
 from searcher import Searcher, SearchIO
@@ -20,13 +20,18 @@ class GeneticAlgorithm(Searcher):
         return base.tuple_replace(child, i, self.model.xs[i]())
 
     def crossover(self, parent1, parent2, crossovers=1):
-        if crossovers < 1:
-            raise ValueError('cannot have fewer than 1 crossover')
         if len(parent1) != len(parent2):
             raise ValueError('parents must be same length to breed')
+        if len(parent1) == 1:
+            return random.choice((parent1, parent2))
 
-        x_pts = sorted(random.sample(xrange(1, len(parent1) - 1), crossovers))
-        x_pts = itertools.chain((0,), x_pts, (None,))
+        if crossovers < 1:
+            raise ValueError('cannot have fewer than 1 crossover')
+        crossovers = min(len(parent1) - 2, crossovers)
+        # print(crossovers)
+        x_pts = itertools.chain((0,),
+            sorted(random.sample(xrange(1, len(parent1) - 1), crossovers)),
+            (None,))
 
         ugh_mom_dad = itertools.cycle((parent1, parent2))
 
@@ -36,31 +41,39 @@ class GeneticAlgorithm(Searcher):
         return tuple(itertools.chain(*segments))
     
     def select_parents(self, population, output_size): #all possible parents
-        xs = itertools.combinations(population, 2)
-        ys = itertools.combinations(reversed(population), 2)
-        return random.sample(set(a).union(set(b)), output_size)
+        fore = itertools.combinations(population, 2)
+        back = itertools.combinations(reversed(population), 2)
+        all_parents = set(fore).union(set(back))
+        if len(all_parents) < output_size:
+            return all_parents
+        return random.sample(all_parents, output_size)
 
     def run(self, text_report=True):
         rand_vect = lambda: self.model.random_input_vector()
-        max_pop = self.spec.population_size
-        init_xs = (rand_vect() for _ in xrange(max_pop))
-        import pdb; pdb.set_trace()
-        init_xs_ys = itertools.izip(init_xs, map(self.model, init_xs))
-        population = map(lambda x, y: SearchIO(y, y, self.model.energy(y)),
-            init_xs_ys)
+        pop_size = self.spec.population_size
+        init_xs = tuple(rand_vect() for _ in xrange(pop_size))
+        energy = lambda x: x.energy
+
+        population = map(
+            lambda t: SearchIO(t[0], t[1], self.model.energy(t[1])),
+            ((x, self.model(x)) for x in init_xs))
 
         stop = False
 
-        best = min(population, key=lambda x: x.energy)
+        best = min(population, key=energy)
 
         for gens in xrange(self.spec.iterations):
             children = []
-            for parent1, parent2 in self.select_parents(population, max_pop):
-                child = self.crossover(parent1, parent2)
-                children.append(self.mutate(child2, p_mutation))
-            best_in_pop = min(c.energy for c in children)
-            if best_in_pop.energy < best.energy:
-                best = best_in_pop
+            for parent1, parent2 in self.select_parents(population, pop_size):
+                xs = self.crossover(parent1.xs, parent2.xs, 2)
+                ys = self.model(xs)
+                if random.random() < self.spec.p_mutation:
+                    self.mutate(xs)
+                child = SearchIO(xs, ys, self.model.energy(ys))
+                children.append(child)
+            best_in_pop = min(children, key=energy)
+
+            best = min(best, best_in_pop, key=energy)
 
             population = children
             #some "is significantly better" termination logic here
