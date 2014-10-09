@@ -21,25 +21,24 @@ class memo(object):
         self.__dict__.update(kwargs)
 
     def to_str(self, depth=0, indent=4, infix=': ', sep=', ', d=None):
-        return self._to_str(
-            depth=depth,
+        return '{\n' + self._to_str(
+            depth=depth + 1,
             indent=indent,
             infix=infix,
             sep=sep,
-            d = self.__dict__ if d is None else d)
+            d = self.__dict__ if d is None else d) + '}'
 
     def _to_str(self, depth, indent, infix, sep, d):
-        after = []
-        reps = []
-        rv = ''
+        after, before, reps = [], [], []
+        rv = ' ' * depth * indent
         for k in sorted([s for s in d.keys() if s[0] != '_']):
             val = d[k]
             if isinstance(val, memo) or type(val) == dict:
                 after.append(k)
             else:
-                reps.append('{}{}{}{}'.format(k, infix, repr(val), sep))
-        rv += ' ' * depth * indent
-        rv += ''.join(reps)
+                before.append('{}{}{}'.format(k, infix, repr(val)))
+        rv += sep.join(before)
+        if after: rv += ','
         rv += '\n'
 
         for k in after:
