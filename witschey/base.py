@@ -20,14 +20,15 @@ class memo(object):
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
 
-    def to_str(self, depth=0, indent=4, sep=': ', d=None):
+    def to_str(self, depth=0, indent=4, infix=': ', sep=', ', d=None):
         return self._to_str(
             depth=depth,
             indent=indent,
+            infix=infix,
             sep=sep,
             d = self.__dict__ if d is None else d)
 
-    def _to_str(self, depth, indent, sep, d):
+    def _to_str(self, depth, indent, infix, sep, d):
         after = []
         reps = []
         rv = ''
@@ -36,19 +37,17 @@ class memo(object):
             if isinstance(val, memo) or type(val) == dict:
                 after.append(k)
             else:
-                if callable(val):
-                    val = val.__name__ + '()'
-                reps.append('{}{}{}'.format(k, sep, val))
+                reps.append('{}{}{}{}'.format(k, infix, repr(val), sep))
         rv += ' ' * depth * indent
-        rv += ', '.join(reps)
+        rv += ''.join(reps)
         rv += '\n'
 
         for k in after:
-            rv += ''.join([' ' * depth * indent,
-                '{' + ' {}:\n'.format(k)])
+            rv += ''.join([' ' * depth * indent, k, infix, '{\n'])
             k = d[k]
             k = k if type(k) == dict else k.__dict__
-            rv += ''.join([self._to_str(depth=depth+1, indent=indent, sep=sep, d=k),
+            rv += ''.join([self._to_str(depth=depth+1,indent=indent,
+                infix=infix, sep=sep, d=k),
                 ' ' * depth * indent,
                 '}\n'])
 
