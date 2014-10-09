@@ -1,6 +1,6 @@
 from __future__ import division, print_function, unicode_literals
 
-import json, random, functools, sys, math, itertools
+import json, random, functools, sys, math, itertools, collections
 
 def pretty_input(t):
     float_format = lambda x: '{: .2f}'.format(x)
@@ -78,6 +78,47 @@ def random_index(x):
     if isinstance(x, dict):
         return random.choice(x.keys)
     raise ValueError('{} is not a list, tuple or dict'.format(x))
+
+class StringBuilder(object):
+    def __init__(self, *args):
+        self._s = ''.join(args)
+        self._next = []
+    
+    def append(self, arg):
+        'recurse through iterables in args, adding all strings to _next '
+        'raises TypeError if it finds a non-Iterable non-string'
+        if isinstance(arg, basestring):
+            self._next.append(arg)
+        elif isinstance(arg, collections.Iterable):
+            map(self.append, arg)
+        else:
+            raise TypeError('{} not a string or iterable'.format(arg))
+
+    def __iadd__(self, arg):
+        self.append(arg)
+        return self
+
+    def as_str(self):
+        'build and cache _s if necessary, then return it.'
+        if self._next:
+            self._s += ''.join(self._next)
+            self._next = []
+        return self._s
+    
+    def __repr__(self):
+        return "{}('{}')".format(self.__class__.__name__, self.as_str())
+
+class NullObject(object):
+    __slots__ = ()
+    def __init__(self, *parents, **kw):
+        return super(NullObject, self).__init__()
+    def __getattribute__(self, *name, **kw): return self
+    def __setattr__(self, *args, **kw):      return self
+    def __iadd__(self, *args, **kw):         return self
+    def __call__(self, *args, **kw):         return self
+    def __bool__(self, *args, **kw):         return False 
+    __nonzero__ = __bool__
+
 
 The = memo(
     Searcher=memo(era_length=50, terminate_early=True,
