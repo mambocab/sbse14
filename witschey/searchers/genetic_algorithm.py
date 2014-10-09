@@ -80,4 +80,4 @@ class GeneticAlgorithm(Searcher):
             if evals > self.spec.iterations: break
             #some "is significantly better" termination logic here
 
-        return best.energy
+        return memo(best=best.energy, evals=evals)
