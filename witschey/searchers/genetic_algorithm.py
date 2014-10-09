@@ -61,7 +61,8 @@ class GeneticAlgorithm(Searcher):
 
         best = min(population, key=energy)
 
-        for gens in xrange(self.spec.iterations):
+        evals = 0
+        for gens in xrange(self.spec.iterations or 1000):
             children = []
             for parent1, parent2 in self.select_parents(population, pop_size):
                 xs = self.crossover(parent1.xs, parent2.xs, 2)
@@ -75,6 +76,8 @@ class GeneticAlgorithm(Searcher):
             best = min(best, best_in_pop, key=energy)
 
             population = children
+            evals += len(population)
+            if evals > self.spec.iterations: break
             #some "is significantly better" termination logic here
 
         return best.energy
