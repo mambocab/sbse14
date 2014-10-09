@@ -23,7 +23,7 @@ class MaxWalkSat(Searcher):
     def run(self, text_report=True):
         rv = memo(report='')
 
-        log_objectives = self.spec.log_eras or self.spec.terminate_early
+        log_objectives = self.spec.log_eras_by_objective or self.spec.terminate_early
         self.lives = 4
 
         if log_objectives:
