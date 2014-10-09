@@ -93,4 +93,8 @@ class SearcherConfig(object):
 
 SearchIO = namedtuple('SearchIO', ('xs', 'ys', 'energy'))
 
+def compute_model_io(model, xs):
+    ys = model(xs)
+    return SearchIO(xs, ys, model.energy(ys))
+
 
