@@ -3,7 +3,8 @@ from __future__ import division, print_function
 import itertools, random, collections
 
 from witschey import base
-from searcher import Searcher, SearchIO
+from witschey.base import memo
+from searcher import Searcher, SearchIO, compute_model_io
 
 # adapted from Chris Theisen's code
 #     his code provided the shell that I worked in and styled to my liking
@@ -54,9 +55,7 @@ class GeneticAlgorithm(Searcher):
         init_xs = tuple(rand_vect() for _ in xrange(pop_size))
         energy = lambda x: x.energy
 
-        population = map(
-            lambda t: SearchIO(t[0], t[1], self.model.energy(t[1])),
-            ((x, self.model(x)) for x in init_xs))
+        population = tuple(compute_model_io(self.model, xs) for xs in init_xs)
 
         stop = False
 
