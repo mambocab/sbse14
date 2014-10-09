@@ -33,7 +33,7 @@ class memo(object):
         rv = ''
         for k in sorted([s for s in d.keys() if s[0] != '_']):
             val = d[k]
-            if isinstance(val, (memo, dict)):
+            if isinstance(val, memo) or type(val) == dict:
                 after.append(k)
             else:
                 if callable(val):
@@ -45,10 +45,10 @@ class memo(object):
 
         for k in after:
             rv += ''.join([' ' * depth * indent,
-                '{ {}:\n'.format(k),
-                str(d[k]),
-                str(k) if isinstance(k, dict) else k.__dict__,
-                self._to_str(depth=depth+1, indent=indent, sep=sep, d=k),
+                '{' + ' {}:\n'.format(k)])
+            k = d[k]
+            k = k if type(k) == dict else k.__dict__
+            rv += ''.join([self._to_str(depth=depth+1, indent=indent, sep=sep, d=k),
                 ' ' * depth * indent,
                 '}\n'])
 
