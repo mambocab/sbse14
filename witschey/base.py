@@ -14,11 +14,8 @@ def pairs(xs):
     for p in itertools.izip(a, b):
         yield p
 
-class memo():
+class memo(object):
     '''adapted from https://github.com/timm/sbse14/wiki/basepy'''
-
-    # def __new__(self, **kwargs):
-    #     return namedtuple('memo', kwargs.keys())
 
     def __init__(self, **kwargs):
         self.__dict__.update(kwargs)
