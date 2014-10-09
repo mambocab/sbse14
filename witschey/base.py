@@ -116,7 +116,7 @@ class NullObject(object):
     def __setattr__(self, *args, **kw):      return self
     def __iadd__(self, *args, **kw):         return self
     def __call__(self, *args, **kw):         return self
-    def __bool__(self, *args, **kw):         return False 
+    def __bool__(self, *args, **kw):         return False
     __nonzero__ = __bool__
 
 
