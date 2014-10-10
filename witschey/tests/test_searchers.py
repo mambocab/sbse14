@@ -68,7 +68,7 @@ class TestSearcherConfig(TestCase):
         sc = searchers.SearcherConfig(model=m, searcher=s)
 
         searcher = sc.get_searcher()
-        assert_equals(searcher.model, m)
+        assert_is_instance(searcher.model, m)
         assert_is_instance(searcher, s)
 
 
