@@ -1,10 +1,12 @@
 from __future__ import division, print_function
 
 import itertools, random, collections
+from collections import defaultdict
 
 from witschey import base
 from witschey.base import memo
 from searcher import Searcher, SearchIO, compute_model_io
+from witschey.log import NumberLog
 
 # adapted from Chris Theisen's code
 #     his code provided the shell that I worked in and styled to my liking
@@ -54,7 +56,10 @@ class GeneticAlgorithm(Searcher):
         pop_size = self.spec.population_size
         init_xs = tuple(rand_vect() for _ in xrange(pop_size))
         energy = lambda x: x.energy
-        report = (base.StringBuilder() if text_report else base.NullObject())
+
+        report = base.StringBuilder() if text_report else base.NullObject()
+        energy_by_generation = defaultdict(
+            NumberLog if self.spec.log_eras_energy else base.NullObject)
 
         population = tuple(compute_model_io(self.model, xs) for xs in init_xs)
 
@@ -63,7 +68,7 @@ class GeneticAlgorithm(Searcher):
         best = min(population, key=energy)
 
         evals = 0
-        for gens in xrange(self.spec.iterations or 1000):
+        for gen in xrange(self.spec.iterations or 1000):
             children = []
             for parent1, parent2 in self.select_parents(population, pop_size):
                 xs = self.crossover(parent1.xs, parent2.xs, 2)
@@ -84,12 +89,17 @@ class GeneticAlgorithm(Searcher):
                 for x in children)
             report += '\n'
 
+            energy_by_generation[gen].extend(c.energy for c in children)
+
             population = children
             evals += len(population)
+
             if evals > self.spec.iterations: break
             #some "is significantly better" termination logic here
 
         rv = memo(best=best.energy, evals=evals)
         if report: rv.report = report.as_str()
+        if energy_by_generation:
+            rv.era_logs_best_energy = energy_by_generation
 
         return rv
