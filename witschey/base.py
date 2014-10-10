@@ -73,10 +73,10 @@ def tuple_replace(t, replace_at, value):
     return tuple(value if i == replace_at else v for i, v in enumerate(t))
 
 def random_index(x):
-    if isinstance(x, (list, tuple)):
-        return random.randint(0, len(x) - 1)
     if isinstance(x, dict):
         return random.choice(x.keys)
+    if isinstance(x, collections.Iterable):
+        return random.randint(0, len(x) - 1)
     raise ValueError('{} is not a list, tuple or dict'.format(x))
 
 class StringBuilder(object):
@@ -117,7 +117,6 @@ class NullObject(object):
     def __call__(self, *args, **kw):         return self
     def __bool__(self, *args, **kw):         return False
     __nonzero__ = __bool__
-
 
 The = memo(
     Searcher=memo(era_length=50, terminate_early=True,
