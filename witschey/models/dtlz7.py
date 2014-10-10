@@ -8,13 +8,13 @@ from model import Model
 from independent_variable import IndependentVariable as IV
 
 class DTLZ7(Model):
-    def __init__(self, ivs=20):
+    def __init__(self, ivs=30, dvs=20):
 
         # h/t http://stackoverflow.com/a/13184536/3408454
         # dynamically generate these suckers
 
         generated_fs = []
-        for x in xrange(1, ivs):
+        for x in xrange(1, dvs):
             f = lambda xs: xs[x]
             f.__name__ = 'f{}'.format(x)
             generated_fs.append(f)
@@ -38,5 +38,5 @@ class DTLZ7(Model):
 
         fs = tuple(generated_fs + [final_f])
 
-        ivs = tuple(IV(min=0, max=1) for _ in xrange(30))
-        super(DTLZ7, self).__init__(independents=ivs, dependents=fs)
+        independents = tuple(IV(min=0, max=1) for _ in xrange(ivs))
+        super(DTLZ7, self).__init__(independents=independents, dependents=fs)
