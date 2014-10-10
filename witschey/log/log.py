@@ -1,47 +1,65 @@
 from __future__ import division, print_function
 
-import random, functools
+import random, functools, collections
+
+from sortedcontainers import SortedList
 
 from witschey import base
-
 from witschey.base import memo
 
 class Log(object):
     """Keep a random sample of stuff seen so far. Based on Dr. Menzies'
     implementation."""
 
-    def __init__(self, inits=None, label=None, max_size=256):
-        self._cache            = []
-        self._n                = 0
+    MAX_SIZE = 256
+
+    def __init__(self, inits=None, label=None, max_size=MAX_SIZE):
+        self._cache            = SortedList()
         self._report           = None
         self.label             = label or ''
+        self._n                = 0
         self.max_size          = max_size
         self._valid_statistics = False
+        self._invalidate_statistics()
         if inits:
             map(self.__iadd__, inits)
 
     def random_index(self):
         return base.random_index(self._cache)
 
+    @classmethod
+    def wrap(cls, x, max_size=MAX_SIZE):
+        if isinstance(x, cls): return x
+        return cls(inits=x, max_size=max_size)
+
+    def __len__(self):
+        return len(self._cache)
+
+    def extend(self, xs):
+        if not isinstance(xs, collections.Iterable):
+            raise TypeError()
+        map(self.__iadd__, xs)
+
     def __iadd__(self, x):
         if x is None:
             return x
 
+        self._n += 1
+
         if isinstance(x, Log):
             map(self.__iadd__, x._cache)
 
-        self._n += 1
         changed = False
 
         # if cache has room, add item
         if self.max_size is None or len(self._cache) < self.max_size:
             changed = True
-            self._cache.append(x)
+            self._cache.add(x)
         # cache is full: maybe replace an old item
         else: 
             # items less likely to be replaced later in the run:
             # leads to uniform sample of entire run
-            if random.random() <= self.max_size / self._n:
+            if random.random() <= self.max_size / len(self):
                 changed = True
                 self._cache[self.random_index()] = x
 
@@ -51,24 +69,23 @@ class Log(object):
 
         return self
 
-    def __add__(self, x):
-        inits = self._cache + x._cache
-        return NumberLog(inits=inits, label='generated via __add__', max_size=None)
+    def __add__(self, x, max_size=MAX_SIZE):
+        inits = itertools.chain(self._cache, x._cache)
+        return NumberLog(inits=inits, max_size=max_size)
 
     def any(self):
         return random.choice(self._cache)
 
     def report(self):
         if self._report is None:
-            self._report = self.generate_report()
+            self._report = self._generate_report()
         return self._report
 
     def setup(self):
         raise NotImplementedError()
 
-    def contents(self):
-        # slow, but most generic copy implementation
-        return copy.deepcopy(self._cache)
+    def as_list(self):
+        return self._cache.as_list()
 
     def _invalidate_statistics(self):
         '''
