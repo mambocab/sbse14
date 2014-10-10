@@ -3,6 +3,8 @@ from unittest import TestCase
 
 import random, itertools
 
+from nose.tools import assert_equal
+
 def init_list(d):
     return [].extend(itertools.repeat(k, v) for k, v in d.items())
 
@@ -16,14 +18,15 @@ class TestNumberLog(TestCase):
         self.log += 48.8
         self.log += 14.24
 
-        # make sure sortedness actually changes
-        assert sorted(self.log._cache) != self.log._cache
+        # given current implementation, should always be sorted,
+        # regardless of insertion order
+        assert_equal(sorted(self.log._cache), self.log._cache)
         assert not self.log._valid_statistics
 
         self.log._prepare_data()
 
         assert self.log._valid_statistics
-        assert sorted(self.log._cache) == self.log._cache
+        assert_equal(sorted(self.log._cache), self.log._cache)
 
     def test_invalidation(self):
         self.log += 48.8
@@ -37,11 +40,12 @@ class TestNumberLog(TestCase):
 
         assert not self.log._valid_statistics
 
-    def test_n(self):
+    def test_len_n(self):
         n = 2000
         for _ in xrange(n):
             self.log += 2
-        assert self.log._n == n
+        assert_equal(self.log._n, n)
+        assert_equal(len(self.log), self.max_size)
 
     def test_max_size(self):
         for x in xrange(2000):
