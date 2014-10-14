@@ -33,7 +33,7 @@ class DifferentialEvolution(Searcher):
         return tuple(rv)
 
     def _extrapolate_xs(self, current):
-        a, b, c = tuple(self._sample_frontier_exclude(current, n=3))
+        a, b, c = self._sample_frontier_exclude(current, n=3)
         rv_list = [x for x in current.xs]
 
         # randomly pick at least one x-position to change
