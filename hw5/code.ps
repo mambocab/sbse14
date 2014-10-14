@@ -1,0 +1,2713 @@
+%!PS-Adobe-3.0
+%%Title: base.py, basic_stats.py, log.py, numberlog.py, __init__.py, model.py, independent_variable.py, dtlz7.py, fonseca.py, kursawe.py
+%%For: Jim Witschey
+%%Creator: a2ps version 4.14
+%%CreationDate: Tue Oct 14 11:56:55 2014
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 17
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 15.000000 def
+/fnfs 11 def
+/bfs 7.060185 def
+/cw 4.236111 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 86.400000 mul
+def
+/ph
+   520.335631 th add
+def
+/pmw urx llx sub pw 2 mul sub 1 div def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+  dup pmw add pw add
+] def
+/y [
+  pmh ph add 0 mul ph add
+  dup
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 5 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1-2) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, print_function, unicode_literals) p n
+0 T () N
+0 T (import json, random, functools, sys, math, itertools, collections) N
+0 T () N
+(5) # (def pretty_input\(t\):) N
+0 T (    float_format = lambda x: '{: .2f}'.format\(x\)) N
+0 T (    str_tuple = tuple\(float_format\(x\).encode\(sys.stdout.encoding\) for x in t\)) N
+0 T (    return ', '.join\(s for s in str_tuple\)) N
+0 T () N
+(10) # (def pairs\(xs\):) N
+0 T (    # from https://docs.python.org/2/library/itertools.html) N
+0 T (    a, b = itertools.tee\(xs\)) N
+0 T (    next\(b, None\)) N
+0 T (    for p in itertools.izip\(a, b\):) N
+(15) # (        yield p) N
+0 T () N
+0 T (class memo\(object\):) N
+0 T (    '''adapted from https://github.com/timm/sbse14/wiki/basepy''') N
+0 T () N
+(20) # (    def __init__\(self, **kwargs\):) N
+0 T (        self.__dict__.update\(kwargs\)) N
+0 T () N
+0 T (    def to_str\(self, depth=0, indent=4, infix=': ', sep=', ', d=None\):) N
+0 T (        return '{\\n' + self._to_str\() N
+(25) # (            depth=depth + 1,) N
+0 T (            indent=indent,) N
+0 T (            infix=infix,) N
+0 T (            sep=sep,) N
+0 T (            d = self.__dict__ if d is None else d\) + '}') N
+(30) # () N
+0 T (    def _to_str\(self, depth, indent, infix, sep, d\):) N
+0 T (        after, before, reps = [], [], []) N
+0 T (        rv = ' ' * depth * indent) N
+0 T (        for k in sorted\([s for s in d.keys\(\) if s[0] != '_']\):) N
+(35) # (            val = d[k]) N
+0 T (            if isinstance\(val, memo\) or type\(val\) == dict:) N
+0 T (                after.append\(k\)) N
+0 T (            else:) N
+0 T (                before.append\('{}{}{}'.format\(k, infix, repr\(val\)\)\)) N
+(40) # (        rv += sep.join\(before\)) N
+0 T (        if after: rv += ',') N
+0 T (        rv += '\\n') N
+0 T () N
+0 T (        for k in after:) N
+(45) # (            rv += ''.join\([' ' * depth * indent, k, infix, '{\\n']\)) N
+0 T (            k = d[k]) N
+0 T (            k = k if type\(k\) == dict else k.__dict__) N
+0 T (            rv += ''.join\([self._to_str\(depth=depth+1,indent=indent,) N
+0 T (                infix=infix, sep=sep, d=k\),) N
+(50) # (                ' ' * depth * indent,) N
+0 T (                '}\\n']\)) N
+0 T () N
+0 T (        return rv) N
+0 T () N
+(55) # (def memoize\(f\):) N
+0 T (    'memoizer for single-arg functions') N
+0 T (    d = {}) N
+0 T (    @functools.wraps\(f\)) N
+0 T (    def wrapper\(x\):) N
+(60) # (        try:) N
+0 T (            return d[x]) N
+0 T (        except KeyError:) N
+0 T (            d[x] = f\(x\)) N
+0 T (            return d[x]) N
+(65) # () N
+0 T (    return wrapper) N
+0 T () N
+0 T (@memoize) N
+0 T (def memo_sqrt\(x\):) N
+(70) # (    return math.sqrt\(x\)) N
+0 T () N
+0 T (def tuple_replace\(t, replace_at, value\):) N
+0 T (    return tuple\(value if i == replace_at else v for i, v in enumerate\(t\)\)) N
+("csc710sbse: hw5: Witschey") (Page 1/2) (Oct 14, 14 11:12) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T () p n
+(75) # (def random_index\(x\):) N
+0 T (    if isinstance\(x, dict\):) N
+0 T (        return random.choice\(x.keys\)) N
+0 T (    if isinstance\(x, collections.Iterable\):) N
+0 T (        return random.randint\(0, len\(x\) - 1\)) N
+(80) # (    raise ValueError\('{} is not a list, tuple or dict'.format\(x\)\)) N
+0 T () N
+0 T (class StringBuilder\(object\):) N
+0 T (    def __init__\(self, *args\):) N
+0 T (        self._s = ''.join\(args\)) N
+(85) # (        self._next = []) N
+0 T (    ) N
+0 T (    def append\(self, arg\):) N
+0 T (        'recurse through iterables in args, adding all strings to _next ') N
+0 T (        'raises TypeError if it finds a non-Iterable non-string') N
+(90) # (        if isinstance\(arg, basestring\):) N
+0 T (            self._next.append\(arg\)) N
+0 T (        elif isinstance\(arg, collections.Iterable\):) N
+0 T (            map\(self.append, arg\)) N
+0 T (        else:) N
+(95) # (            raise TypeError\('{} not a string or iterable'.format\(arg\)\)) N
+0 T () N
+0 T (    def __iadd__\(self, arg\):) N
+0 T (        self.append\(arg\)) N
+0 T (        return self) N
+(100) # () N
+0 T (    def as_str\(self\):) N
+0 T (        'build and cache _s if necessary, then return it.') N
+0 T (        if self._next:) N
+0 T (            self._s += ''.join\(self._next\)) N
+(105) # (            self._next = []) N
+0 T (        return self._s) N
+0 T (    ) N
+0 T (    def __repr__\(self\):) N
+0 T (        return "{}\('{}'\)".format\(self.__class__.__name__, self.as_str\(\)\)) N
+(110) # () N
+0 T (class NullObject\(object\):) N
+0 T (    __slots__ = \(\)) N
+0 T (    def __init__\(self, *args, **kw\):         return None) N
+0 T (    def __getattribute__\(self, *name, **kw\): return self) N
+(115) # (    def __setattr__\(self, *args, **kw\):      return self) N
+0 T (    def __iadd__\(self, *args, **kw\):         return self) N
+0 T (    def __call__\(self, *args, **kw\):         return self) N
+0 T (    def __bool__\(self, *args, **kw\):         return False) N
+0 T (    __nonzero__ = __bool__) N
+(120) # () N
+0 T (The = memo\() N
+0 T (    Searcher=memo\(era_length=50, terminate_early=True,) N
+0 T (        log_eras_best_energy=True, log_eras_by_objective=False,) N
+0 T (        iterations=1000, p_mutation=1/3\),) N
+(125) # (    SimulatedAnnealer=memo\(cooling_factor=.8\),) N
+0 T (    MaxWalkSat=memo\(\),) N
+0 T (    GeneticAlgorithm=memo\(population_size=50, p_mutation=.6\)\)) N
+("csc710sbse: hw5: Witschey") (Page 2/2) (Oct 14, 14 11:12) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/base.py) (1/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1,1) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, print_function) p n
+0 T () N
+0 T (import sortedcontainers, math) N
+0 T () N
+(5) # (def basic_stats_sorted\(xs\):) N
+0 T (    return xs if isinstance\(xs, sortedcontainers.SortedList\) else sorted\(xs\)) N
+0 T () N
+0 T (def median\(xs\):) N
+0 T (    # implementation from http://stackoverflow.com/a/10482734/3408454) N
+(10) # (    xs = basic_stats_sorted\(xs\)) N
+0 T (    n = len\(xs\)) N
+0 T (    return xs[n // 2] if n % 2 else \(xs[n // 2] + xs[n // 2 - 1]\) / 2) N
+0 T () N
+0 T (def mean\(xs\):) N
+(15) # (    print\(xs\)) N
+0 T (    return sum\(xs\) / len\(xs\)) N
+0 T () N
+0 T (def iqr\(xs\):) N
+0 T (    n = len\(xs\)) N
+(20) # (    return xs[int\(n * .75\)] - xs[int\(n * .25\)]) N
+0 T () N
+0 T (def standard_deviation\(xs, mean=None\):) N
+0 T (    if mean is None: mean = mean\(xs\)) N
+0 T (    return math.sqrt\(\(sum\(x - mean\) for x in xs\) ** 2\)) N
+(25) # () N
+0 T (def norm\(x, lo, hi\):) N
+0 T (    return \(x - lo\) / \(hi - lo\)) N
+0 T () N
+0 T (def xtile\(xs, lo=0, hi=0.001,) N
+(30) # (        width=50,) N
+0 T (        chops=[0.1, 0.3, 0.5, 0.7, 0.9],) N
+0 T (        marks=["-", " ", " ", "-", " "],) N
+0 T (        bar="|", star="*",) N
+0 T (        show=" {: >6.2f}"\):) N
+(35) # (    """The function _xtile_ takes a list of \(possibly\)) N
+0 T (    unsorted numbers and presents them as a horizontal) N
+0 T (    xtile chart \(in ascii format\). The default is a ) N
+0 T (    contracted _quintile_ that shows the ) N
+0 T (    10,30,50,70,90 breaks in the data \(but this can be ) N
+(40) # (    changed- see the optional flags of the function\).) N
+0 T (    """) N
+0 T () N
+0 T (    xs = basic_stats_sorted\(xs\)) N
+0 T () N
+(45) # (    lo = min\(lo, xs[0]\)) N
+0 T (    hi = max\(hi, xs[-1]\)) N
+0 T (    if hi == lo:) N
+0 T (        hi += .001 # ugh) N
+0 T () N
+(50) # (    out     = [' '] * width) N
+0 T () N
+0 T (    pos = lambda p: xs[int\(len\(xs\) * p\)]) N
+0 T (    place  = lambda x: min\(width-1, int\(len\(out\) * norm\(x, lo, hi\)\)\)) N
+0 T () N
+(55) # (    what   = [pos\(p\)   for p in chops]) N
+0 T (    where  = [place\(n\) for n in  what]) N
+0 T () N
+0 T (    for one, two in base.pairs\(where\):) N
+0 T (        for i in range\(one, two\): ) N
+(60) # (            out[i] = marks[0]) N
+0 T (        marks = marks[1:]) N
+0 T () N
+0 T (    out[int\(width / 2\)]  = bar) N
+0 T (    out[place\(pos\(0.5\)\)] = star) N
+(65) # () N
+0 T (    return ''.join\(out\) +  "," +  ','.join\([show.format\(x\) for x in what]\)) N
+0 T () N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Oct 09, 14 21:36) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, print_function) p n
+0 T () N
+0 T (import random, functools, collections) N
+0 T () N
+(5) # (from sortedcontainers import SortedList) N
+0 T () N
+0 T (from witschey import base) N
+0 T (from witschey.base import memo) N
+0 T () N
+(10) # (class Log\(object\):) N
+0 T (    """Keep a random sample of stuff seen so far. Based on Dr. Menzies') N
+0 T (    implementation.""") N
+0 T () N
+0 T (    MAX_SIZE = 256) N
+(15) # () N
+0 T (    def __init__\(self, inits=None, label=None, max_size=MAX_SIZE\):) N
+0 T (        self._cache            = SortedList\(\)) N
+0 T (        self._report           = None) N
+0 T (        self.label             = label or '') N
+(20) # (        self._n                = 0) N
+0 T (        self.max_size          = max_size) N
+0 T (        self._valid_statistics = False) N
+0 T (        self._invalidate_statistics\(\)) N
+0 T (        if inits:) N
+(25) # (            map\(self.__iadd__, inits\)) N
+0 T () N
+0 T (    def random_index\(self\):) N
+0 T (        return base.random_index\(self._cache\)) N
+0 T () N
+(30) # (    @classmethod) N
+0 T (    def wrap\(cls, x, max_size=MAX_SIZE\):) N
+0 T (        if isinstance\(x, cls\): return x) N
+0 T (        return cls\(inits=x, max_size=max_size\)) N
+0 T () N
+(35) # (    def __len__\(self\):) N
+0 T (        return len\(self._cache\)) N
+0 T () N
+0 T (    def extend\(self, xs\):) N
+0 T (        if not isinstance\(xs, collections.Iterable\):) N
+(40) # (            raise TypeError\(\)) N
+0 T (        map\(self.__iadd__, xs\)) N
+0 T () N
+0 T (    def __iadd__\(self, x\):) N
+0 T (        if x is None:) N
+(45) # (            return x) N
+0 T () N
+0 T (        self._n += 1) N
+0 T () N
+0 T (        if isinstance\(x, Log\):) N
+(50) # (            map\(self.__iadd__, x._cache\)) N
+0 T () N
+0 T (        changed = False) N
+0 T () N
+0 T (        # if cache has room, add item) N
+(55) # (        if self.max_size is None or len\(self._cache\) < self.max_size:) N
+0 T (            changed = True) N
+0 T (            self._cache.add\(x\)) N
+0 T (        # cache is full: maybe replace an old item) N
+0 T (        else: ) N
+(60) # (            # items less likely to be replaced later in the run:) N
+0 T (            # leads to uniform sample of entire run) N
+0 T (            if random.random\(\) <= self.max_size / len\(self\):) N
+0 T (                changed = True) N
+0 T (                self._cache.remove\(random.choice\(self._cache\)\)) N
+(65) # (                self._cache.add\(x\)) N
+0 T () N
+0 T (        if changed:) N
+0 T (            self._invalidate_statistics\(\)) N
+0 T (            self._change\(x\)) N
+(70) # () N
+0 T (        return self) N
+0 T () N
+0 T (    def __add__\(self, x, max_size=MAX_SIZE\):) N
+("csc710sbse: hw5: Witschey") (Page 1/2) (Oct 14, 14 11:19) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/basic_stats.py, witschey/log/log.py) (2/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2,1) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (        inits = itertools.chain\(self._cache, x._cache\)) p n
+(75) # (        return NumberLog\(inits=inits, max_size=max_size\)) N
+0 T () N
+0 T (    def any\(self\):) N
+0 T (        return random.choice\(self._cache\)) N
+0 T () N
+(80) # (    def report\(self\):) N
+0 T (        if self._report is None:) N
+0 T (            self._report = self._generate_report\(\)) N
+0 T (        return self._report) N
+0 T () N
+(85) # (    def setup\(self\):) N
+0 T (        raise NotImplementedError\(\)) N
+0 T () N
+0 T (    def as_list\(self\):) N
+0 T (        return self._cache.as_list\(\)) N
+(90) # () N
+0 T (    def _invalidate_statistics\(self\):) N
+0 T (        ''') N
+0 T (        default implementation. if _valid_statistics is something other than) N
+0 T (        a boolean, reimplement!) N
+(95) # (        ''') N
+0 T (        self._valid_statistics = False) N
+0 T () N
+0 T (    def ish\(self, *args, **kwargs\):) N
+0 T (        raise NotImplementedError\(\)) N
+(100) # () N
+0 T (    def _change\(self, x\):) N
+0 T (        ''') N
+0 T (        override to add incremental updating functionality) N
+0 T (        ''') N
+(105) # (        pass) N
+0 T () N
+0 T (    def _prepare_data\(self\):) N
+0 T (        s = '_prepare_data\(\) not implemented for ' + self.__class__.__name__) N
+0 T (        raise NotImplementedError\(s\)) N
+(110) # () N
+0 T (    @staticmethod) N
+0 T (    def log_for\(t\):) N
+0 T (        if t == int or t == float or isinstance\(t, \(int, float\)\):) N
+0 T (            return NumberLog\(\)) N
+(115) # (        else:) N
+0 T (            return SymbolLog\(\)) N
+0 T () N
+0 T (    def contents\(self\):) N
+0 T (        return self._cache.as_list\(\)) N
+(120) # () N
+0 T () N
+0 T (def statistic\(f\):) N
+0 T (    ''') N
+0 T (    decorator for log functions that return statistics about contents.) N
+(125) # (    if _valid_statistics is False, generate valid stats before calling) N
+0 T (    the wrapped function.) N
+0 T (    ''') N
+0 T (    @functools.wraps\(f\)) N
+0 T (    def wrapper\(*args, **kwargs\):) N
+(130) # (        self = args[0]) N
+0 T (        if not self._valid_statistics:) N
+0 T (            self._prepare_data\(\)) N
+0 T (        return f\(*args, **kwargs\)) N
+0 T () N
+(135) # (    return wrapper) N
+("csc710sbse: hw5: Witschey") (Page 2/2) (Oct 14, 14 11:19) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division) p n
+0 T () N
+0 T (import sys) N
+0 T () N
+(5) # (from log import Log) N
+0 T (from witschey import base) N
+0 T (from witschey import basic_stats) N
+0 T () N
+0 T (class NumberLog\(Log\):) N
+(10) # () N
+0 T (    def __init__\(self, *args, **kwargs\):) N
+0 T (        super\(NumberLog, self\).__init__\(*args, **kwargs\)) N
+0 T () N
+0 T (        self._invalidate_statistics\(\)) N
+(15) # () N
+0 T (    @property) N
+0 T (    def hi\(self\):) N
+0 T (        return self._cache[-1] # assumes SortedList implementation) N
+0 T (    @property) N
+(20) # (    def lo\(self\):) N
+0 T (        return self._cache[0]  # assumes SortedList implementation) N
+0 T () N
+0 T (    def _invalidate_statistics\(self\):) N
+0 T (        self._cached_mean, self._cached_median = None, None) N
+(25) # (        self._cached_sd, self._cached_iqr = None, None) N
+0 T () N
+0 T (        super\(NumberLog, self\)._invalidate_statistics\(\)) N
+0 T () N
+0 T (    def norm\(self,x\):) N
+(30) # (        "normalize the argument with respect to maximum and minimum") N
+0 T (        if self.hi == self.lo:) N
+0 T (            raise ValueError\('hi and lo of {} are equal'.format\(self.__name__\)\)) N
+0 T (        return basic_stats.norm\(x, self.lo, self.hi\)) N
+0 T () N
+(35) # (    def _prepare_data\(self\):) N
+0 T (        if not self._valid_statistics:) N
+0 T (            pass) N
+0 T (        self._valid_statistics = True) N
+0 T () N
+(40) # (    def _generate_report\(self\):) N
+0 T (        return memo\(median=self.median\(\), iqr=self.iqr\(\),) N
+0 T (            lo=self.lo, hi=self.hi\)) N
+0 T () N
+0 T (    def ish\(self,f=0.1\):) N
+(45) # (        """return a num likely to be similar to/representative of) N
+0 T (        nums in the distribution""") N
+0 T (        return self.any\(\) + f*\(self.any\(\) - self.any\(\)\)) N
+0 T () N
+0 T (    def median\(self\):) N
+(50) # (        if self._cached_median is not None:) N
+0 T (            return self._cached_median) N
+0 T (        self._cached_median = basic_stats.median\(self._cache\)) N
+0 T (        return self._cached_median) N
+0 T () N
+(55) # (    def mean\(self\):) N
+0 T (        if self._cached_mean is not None:) N
+0 T (            return self._cached_mean) N
+0 T (        self._cached_mean = basic_stats.mean\(self._cache\)) N
+0 T (        return self._cached_mean) N
+(60) # () N
+0 T (    def standard_deviation\(self\):) N
+0 T (        if self._cached_sd is not None:) N
+0 T (            return self._cached_sd) N
+0 T (        self._cached_sd = basic_stats.standard_deviation\() N
+(65) # (            self._cache, mean=self.mean\(\)\)) N
+0 T (        return self._cached_sd) N
+0 T () N
+0 T (    def iqr\(self\):) N
+0 T (        if self._cached_iqr is not None:) N
+(70) # (            return self._cached_iqr) N
+0 T (        self._cached_iqr = basic_stats.iqr\(self._cache\)) N
+0 T (        return self._cached_iqr) N
+0 T () N
+("csc710sbse: hw5: Witschey") (Page 1/2) (Oct 09, 14 19:36) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/log/log.py, witschey/log/numberlog.py) (3/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2,1) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (    def xtile\(self, *args, **kw\):) p n
+(75) # (        return basic_stats.xtile\(self._cache, *args, **kw\)) N
+0 T () N
+0 T (    def better\(self, log2\):) N
+0 T (        if not self._cache or not log2._cache: return False) N
+0 T (        if self.median\(\) < log2.median\(\): return True) N
+(80) # (        if self.iqr\(\) < log2.iqr\(\): return True) N
+0 T (        return False) N
+("csc710sbse: hw5: Witschey") (Page 2/2) (Oct 09, 14 19:36) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from model import Model) p n
+0 T (from independent_variable import IndependentVariable) N
+0 T (from schaffer import Schaffer) N
+0 T (from kursawe import Kursawe) N
+(5) # (from fonseca import Fonseca) N
+0 T (from zdt1 import ZDT1) N
+0 T (from zdt3 import ZDT3) N
+0 T (from viennet3 import Viennet3) N
+0 T (from dtlz7 import DTLZ7) N
+(10) # () N
+0 T (del model) N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Oct 14, 14 10:52) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/log/numberlog.py, witschey/models/__init__.py) (4/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1,1) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, print_function) p n
+0 T () N
+0 T (# all adapted from Dr. Tim Menzies' model code:) N
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+(5) # () N
+0 T (from abc import ABCMeta, abstractmethod) N
+0 T () N
+0 T (class Model\(object\):) N
+0 T (    # allows us to get all subclasses with __subclasses__\(\)) N
+(10) # (    __metaclass__ = ABCMeta) N
+0 T () N
+0 T (    def __init__\(self, independents=None, dependents=None,) N
+0 T (        energy_min=None, energy_max=None, enforce_energy_constraints=False\):) N
+0 T (        if independents is None or dependents is None:) N
+(15) # (            raise ValueError) N
+0 T () N
+0 T (        self.xs = independents) N
+0 T (        self.ys = dependents) N
+0 T (        self.energy_max = energy_max) N
+(20) # (        self.energy_min = energy_min) N
+0 T (        self.enforce_energy_constraints = enforce_energy_constraints) N
+0 T () N
+0 T (    def normalize\(self, x\):) N
+0 T (        n = x - self.energy_min) N
+(25) # (        d = self.energy_max - self.energy_min) N
+0 T (        try:) N
+0 T (            return n / d) N
+0 T (        except ZeroDivisionError:) N
+0 T (            return 0.5) N
+(30) # () N
+0 T (    def random_input_vector\(self\):) N
+0 T (        return tuple\(x\(\) for x in self.xs\)) N
+0 T () N
+0 T (    def __call__\(self, v, norm=False\):) N
+(35) # (        energy_vector = tuple\(y\(v\) for y in self.ys\)) N
+0 T (        energy_total = sum\(energy_vector\)) N
+0 T () N
+0 T (        if self.enforce_energy_constraints:) N
+0 T (            energy_errmsg ='current energy {} not in range [{}, {}]'.format\() N
+(40) # (                energy_total, self.energy_min, self.energy_max\)) N
+0 T () N
+0 T (        if self.energy_min is None or self.energy_min > energy_total:) N
+0 T (            if self.enforce_energy_constraints:) N
+0 T (                raise ValueError\(energy_errmsg\)) N
+(45) # (            self.energy_min = energy_total) N
+0 T () N
+0 T (        if self.energy_max is None or energy_total > self.energy_max:) N
+0 T (            if self.enforce_energy_constraints:) N
+0 T (                raise ValueError\(energy_errmsg\)) N
+(50) # (            self.energy_max = energy_total) N
+0 T () N
+0 T (        return energy_vector) N
+0 T () N
+0 T (    def energy\(self, energy_vector\):) N
+(55) # (        return sum\(energy_vector\)) N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Oct 08, 14 17:25) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# all adapted from Dr. Tim Menzies' model code:) p n
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+0 T () N
+0 T (import random) N
+(5) # () N
+0 T (class IndependentVariable\(object\):) N
+0 T (    def __init__\(self, min=None, max=None, type=float\):) N
+0 T (        self.min = min) N
+0 T (        self.max = max) N
+(10) # (        self.type = type) N
+0 T () N
+0 T (    def __call__\(self\):) N
+0 T (        if self.type == float:) N
+0 T (            f = random.uniform) N
+(15) # (        elif self.type == int:) N
+0 T (            f = random.randint) N
+0 T () N
+0 T (        return f\(self.min, self.max\)) N
+0 T () N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Sep 17, 14 21:54) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/models/model.py, witschey/models/independent_variable.py) (5/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1,1) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# all adapted from Dr. Tim Menzies' model code:) p n
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+0 T () N
+0 T (from __future__ import division) N
+(5) # (import math) N
+0 T () N
+0 T (from model import Model) N
+0 T (from independent_variable import IndependentVariable as IV) N
+0 T () N
+(10) # (class DTLZ7\(Model\):) N
+0 T (    def __init__\(self, ivs=30, dvs=20\):) N
+0 T () N
+0 T (        # h/t http://stackoverflow.com/a/13184536/3408454) N
+0 T (        # dynamically generate these suckers) N
+(15) # () N
+0 T (        generated_fs = []) N
+0 T (        for x in xrange\(1, dvs\):) N
+0 T (            f = lambda xs: xs[x]) N
+0 T (            f.__name__ = 'f{}'.format\(x\)) N
+(20) # (            generated_fs.append\(f\)) N
+0 T () N
+0 T (        def g\(xs\):) N
+0 T (            return 1 + \(9 / abs\(xs[-1]\)\) * sum\(xs\)) N
+0 T () N
+(25) # (        def h\(xs, fs=generated_fs, g=g\):) N
+0 T (            s = 0) N
+0 T (            for f in fs:) N
+0 T (                fxs = f\(xs\)) N
+0 T (                a = fxs / \(1 + g\(xs\)\)) N
+(30) # (                b = 1 + math.sin\(3 * math.pi * fxs\)) N
+0 T (                s += a * b) N
+0 T () N
+0 T (            return ivs - s) N
+0 T () N
+(35) # (        def final_f\(xs\):) N
+0 T (            return \(1 + g\(xs\)\) * h\(xs\)) N
+0 T (        final_f.__name__ = 'f{}'.format\(ivs\)) N
+0 T () N
+0 T (        fs = tuple\(generated_fs + [final_f]\)) N
+(40) # () N
+0 T (        independents = tuple\(IV\(min=0, max=1\) for _ in xrange\(ivs\)\)) N
+0 T (        super\(DTLZ7, self\).__init__\(independents=independents, dependents=fs\)) N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Oct 09, 14 20:39) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# all adapted from Dr. Tim Menzies' model code:) p n
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+0 T () N
+0 T (from __future__ import division) N
+(5) # (import math) N
+0 T () N
+0 T (from model import Model) N
+0 T (from independent_variable import IndependentVariable as IV) N
+0 T (from witschey.base import memo_sqrt) N
+(10) # () N
+0 T (class Fonseca\(Model\):) N
+0 T (    def __init__\(self, ivs=3\):) N
+0 T (        ivs = tuple\(IV\(min=-4, max=4\) for _ in xrange\(ivs - 1\)\)) N
+0 T () N
+(15) # (        def f1\(xs\):) N
+0 T (            e = sum\(\(x - \(1 / memo_sqrt\(i+1\)\)\) ** 2 for i, x in enumerate\(xs\)\)) N
+0 T (            return 1 - math.exp\(-e\)) N
+0 T () N
+0 T (        def f2\(xs\):) N
+(20) # (            e = sum\(\(x + \(1 / memo_sqrt\(i+1\)\)\) ** 2 for i, x in enumerate\(xs\)\)) N
+0 T (            return 1 - math.exp\(-e\)) N
+0 T () N
+0 T (        super\(Fonseca, self\).__init__\(independents=ivs, dependents=\(f1, f2\)\)) N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Sep 22, 14 23:27) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/models/dtlz7.py, witschey/models/fonseca.py) (6/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1,1) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# all adapted from Dr. Tim Menzies' model code:) p n
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+0 T () N
+0 T (from __future__ import division) N
+(5) # (import math) N
+0 T () N
+0 T (from model import Model) N
+0 T (from independent_variable import IndependentVariable as IV) N
+0 T () N
+(10) # (class Kursawe\(Model\):) N
+0 T (    def __init__\(self, ivs=3, a=0.8, b=3\):) N
+0 T (        ivs = tuple\(IV\(min=-5, max=5\) for _ in xrange\(ivs - 1\)\)) N
+0 T (        self.a = a) N
+0 T (        self.b = b) N
+(15) # () N
+0 T (        def f1\(xs\):) N
+0 T (            rv = 0) N
+0 T (            for i in xrange\(len\(xs\) - 1\):) N
+0 T (                exponent = \(-0.2\) * math.sqrt\(xs[i] ** 2 + xs[i+1] ** 2\)) N
+(20) # (                rv += -10 * math.exp\(exponent\)) N
+0 T (            return rv) N
+0 T () N
+0 T (        def f2\(xs\):) N
+0 T (            f = lambda x: \(math.fabs\(x\)**self.a\) + \(5 * math.sin\(x\)**self.b\)) N
+(25) # (            return sum\(f\(x\) for x in xs\)) N
+0 T () N
+0 T (        super\(Kursawe, self\).__init__\(independents=ivs, dependents=\(f1, f2\)\)) N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Sep 22, 14 23:13) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# all adapted from Dr. Tim Menzies' model code:) p n
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+0 T () N
+0 T (from model import Model) N
+(5) # (from independent_variable import IndependentVariable as IV) N
+0 T () N
+0 T (class Schaffer\(Model\):) N
+0 T (    def __init__\(self, ivs=1\):) N
+0 T (        ivs = tuple\(IV\(min=-10^5, max=10^5\) for _ in xrange\(ivs\)\)) N
+(10) # (        # we use def instead of lambdas so the functions keep their __name__s) N
+0 T (        def f1\(xs\):) N
+0 T (            return sum\(x ** 2 for x in xs\)) N
+0 T (        def f2\(xs\):) N
+0 T (            return sum\(\(x - 2\) ** 2 for x in xs\)) N
+(15) # () N
+0 T (        super\(Schaffer, self\).__init__\() N
+0 T (            independents=ivs,dependents=\(f1, f2\)\)) N
+0 T () N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Oct 07, 14 13:17) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/models/kursawe.py, witschey/models/schaffer.py) (7/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1,1) 8
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# all adapted from Dr. Tim Menzies' model code:) p n
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+0 T () N
+0 T (from __future__ import division) N
+(5) # (import math) N
+0 T () N
+0 T (from model import Model) N
+0 T (from independent_variable import IndependentVariable as IV) N
+0 T () N
+(10) # (class Viennet3\(Model\):) N
+0 T () N
+0 T (    def __init__\(self\):) N
+0 T () N
+0 T (        def f1\(xs\):) N
+(15) # (            x_1sq = xs[0] ** 2) N
+0 T (            x_2sq = xs[1] ** 2) N
+0 T (            a = 0.5 * x_1sq) N
+0 T (            b = math.sin\(x_1sq + x_2sq\)) N
+0 T (            return a + x_2sq + b) N
+(20) # () N
+0 T (        def f2\(xs\):) N
+0 T (            x_1 = xs[0]) N
+0 T (            x_2 = xs[1]) N
+0 T () N
+(25) # (            a = \(\(3 * x_1 - 2 * x_2 + 4\) ** 2\) / 8) N
+0 T (            b = \(\(x_1 + x_2 + 1\) ** 2\) / 27) N
+0 T () N
+0 T (            return a + b + 15) N
+0 T () N
+(30) # (        def f3\(xs\):) N
+0 T (            x_1sq = xs[0] ** 2) N
+0 T (            x_2sq = xs[1] ** 2) N
+0 T () N
+0 T (            a = 1 / \(x_1sq + x_2sq + 1\)) N
+(35) # (            b = 1.1 * math.exp\(-x_1sq - x_2sq\)) N
+0 T () N
+0 T (            return a - b) N
+0 T () N
+0 T (        ivs = \(IV\(min=-3, max=3\), IV\(min=-3, max=3\)\)) N
+(40) # () N
+0 T (        super\(Viennet3, self\).__init__\() N
+0 T (            independents=ivs, dependents=\(f1, f2, f3\)\)) N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Sep 22, 14 23:13) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# all adapted from Dr. Tim Menzies' model code:) p n
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+0 T () N
+0 T (from __future__ import division) N
+(5) # (import math) N
+0 T () N
+0 T (from model import Model) N
+0 T (from independent_variable import IndependentVariable as IV) N
+0 T () N
+(10) # (class ZDT1\(Model\):) N
+0 T (    def __init__\(self, ivs=30\):) N
+0 T () N
+0 T (        def g\(xs\):) N
+0 T (            return 1 + 9 * sum\(xs[1:]\) / \(len\(xs\) - 1\)) N
+(15) # () N
+0 T (        def f1\(xs\):) N
+0 T (            return xs[0]) N
+0 T () N
+0 T (        def f2\(xs\):) N
+(20) # (            gxs = g\(xs\)) N
+0 T (            return gxs * \(1 - math.sqrt\(xs[0] / gxs\)\)) N
+0 T () N
+0 T (        ivs = tuple\(IV\(min=0, max=1\) for _ in xrange\(30\)\)) N
+0 T (        super\(ZDT1, self\).__init__\(independents=ivs, dependents=\(f1, f2, g\)\)) N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Sep 22, 14 23:13) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/models/viennet3.py, witschey/models/zdt1.py) (8/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1,1) 9
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# all adapted from Dr. Tim Menzies' model code:) p n
+0 T (# https://github.com/timm/sbse14/blob/master/models.py) N
+0 T () N
+0 T (from __future__ import division) N
+(5) # () N
+0 T (import math) N
+0 T () N
+0 T (from model import Model) N
+0 T (from independent_variable import IndependentVariable as IV) N
+(10) # (from witschey.base import memo_sqrt) N
+0 T () N
+0 T () N
+0 T (class ZDT3\(Model\):) N
+0 T () N
+(15) # (    def __init__\(self, ivs=30\):) N
+0 T () N
+0 T (        def g\(xs\):) N
+0 T (            return 1 + 9 * sum\(xs[1:]\) / \(len\(xs\) - 1\)) N
+0 T () N
+(20) # (        def f1\(xs\):) N
+0 T (            return xs[0]) N
+0 T () N
+0 T (        def f2\(xs\):) N
+0 T (            gxs = g\(xs\)) N
+(25) # (            a = 1 - memo_sqrt\(xs[0] / gxs\) - \(xs[0] / gxs\)) N
+0 T (            a *= math.sin\(10 * math.pi * xs[0]\)) N
+0 T (            return gxs * a) N
+0 T () N
+0 T (        ivs = tuple\(IV\(min=0, max=1\) for _ in xrange\(30\)\)) N
+(30) # () N
+0 T (        super\(ZDT3, self\).__init__\(independents=ivs, dependents=\(f1, f2, g\)\)) N
+0 T () N
+("csc710sbse: hw5: Witschey") (Page 1/1) (Sep 22, 14 23:12) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, unicode_literals) p n
+0 T () N
+0 T (from witschey.base import memo, The) N
+0 T (from witschey.models import Model) N
+(5) # () N
+0 T (from collections import OrderedDict, namedtuple) N
+0 T (from datetime import datetime) N
+0 T (import abc) N
+0 T (from types import NoneType) N
+(10) # () N
+0 T (class Searcher\(object\):) N
+0 T (    # allows us to get all subclasses with __subclasses__\(\)) N
+0 T (    __metaclass__ = abc.ABCMeta) N
+0 T () N
+(15) # (    def __new__\(cls, *args, **kwargs\):) N
+0 T (        # construct our object) N
+0 T (        future_self = super\(Searcher, cls\).__new__\(cls, *args, **kwargs\)) N
+0 T () N
+0 T (        name = cls.__name__) N
+(20) # (        # initialize a dict with searcher's name) N
+0 T (        # and the initialization time) N
+0 T (        d = dict\(searcher=name, initialized=datetime.now\(\)\)) N
+0 T () N
+0 T (        # if there are global options for this class or its bases in The) N
+(25) # (        for k in [name] + [k.__name__ for k in cls.__bases__]:) N
+0 T (            if hasattr\(The, k\):) N
+0 T (                # add them to the dict) N
+0 T (                d.update\(getattr\(The, k\).__dict__\)) N
+0 T () N
+(30) # (        # then, add the kwargs to the constructor call to the dict.) N
+0 T (        # NB: this happens after adding options from The, so ) N
+0 T (        #     call-specific options override the globals) N
+0 T (        d.update\(kwargs\)) N
+0 T () N
+(35) # (        # set our spec with the contents of the dict) N
+0 T (        future_self.spec = memo\(**d\)) N
+0 T () N
+0 T (        return future_self) N
+0 T () N
+(40) # (    def __init__\(self, model, *args, **kw\):) N
+0 T (        self.model = model\(\)) N
+0 T () N
+0 T (    def run\(*args, **kwargs\):) N
+0 T (        raise NotImplementedError\(\)) N
+(45) # () N
+0 T (class SearcherConfig\(object\):) N
+0 T () N
+0 T (    def __init__\(self, searcher=None, model=None, **kwargs\):) N
+0 T (        self.searcher, self.model = searcher, model) N
+(50) # (        self._kw_dict = kwargs) N
+0 T () N
+0 T (    def get_searcher\(self, searcher=None, model=None, **kwargs\):) N
+0 T (        s = searcher or self.searcher) N
+0 T (        m = model or self.model) N
+(55) # (        kw = self._kw_dict.copy\(\).update\(kwargs\) or {}) N
+0 T () N
+0 T (        return s\(m, **kw\)) N
+0 T () N
+0 T (    @property) N
+(60) # (    def searcher\(self\):) N
+0 T (        return self._searcher) N
+0 T (    @searcher.setter) N
+0 T (    def searcher\(self, value\):) N
+0 T (        if isinstance\(value, NoneType\) or issubclass\(value, Searcher\):) N
+(65) # (            self._searcher = value) N
+0 T (        else:) N
+0 T (            raise TypeError\('{} is not a Searcher or None'.format\(value\)\)) N
+0 T () N
+0 T (    @property) N
+(70) # (    def model\(self\):) N
+0 T (        return self._model) N
+0 T (    @model.setter) N
+0 T (    def model\(self, value\):) N
+("csc710sbse: hw5: Witschey") (Page 1/2) (Oct 10, 14 9:59) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/models/zdt3.py, witschey/searchers/searcher.py) (9/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2,1) 10
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (        if isinstance\(value, NoneType\) or issubclass\(value, Model\):) p n
+(75) # (            self._model = value) N
+0 T (        else:) N
+0 T (            raise TypeError\('{} is not a Model or None'.format\(value\)\)) N
+0 T () N
+0 T (    def update\(self, searcher=None, model=None, **kwargs\):) N
+(80) # (        if searcher is not None: self.searcher = searcher) N
+0 T (        if model    is not None: self.model    = model) N
+0 T (        self._kw_dict.update\(kwargs\)) N
+0 T () N
+0 T (    def as_dict\(self\):) N
+(85) # (        "gives back a dict with the searcher and model first") N
+0 T (        return OrderedDict\(searcher=self._searcher,) N
+0 T (            model=self._model, **self._kw_dict\)) N
+0 T () N
+0 T (    def __repr__\(self\):) N
+(90) # (        kw_string = ', '.join\('{0}={1}'.format\(k, v\)) N
+0 T (                for k, v in self.as_dict\(\).iteritems\(\)\)) N
+0 T (        return '{0}\({1}\)'.format\(self.__class__.__name__, kw_string\)) N
+0 T () N
+0 T (SearchIO = namedtuple\('SearchIO', \('xs', 'ys', 'energy'\)\)) N
+(95) # () N
+0 T (def compute_model_io\(model, xs\):) N
+0 T (    ys = model\(xs\)) N
+0 T (    return SearchIO\(xs, ys, model.energy\(ys\)\)) N
+0 T () N
+(100) # () N
+("csc710sbse: hw5: Witschey") (Page 2/2) (Oct 10, 14 9:59) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, print_function) p n
+0 T () N
+0 T (import random, math) N
+0 T (from collections import defaultdict) N
+(5) # (from copy import deepcopy) N
+0 T () N
+0 T (from searcher import Searcher, SearchIO, compute_model_io) N
+0 T (from witschey.base import memo) N
+0 T (from witschey.log import NumberLog) N
+(10) # () N
+0 T (def p\(old, new, temp, cooling_factor\):) N
+0 T (    """) N
+0 T (    sets the threshold we compare to to decide whether to jump) N
+0 T () N
+(15) # (    returns e^-\(\(new-old\)/temp\)) N
+0 T (    """) N
+0 T (    numerator = new - old) N
+0 T () N
+0 T (    if not 0 <= numerator <= 1:) N
+(20) # (        numerator = old - new) N
+0 T (    try:) N
+0 T (        exponent = numerator / temp) N
+0 T (    except ZeroDivisionError:) N
+0 T (        return 0) N
+(25) # (    rv = math.exp\(-exponent\)) N
+0 T (    if rv > 1:) N
+0 T (        raise ValueError\('p returning greater than one',) N
+0 T (            rv, old, new, temp\)) N
+0 T (    return rv * cooling_factor) N
+(30) # () N
+0 T () N
+0 T (class SimulatedAnnealer\(Searcher\):) N
+0 T (    def __init__\(self, model, *args, **kw\):) N
+0 T (        super\(SimulatedAnnealer, self\).__init__\(model=model, *args, **kw\)) N
+(35) # () N
+0 T (    def run\(self, text_report=True\):) N
+0 T (        rv = memo\(report=''\)) N
+0 T (        log_eras_by_objective =\\) N
+0 T (            self.spec.log_eras_by_objective or self.spec.terminate_early) N
+(40) # (        if log_eras_by_objective:) N
+0 T (            rv.era_logs_by_objective = {) N
+0 T (                f.__name__: defaultdict\(NumberLog\)) N
+0 T (                for f in self.model.ys) N
+0 T (            }) N
+(45) # (        if self.spec.log_eras_best_energy:) N
+0 T (            rv.era_logs_best_energy = defaultdict\(NumberLog\)) N
+0 T (        def report_append\(s\):) N
+0 T (            if text_report:) N
+0 T (                rv.report += s) N
+(50) # () N
+0 T (        init_xs = self.model.random_input_vector\(\)) N
+0 T (        init_ys = self.model\(init_xs\)) N
+0 T (        best = SearchIO\(init_xs, init_ys, self.model.energy\(init_ys\)\)) N
+0 T (        current = deepcopy\(best\)) N
+(55) # () N
+0 T (        report_append\('{: .2}'.format\(best.energy\) + ' '\)) N
+0 T (        self.lives = 4) N
+0 T () N
+0 T (        for k in range\(self.spec.iterations\):) N
+(60) # (            if self.lives <= 0 and self.spec.terminate_early: break) N
+0 T () N
+0 T (            neighbor_candidate_xs = self.model.random_input_vector\(\)) N
+0 T (            neighbor_xs = tuple\(current.xs[i]) N
+0 T (                if random.random\(\) < self.spec.p_mutation else v) N
+(65) # (                for i, v in enumerate\(neighbor_candidate_xs\)\)) N
+0 T () N
+0 T (            neighbor = compute_model_io\(self.model, neighbor_candidate_xs\)) N
+0 T () N
+0 T (            if neighbor.energy < best.energy:) N
+(70) # (                best, current = neighbor, neighbor) N
+0 T (                report_append\('!'\)) N
+0 T () N
+0 T (            if neighbor.energy < current.energy:) N
+("csc710sbse: hw5: Witschey") (Page 1/2) (Oct 14, 14 11:13) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/searchers/searcher.py, witschey/searchers/simulated_annealer.py) (10/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2,1) 11
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (                current = neighbor) p n
+(75) # (                report_append\('+'\)) N
+0 T (            else:) N
+0 T (                good_idea = p\() N
+0 T (                    self.model.normalize\(current.energy\),) N
+0 T (                    self.model.normalize\(neighbor.energy\),) N
+(80) # (                    k / self.spec.iterations, self.spec.cooling_factor\)) N
+0 T (                # if random.random\(\) < good_idea:) N
+0 T (                if good_idea < random.random\(\):) N
+0 T (                    current = neighbor) N
+0 T (                    report_append\('?'\)) N
+(85) # () N
+0 T (            report_append\('.'\)) N
+0 T () N
+0 T (            era = k // self.spec.era_length) N
+0 T (            for f, v in zip\(self.model.ys, best.ys\):) N
+(90) # (                if log_eras_by_objective:) N
+0 T (                    rv.era_logs_by_objective[f.__name__][era] += v) N
+0 T (                if self.spec.log_eras_best_energy:) N
+0 T (                    rv.era_logs_best_energy[era] += best.energy) N
+0 T () N
+(95) # (            if k % self.spec.era_length == 0 and k != 0:) N
+0 T (                report_append\('\\n' + '{: .2}'.format\(best.energy\) + ' '\)) N
+0 T () N
+0 T (                self.lives -= 1) N
+0 T () N
+(100) # (                if not self.spec.terminate_early: break) N
+0 T (                for logs in rv.era_logs_by_objective.values\(\):) N
+0 T (                    if era not in logs: break) N
+0 T (                    if len\(logs.keys\(\)\) < 2: break) N
+0 T () N
+(105) # (                    prev_log = logs[logs.keys\(\).index\(era\) - 1]) N
+0 T (                    if logs[era].better\(prev_log\): self.lives += 1) N
+0 T () N
+0 T (        rv.best = best.energy) N
+0 T (        return rv) N
+(110) # () N
+("csc710sbse: hw5: Witschey") (Page 2/2) (Oct 14, 14 11:13) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division) p n
+0 T () N
+0 T (import random) N
+0 T (import numpy as np) N
+(5) # (from collections import defaultdict) N
+0 T () N
+0 T (from searcher import Searcher) N
+0 T (from witschey.base import memo, tuple_replace) N
+0 T (from witschey.log import NumberLog) N
+(10) # () N
+0 T (class MaxWalkSat\(Searcher\):) N
+0 T () N
+0 T (    def __init__\(self, model, *args, **kw\):) N
+0 T (        super\(MaxWalkSat, self\).__init__\(model=model, *args, **kw\)) N
+(15) # () N
+0 T (    def local_search_inputs\(self, bottom, top, n=10\):) N
+0 T (        chunk_length = \(top - bottom\) / n) N
+0 T () N
+0 T (        for a in np.arange\(bottom, top, chunk_length\):) N
+(20) # (            yield random.uniform\(a, a + chunk_length\)) N
+0 T () N
+0 T () N
+0 T (    def run\(self, text_report=True\):) N
+0 T (        rv = memo\(report=''\)) N
+(25) # () N
+0 T (        log_objectives = self.spec.log_eras_by_objective or self.spec.terminate_) N
+0 T (early) N
+0 T (        self.lives = 4) N
+0 T () N
+0 T (        if log_objectives:) N
+(30) # (            rv.era_logs_by_objective = {f.__name__: defaultdict\(NumberLog\)) N
+0 T (                for f in self.model.ys}) N
+0 T (        if self.spec.log_eras_best_energy:) N
+0 T (            rv.era_logs_best_energy = defaultdict\(NumberLog\)) N
+0 T () N
+(35) # (        def report\(s\):) N
+0 T (            if text_report:) N
+0 T (                rv.report += s) N
+0 T () N
+0 T (        self.terminate = False) N
+(40) # (        def end_era\(evals, era_length, log_value\):) N
+0 T (            report\('\\n{: .2}'.format\(log_value\) + ' '\)) N
+0 T () N
+0 T (            self.lives -= 1) N
+0 T (            eras = evals // era_length) N
+(45) # () N
+0 T () N
+0 T (            for logs in rv.era_logs_by_objective.values\(\):) N
+0 T (                if eras not in logs: break) N
+0 T (                if len\(logs.keys\(\)\) < 2: break) N
+(50) # () N
+0 T (                prev_log = logs[logs.keys\(\).index\(eras\) - 1]) N
+0 T (                if logs[eras].better\(prev_log\): self.lives += 1) N
+0 T () N
+0 T (            if self.lives <= 0: self.terminate = True) N
+(55) # () N
+0 T () N
+0 T (        def log_era\(evals, era_length, dependents_outputs\):) N
+0 T (            era = evals // era_length) N
+0 T (            for f, v in dependents_outputs:) N
+(60) # (                if log_objectives:) N
+0 T (                    rv.era_logs_by_objective[f.__name__][era] += v) N
+0 T (                if self.spec.log_eras_best_energy:) N
+0 T (                    rv.era_logs_best_energy[era] += rv.best) N
+0 T () N
+(65) # () N
+0 T (        init = self.model.random_input_vector\(\)) N
+0 T (        solution = init) N
+0 T (        state = solution) N
+0 T (        current_energy = self.model.energy\(self.model\(state\)\)) N
+(70) # (        rv.best = current_energy) N
+0 T (        evals = 0) N
+0 T () N
+("csc710sbse: hw5: Witschey") (Page 1/2) (Oct 14, 14 11:13) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/searchers/simulated_annealer.py, witschey/searchers/maxwalksat.py) (11/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2,1) 12
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (        report\('{: .2}'.format\(rv.best\) + ' '\)) p n
+0 T () N
+(75) # () N
+0 T (        while evals < self.spec.iterations:) N
+0 T (            if self.terminate: break) N
+0 T () N
+0 T (            for j in range\(20\):) N
+(80) # (                if evals > self.spec.iterations or self.terminate:) N
+0 T (                    break) N
+0 T () N
+0 T (                dimension = random.randint\(0, len\(state\) - 1\)) N
+0 T (                if self.spec.p_mutation > random.random\(\):) N
+(85) # (                    state = tuple_replace\(state,) N
+0 T (                        dimension, self.model.xs[dimension]\(\)\)) N
+0 T () N
+0 T (                    current_energy = self.model.energy\(self.model\(state\)\)) N
+0 T () N
+(90) # (                    if current_energy < rv.best:) N
+0 T (                        solution = state) N
+0 T (                        rv.best = current_energy) N
+0 T (                        report\('+'\)) N
+0 T (                    else:) N
+(95) # (                        report\('.'\)) N
+0 T () N
+0 T (                    evals += 1) N
+0 T () N
+0 T () N
+(100) # (                    if evals % self.spec.era_length == 0:) N
+0 T (                        end_era\(evals, self.spec.era_length, rv.best\)) N
+0 T () N
+0 T (                else:) N
+0 T (                    for j in self.local_search_inputs\() N
+(105) # (                        self.model.xs[dimension].min,) N
+0 T (                        self.model.xs[dimension].max) N
+0 T (                        \):) N
+0 T (                        if self.terminate: break) N
+0 T () N
+(110) # (                        state = tuple_replace\(state,) N
+0 T (                            dimension, self.model.xs[dimension]\(\)\)) N
+0 T () N
+0 T (                        current_energy = self.model\(state\)) N
+0 T () N
+(115) # (                        if current_energy < rv.best:) N
+0 T (                            solution = state) N
+0 T (                            rv.best = current_energy) N
+0 T (                            report\('|'\)) N
+0 T (                        else:) N
+(120) # (                            report\('.'\)) N
+0 T () N
+0 T (                        evals += 1) N
+0 T (                        if evals % self.spec.era_length == 0:) N
+0 T (                            end_era\(evals, self.spec.era_length, rv.best\)) N
+(125) # (                if log_objectives or self.spec.log_eras_energy:) N
+0 T (                    log_era\(evals, self.spec.era_length,) N
+0 T (                        zip\(self.model.ys, self.model\(solution\)\)\)) N
+0 T () N
+0 T (        rv.evaluations = evals) N
+(130) # (        return rv) N
+("csc710sbse: hw5: Witschey") (Page 2/2) (Oct 14, 14 11:13) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, print_function) p n
+0 T () N
+0 T (import itertools, random, collections) N
+0 T (from collections import defaultdict) N
+(5) # () N
+0 T (from witschey import base) N
+0 T (from witschey.base import memo) N
+0 T (from searcher import Searcher, SearchIO, compute_model_io) N
+0 T (from witschey.log import NumberLog) N
+(10) # () N
+0 T (# adapted from Chris Theisen's code) N
+0 T (#     his code provided the shell that I worked in and styled to my liking) N
+0 T (#Structure from:) N
+0 T (#http://www.cleveralgorithms.com/nature-inspired/evolution/genetic_algorithm.htm) N
+0 T (l) N
+(15) # () N
+0 T (class GeneticAlgorithm\(Searcher\):) N
+0 T () N
+0 T (    def __init__\(self, model, *args, **kw\):) N
+0 T (        super\(GeneticAlgorithm, self\).__init__\(model=model, *args, **kw\)) N
+(20) # () N
+0 T (    def mutate\(self, child\):) N
+0 T (        i = base.random_index\(child\)) N
+0 T (        return base.tuple_replace\(child, i, self.model.xs[i]\(\)\)) N
+0 T () N
+(25) # (    def crossover\(self, parent1, parent2, crossovers=1\):) N
+0 T (        if len\(parent1\) != len\(parent2\):) N
+0 T (            raise ValueError\('parents must be same length to breed'\)) N
+0 T (        if len\(parent1\) == 1:) N
+0 T (            return random.choice\(\(parent1, parent2\)\)) N
+(30) # () N
+0 T (        if crossovers < 1:) N
+0 T (            raise ValueError\('cannot have fewer than 1 crossover'\)) N
+0 T (        crossovers = min\(len\(parent1\) - 2, crossovers\)) N
+0 T (        # print\(crossovers\)) N
+(35) # (        x_pts = itertools.chain\(\(0,\),) N
+0 T (            sorted\(random.sample\(xrange\(1, len\(parent1\) - 1\), crossovers\)\),) N
+0 T (            \(None,\)\)) N
+0 T () N
+0 T (        ugh_mom_dad = itertools.cycle\(\(parent1, parent2\)\)) N
+(40) # () N
+0 T (        segments = [itertools.islice\(parent, p[0], p[1]\)) N
+0 T (            for parent, p in itertools.izip\(ugh_mom_dad, base.pairs\(x_pts\)\)]) N
+0 T () N
+0 T (        return tuple\(itertools.chain\(*segments\)\)) N
+(45) # (    ) N
+0 T (    def select_parents\(self, population, output_size\): #all possible parents) N
+0 T (        fore = itertools.combinations\(population, 2\)) N
+0 T (        back = itertools.combinations\(reversed\(population\), 2\)) N
+0 T (        all_parents = set\(fore\).union\(set\(back\)\)) N
+(50) # (        if len\(all_parents\) < output_size:) N
+0 T (            return all_parents) N
+0 T (        return random.sample\(all_parents, output_size\)) N
+0 T () N
+0 T (    def run\(self, text_report=True\):) N
+(55) # (        rand_vect = lambda: self.model.random_input_vector\(\)) N
+0 T (        pop_size = self.spec.population_size) N
+0 T (        init_xs = tuple\(rand_vect\(\) for _ in xrange\(pop_size\)\)) N
+0 T (        energy = lambda x: x.energy) N
+0 T () N
+(60) # (        report = base.StringBuilder\(\) if text_report else base.NullObject\(\)) N
+0 T (        energy_by_generation = defaultdict\() N
+0 T (            NumberLog if self.spec.log_eras_best_energy else base.NullObject\)) N
+0 T () N
+0 T () N
+(65) # (        population = tuple\(compute_model_io\(self.model, xs\) for xs in init_xs\)) N
+0 T () N
+0 T (        stop = False) N
+0 T () N
+0 T (        best = min\(population, key=energy\)) N
+(70) # () N
+0 T (        evals = 0) N
+0 T (        for gen in xrange\(self.spec.iterations or 1000\):) N
+("csc710sbse: hw5: Witschey") (Page 1/2) (Oct 14, 14 11:14) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/searchers/maxwalksat.py, witschey/searchers/genetic_algorithm.py) (12/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2,1) 13
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (            children = []) p n
+0 T (            for parent1, parent2 in self.select_parents\(population, pop_size\):) N
+(75) # (                xs = self.crossover\(parent1.xs, parent2.xs, 2\)) N
+0 T (                ys = self.model\(xs\)) N
+0 T (                if random.random\(\) < self.spec.p_mutation:) N
+0 T (                    self.mutate\(xs\)) N
+0 T (                child = SearchIO\(xs, ys, self.model.energy\(ys\)\)) N
+(80) # (                children.append\(child\)) N
+0 T () N
+0 T (            best_in_pop = min\(children, key=energy\)) N
+0 T () N
+0 T (            prev_best_energy = best.energy) N
+(85) # (            best = min\(best, best_in_pop, key=energy\)) N
+0 T () N
+0 T (            report += str\(best.energy\)) N
+0 T (            # passing an iterable so it isn't calculated for NullStringBuilder) N
+0 T (            report += \('+' if x.energy < prev_best_energy else '.') N
+(90) # (                for x in children\)) N
+0 T (            report += '\\n') N
+0 T () N
+0 T (            energy_by_generation[gen] += best.energy) N
+0 T () N
+(95) # (            population = children) N
+0 T (            evals += len\(population\)) N
+0 T () N
+0 T (            if evals > self.spec.iterations: break) N
+0 T (            #some "is significantly better" termination logic here) N
+(100) # () N
+0 T (        rv = memo\(best=best.energy, evals=evals\)) N
+0 T (        if report: rv.report = report.as_str\(\)) N
+0 T (        if energy_by_generation:) N
+0 T (            rv.era_logs_best_energy = energy_by_generation) N
+(105) # () N
+0 T (        return rv) N
+("csc710sbse: hw5: Witschey") (Page 2/2) (Oct 14, 14 11:14) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (""") p n
+0 T () N
+0 T (## Hyptotheis Testing Stuff) N
+0 T () N
+(5) # () N
+0 T (### Standard Stuff) N
+0 T () N
+0 T (#### Standard Headers) N
+0 T () N
+(10) # (""") N
+0 T (from __future__ import division) N
+0 T (import sys,random,math) N
+0 T (sys.dont_write_bytecode = True) N
+0 T () N
+(15) # (from witschey.base import StringBuilder) N
+0 T () N
+0 T (""") N
+0 T () N
+0 T (#### Standard Utils) N
+(20) # () N
+0 T (""") N
+0 T (class o\(\):) N
+0 T (  "Anonymous container") N
+0 T (  def __init__\(i,**fields\) : ) N
+(25) # (    i.override\(fields\)) N
+0 T (  def override\(i,d\): i.__dict__.update\(d\); return i) N
+0 T (  def __repr__\(i\):) N
+0 T (    d = i.__dict__) N
+0 T (    name = i.__class__.__name__) N
+(30) # (    return name+'{'+' '.join\([':%s %s' % \(k,pretty\(d[k]\)\) ) N
+0 T (                     for k in i.show\(\)]\)+ '}') N
+0 T (  def show\(i\):) N
+0 T (    return [k for k in sorted\(i.__dict__.keys\(\)\) ) N
+0 T (            if not "_" in k]) N
+(35) # (""") N
+0 T () N
+0 T (Misc functions:) N
+0 T () N
+0 T (""") N
+(40) # (rand = random.random) N
+0 T (any  = random.choice) N
+0 T (seed = random.seed) N
+0 T (exp  = lambda n: math.e**n) N
+0 T (ln   = lambda n: math.log\(n,math.e\)) N
+(45) # (g    = lambda n: round\(n,2\)) N
+0 T () N
+0 T (def median\(lst,ordered=False\):) N
+0 T (  if not ordered: lst= sorted\(lst\)) N
+0 T (  n = len\(lst\)) N
+(50) # (  p = n//2) N
+0 T (  if n % 2: return lst[p]) N
+0 T (  q = p - 1) N
+0 T (  q = max\(0,min\(q,n\)\)) N
+0 T (  return \(lst[p] + lst[q]\)/2) N
+(55) # () N
+0 T (def msecs\(f\):) N
+0 T (  import time) N
+0 T (  t1 = time.time\(\)) N
+0 T (  f\(\)) N
+(60) # (  return \(time.time\(\) - t1\) * 1000) N
+0 T () N
+0 T (def pairs\(lst\):) N
+0 T (  "Return all pairs of items i,i+1 from a list.") N
+0 T (  last=lst[0]) N
+(65) # (  for i in lst[1:]:) N
+0 T (    yield last,i) N
+0 T (    last = i) N
+0 T () N
+0 T (def xtile\(lst,lo=0,hi=100,width=50,) N
+(70) # (             chops=[0.1 ,0.3,0.5,0.7,0.9],) N
+0 T (             marks=["-" ," "," ","-"," "],) N
+0 T (             bar="|",star="*",show=" %3.0f"\):) N
+0 T (  """The function _xtile_ takes a list of \(possibly\)) N
+("csc710sbse: hw5: Witschey") (Page 1/8) (Oct 14, 14 11:01) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/searchers/genetic_algorithm.py, witschey/rdiv.py) (13/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2-3) 14
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (  unsorted numbers and presents them as a horizontal) p n
+(75) # (  xtile chart \(in ascii format\). The default is a ) N
+0 T (  contracted _quintile_ that shows the ) N
+0 T (  10,30,50,70,90 breaks in the data \(but this can be ) N
+0 T (  changed- see the optional flags of the function\).) N
+0 T (  """) N
+(80) # (  def pos\(p\)   : return ordered[int\(len\(lst\)*p\)]) N
+0 T (  def place\(x\) : ) N
+0 T (    return int\(width*float\(\(x - lo\)\)/\(hi - lo+0.00001\)\)) N
+0 T (  def pretty\(lst\) : ) N
+0 T (    return ', '.join\([show % x for x in lst]\)) N
+(85) # (  ordered = sorted\(lst\)) N
+0 T (  lo      = min\(lo,ordered[0]\)) N
+0 T (  hi      = max\(hi,ordered[-1]\)) N
+0 T (  what    = [pos\(p\)   for p in chops]) N
+0 T (  where   = [place\(n\) for n in  what]) N
+(90) # (  out     = [" "] * width) N
+0 T (  for one,two in pairs\(where\):) N
+0 T (    for i in range\(one,two\): ) N
+0 T (      out[i] = marks[0]) N
+0 T (    marks = marks[1:]) N
+(95) # (  out[int\(width/2\)]    = bar) N
+0 T (  out[place\(pos\(0.5\)\)] = star ) N
+0 T (  return '\('+''.join\(out\) +  "\)," +  pretty\(what\)) N
+0 T () N
+0 T (def _tileX\(\) :) N
+(100) # (  import random) N
+0 T (  random.seed\(1\)) N
+0 T (  nums = [random.random\(\)**2 for _ in range\(100\)]) N
+0 T (  print xtile\(nums,lo=0,hi=1.0,width=25,show=" %5.2f"\)) N
+0 T (""") N
+(105) # () N
+0 T (### Standard Accumulator for Numbers) N
+0 T () N
+0 T (Note the _lt_ method: this accumulator can be sorted by median values.) N
+0 T () N
+(110) # (Warning: this accumulator keeps _all_ numbers. Might be better to use) N
+0 T (a bounded cache.) N
+0 T () N
+0 T (""") N
+0 T (class Num:) N
+(115) # (  "An Accumulator for numbers") N
+0 T (  def __init__\(i,name,inits=[]\): ) N
+0 T (    i.n = i.m2 = i.mu = 0.0) N
+0 T (    i.all=[]) N
+0 T (    i._median=None) N
+(120) # (    i.name = name) N
+0 T (    i.rank = 0) N
+0 T (    for x in inits: i.add\(x\)) N
+0 T (  def s\(i\)       : return \(i.m2/\(i.n - 1\)\)**0.5) N
+0 T (  def add\(i,x\):) N
+(125) # (    i._median=None) N
+0 T (    i.n   += 1   ) N
+0 T (    i.all += [x]) N
+0 T (    delta  = x - i.mu) N
+0 T (    i.mu  += delta*1.0/i.n) N
+(130) # (    i.m2  += delta*\(x - i.mu\)) N
+0 T (  def __add__\(i,j\):) N
+0 T (    return Num\(i.name + j.name,i.all + j.all\)) N
+0 T (  def quartiles\(i\):) N
+0 T (    def p\(x\) : return int\(g\(xs[x]\)\)) N
+(135) # (    i.median\(\)) N
+0 T (    xs = i.all) N
+0 T (    n  = int\(len\(xs\)*0.25\)) N
+0 T (    return p\(n\) , p\(2*n\) , p\(3*n\)) N
+0 T (  def median\(i\):) N
+(140) # (    if not i._median:) N
+0 T (      i.all = sorted\(i.all\)) N
+0 T (      i._median=median\(i.all\)) N
+0 T (    return i._median) N
+0 T (  def __lt__\(i,j\):) N
+(145) # (    return i.median\(\) < j.median\(\) ) N
+0 T (  def spread\(i\):) N
+("csc710sbse: hw5: Witschey") (Page 2/8) (Oct 14, 14 11:01) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (    i.all=sorted\(i.all\)) p n
+0 T (    n1=i.n*0.25) N
+0 T (    n2=i.n*0.75) N
+(150) # (    if len\(i.all\) <= 1:) N
+0 T (      return 0) N
+0 T (    if len\(i.all\) == 2:) N
+0 T (      return i.all[1] - i.all[0]) N
+0 T (    else:) N
+(155) # (      return i.all[int\(n2\)] - i.all[int\(n1\)]) N
+0 T () N
+0 T () N
+0 T (""") N
+0 T () N
+(160) # (### The A12 Effect Size Test ) N
+0 T () N
+0 T (""") N
+0 T (def a12slow\(lst1,lst2\):) N
+0 T (  "how often is x in lst1 more than y in lst2?") N
+(165) # (  more = same = 0.0) N
+0 T (  for x in lst1:) N
+0 T (    for y in lst2:) N
+0 T (      if    x == y : same += 1) N
+0 T (      elif  x >  y : more += 1) N
+(170) # (  x= \(more + 0.5*same\) / \(len\(lst1\)*len\(lst2\)\)) N
+0 T (  return x) N
+0 T () N
+0 T (def a12\(lst1,lst2\):) N
+0 T (  "how often is x in lst1 more than y in lst2?") N
+(175) # (  def loop\(t,t1,t2\): ) N
+0 T (    while t1.j < t1.n and t2.j < t2.n:) N
+0 T (      h1 = t1.l[t1.j]) N
+0 T (      h2 = t2.l[t2.j]) N
+0 T (      h3 = t2.l[t2.j+1] if t2.j+1 < t2.n else None ) N
+(180) # (      if h1>  h2:) N
+0 T (        t1.j  += 1; t1.gt += t2.n - t2.j) N
+0 T (      elif h1 == h2:) N
+0 T (        if h3 and h1 > h3 :) N
+0 T (            t1.gt += t2.n - t2.j  - 1) N
+(185) # (        t1.j  += 1; t1.eq += 1; t2.eq += 1) N
+0 T (      else:) N
+0 T (        t2,t1  = t1,t2) N
+0 T (    return t.gt*1.0, t.eq*1.0) N
+0 T (  #--------------------------) N
+(190) # (  lst1 = sorted\(lst1, reverse=True\)) N
+0 T (  lst2 = sorted\(lst2, reverse=True\)) N
+0 T (  n1   = len\(lst1\)) N
+0 T (  n2   = len\(lst2\)) N
+0 T (  t1   = o\(l=lst1,j=0,eq=0,gt=0,n=n1\)) N
+(195) # (  t2   = o\(l=lst2,j=0,eq=0,gt=0,n=n2\)) N
+0 T (  gt,eq= loop\(t1, t1, t2\)) N
+0 T (  return gt/\(n1*n2\) + eq/2/\(n1*n2\)) N
+0 T () N
+0 T (def _a12\(\):) N
+(200) # (  def f1\(\): return a12slow\(l1,l2\)) N
+0 T (  def f2\(\): return a12\(l1,l2\)) N
+0 T (  for n in [100,200,400,800,1600,3200,6400]:) N
+0 T (    l1 = [rand\(\) for _ in xrange\(n\)]) N
+0 T (    l2 = [rand\(\) for _ in xrange\(n\)]) N
+(205) # (    t1 = msecs\(f1\)) N
+0 T (    t2 = msecs\(f2\)) N
+0 T (    print n, g\(f1\(\)\),g\(f2\(\)\),int\(\(t1/t2\)\)) N
+0 T () N
+0 T () N
+(210) # ("""Output:) N
+0 T () N
+0 T (````) N
+0 T (n   a12\(fast\)       a12\(slow\)       tfast / tslow) N
+0 T (--- --------------- -------------- --------------) N
+(215) # (100  0.53           0.53               4) N
+0 T (200  0.48           0.48               6) N
+0 T (400  0.49           0.49              28) N
+0 T (800  0.5            0.5               26) N
+0 T (1600 0.51           0.51              72) N
+("csc710sbse: hw5: Witschey") (Page 3/8) (Oct 14, 14 11:01) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/rdiv.py) (14/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (4-5) 15
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(220) # (3200 0.49           0.49             109) p n
+0 T (6400 0.5            0.5              244) N
+0 T (````) N
+0 T () N
+0 T () N
+(225) # (## Non-Parametric Hypothesis Testing) N
+0 T () N
+0 T (The following _bootstrap_ method was introduced in) N
+0 T (1979 by Bradley Efron at Stanford University. It) N
+0 T (was inspired by earlier work on the) N
+(230) # (jackknife.) N
+0 T (Improved estimates of the variance were [developed later][efron01].  ) N
+0 T () N
+0 T ([efron01]: http://goo.gl/14n8Wf "Bradley Efron and R.J. Tibshirani. An Introduct) N
+0 T (ion to the Bootstrap \(Chapman & Hall/CRC Monographs on Statistics & Applied Prob) N
+0 T (ability\), 1993") N
+0 T () N
+(235) # () N
+0 T (To check if two populations _\(y0,z0\)_) N
+0 T (are different, many times sample with replacement) N
+0 T (from both to generate _\(y1,z1\), \(y2,z2\), \(y3,z3\)_.. etc.) N
+0 T () N
+(240) # (""") N
+0 T (def sampleWithReplacement\(lst\):) N
+0 T (  "returns a list same size as list") N
+0 T (  def any\(n\)  : return random.uniform\(0,n\)) N
+0 T (  def one\(lst\): return lst[ int\(any\(len\(lst\)\)\) ]) N
+(245) # (  return [one\(lst\) for _ in lst]) N
+0 T (""") N
+0 T () N
+0 T () N
+0 T (Then, for all those samples,) N
+(250) # ( check if some *testStatistic* in the original pair) N
+0 T (hold for all the other pairs. If it does more than \(say\) 99%) N
+0 T (of the time, then we are 99% confident in that the) N
+0 T (populations are the same.) N
+0 T () N
+(255) # (In such a _bootstrap_ hypothesis test, the *some property*) N
+0 T (is the difference between the two populations, muted by the) N
+0 T (joint standard deviation of the populations.) N
+0 T () N
+0 T (""") N
+(260) # (def testStatistic\(y,z\): ) N
+0 T (    """Checks if two means are different, tempered) N
+0 T (     by the sample size of 'y' and 'z'""") N
+0 T (    tmp1 = tmp2 = 0) N
+0 T (    for y1 in y.all: tmp1 += \(y1 - y.mu\)**2 ) N
+(265) # (    for z1 in z.all: tmp2 += \(z1 - z.mu\)**2) N
+0 T (    s1    = \(float\(tmp1\)/\(y.n - 1\)\)**0.5) N
+0 T (    s2    = \(float\(tmp2\)/\(z.n - 1\)\)**0.5) N
+0 T (    delta = z.mu - y.mu) N
+0 T (    if s1+s2:) N
+(270) # (      delta =  delta/\(\(s1/y.n + s2/z.n\)**0.5\)) N
+0 T (    return delta) N
+0 T (""") N
+0 T () N
+0 T (The rest is just details:) N
+(275) # () N
+0 T (+ Efron advises) N
+0 T (  to make the mean of the populations the same \(see) N
+0 T (  the _yhat,zhat_ stuff shown below\).) N
+0 T (+ The class _total_ is a just a quick and dirty accumulation class.) N
+(280) # (+ For more details see [the Efron text][efron01].  ) N
+0 T () N
+0 T (""") N
+0 T (def bootstrap\(y0,z0,conf=0.01,b=1000\):) N
+0 T (  """The bootstrap hypothesis test from) N
+(285) # (     p220 to 223 of Efron's book 'An) N
+0 T (    introduction to the boostrap.""") N
+0 T (  class total\(\):) N
+0 T (    "quick and dirty data collector") N
+0 T (    def __init__\(i,some=[]\):) N
+(290) # (      i.sum = i.n = i.mu = 0 ; i.all=[]) N
+("csc710sbse: hw5: Witschey") (Page 4/8) (Oct 14, 14 11:01) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (      for one in some: i.put\(one\)) p n
+0 T (    def put\(i,x\):) N
+0 T (      i.all.append\(x\);) N
+0 T (      i.sum +=x; i.n += 1; i.mu = float\(i.sum\)/i.n) N
+(295) # (    def __add__\(i1,i2\): return total\(i1.all + i2.all\)) N
+0 T (  y, z   = total\(y0\), total\(z0\)) N
+0 T (  x      = y + z) N
+0 T (  tobs   = testStatistic\(y,z\)) N
+0 T (  yhat   = [y1 - y.mu + x.mu for y1 in y.all]) N
+(300) # (  zhat   = [z1 - z.mu + x.mu for z1 in z.all]) N
+0 T (  bigger = 0.0) N
+0 T (  for i in range\(b\):) N
+0 T (    if testStatistic\(total\(sampleWithReplacement\(yhat\)\),) N
+0 T (                     total\(sampleWithReplacement\(zhat\)\)\) > tobs:) N
+(305) # (      bigger += 1) N
+0 T (  return bigger / b < conf) N
+0 T (""") N
+0 T () N
+0 T (#### Examples) N
+(310) # () N
+0 T (""") N
+0 T (def _bootstraped\(\): ) N
+0 T (  def worker\(n=1000,) N
+0 T (             mu1=10,  sigma1=1,) N
+(315) # (             mu2=10.2, sigma2=1\):) N
+0 T (    def g\(mu,sigma\) : return random.gauss\(mu,sigma\)) N
+0 T (    x = [g\(mu1,sigma1\) for i in range\(n\)]) N
+0 T (    y = [g\(mu2,sigma2\) for i in range\(n\)]) N
+0 T (    return n,mu1,sigma1,mu2,sigma2,\\) N
+(320) # (        'different' if bootstrap\(x,y\) else 'same') N
+0 T (  # very different means, same std) N
+0 T (  print worker\(mu1=10, sigma1=10, ) N
+0 T (               mu2=100, sigma2=10\)) N
+0 T (  # similar means and std) N
+(325) # (  print worker\(mu1= 10.1, sigma1=1, ) N
+0 T (               mu2= 10.2, sigma2=1\)) N
+0 T (  # slightly different means, same std) N
+0 T (  print worker\(mu1= 10.1, sigma1= 1, ) N
+0 T (               mu2= 10.8, sigma2= 1\)) N
+(330) # (  # different in mu eater by large std) N
+0 T (  print worker\(mu1= 10.1, sigma1= 10, ) N
+0 T (               mu2= 10.8, sigma2= 1\)) N
+0 T (""") N
+0 T () N
+(335) # (Output:) N
+0 T () N
+0 T (````) N
+0 T (_bootstraped\(\)) N
+0 T () N
+(340) # (\(1000, 10, 10, 100, 10, 'different'\)) N
+0 T (\(1000, 10.1, 1, 10.2, 1, 'same'\)) N
+0 T (\(1000, 10.1, 1, 10.8, 1, 'different'\)) N
+0 T (\(1000, 10.1, 10, 10.8, 1, 'same'\)) N
+0 T (````) N
+(345) # () N
+0 T (Warning- the above took 8 seconds to generate since we used 1000 bootstraps.) N
+0 T (As to how many bootstraps are enough, that depends on the data. There are) N
+0 T (results saying 200 to 400 are enough but, since I am  suspicious man, I run it f) N
+0 T (or 1000.) N
+0 T () N
+(350) # (Which means the runtimes associated with bootstrapping is a significant issue.) N
+0 T (To reduce that runtime, I avoid things like an all-pairs comparison of all treat) N
+0 T (ments) N
+0 T (\(see below: Scott-knott\).  Also, BEFORE I do the boostrap, I first run) N
+0 T (the effect size test \(and only go to bootstrapping in effect size passes:) N
+0 T () N
+(355) # (""") N
+0 T (def different\(l1,l2\):) N
+0 T (  #return bootstrap\(l1,l2\) and a12\(l2,l1\)) N
+0 T (  return a12\(l2,l1\) and bootstrap\(l1,l2\)) N
+0 T () N
+(360) # (""") N
+0 T () N
+("csc710sbse: hw5: Witschey") (Page 5/8) (Oct 14, 14 11:01) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/rdiv.py) (15/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (6-7) 16
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (## Saner Hypothesis Testing) p n
+0 T () N
+0 T (The following code, which you should use verbatim does the following:) N
+(365) # () N
+0 T () N
+0 T (+ All treatments are clustered into _ranks_. In practice, dozens) N
+0 T (  of treatments end up generating just a handful of ranks.) N
+0 T (+ The numbers of calls to the hypothesis tests are minimized:) N
+(370) # (    + Treatments are sorted by their median value.) N
+0 T (    + Treatments are divided into two groups such that the) N
+0 T (      expected value of the mean values _after_ the split is minimized;) N
+0 T (    + Hypothesis tests are called to test if the two groups are truly difference) N
+0 T (.) N
+0 T (          + All hypothesis tests are non-parametric and include \(1\) effect size ) N
+0 T (tests) N
+(375) # (            and \(2\) tests for statistically significant numbers;) N
+0 T (          + Slow bootstraps are executed  if the faster _A12_ tests are passed;) N
+0 T () N
+0 T (In practice, this means that the hypothesis tests \(with confidence of say, 95%\)) N
+0 T (are called on only a logarithmic number of times. So...) N
+(380) # () N
+0 T (+ With this method, 16 treatments can be studied using less than _&sum;<sub>1,2,) N
+0 T (4,8,16</sub>log<sub>2</sub>i =15_ hypothesis tests  and confidence _0.99<sup>15<) N
+0 T (/sup>=0.86_.) N
+0 T (+ But if did this with the 120 all-pairs comparisons of the 16 treatments, we wo) N
+0 T (uld have total confidence _0.99<sup>120</sup>=0.30.) N
+0 T () N
+0 T (For examples on using this code, see _rdivDemo_ \(below\).) N
+(385) # () N
+0 T (""") N
+0 T (def scottknott\(data,cohen=0.3,small=3, useA12=False,epsilon=0.01\):) N
+0 T (  """Recursively split data, maximizing delta of) N
+0 T (  the expected value of the mean before and ) N
+(390) # (  after the splits. ) N
+0 T (  Reject splits with under 3 items""") N
+0 T (  all  = reduce\(lambda x,y:x+y,data\)) N
+0 T (  same = lambda l,r: abs\(l.median\(\) - r.median\(\)\) <= all.s\(\)*cohen) N
+0 T (  if useA12: ) N
+(395) # (    same = lambda l, r:   not different\(l.all,r.all\) ) N
+0 T (  big  = lambda    n: n > small    ) N
+0 T (  return rdiv\(data,all,minMu,big,same,epsilon\)) N
+0 T () N
+0 T (def rdiv\(data,  # a list of class Nums) N
+(400) # (         all,   # all the data combined into one num) N
+0 T (         div,   # function: find the best split) N
+0 T (         big,   # function: rejects small splits) N
+0 T (         same, # function: rejects similar splits) N
+0 T (         epsilon\): # small enough to split two parts) N
+(405) # (  """Looks for ways to split sorted data, ) N
+0 T (  Recurses into each split. Assigns a 'rank' number) N
+0 T (  to all the leaf splits found in this way. ) N
+0 T (  """) N
+0 T (  def recurse\(parts,all,rank=0\):) N
+(410) # (    "Split, then recurse on each part.") N
+0 T (    cut,left,right = maybeIgnore\(div\(parts,all,big,epsilon\),) N
+0 T (                                 same,parts\)) N
+0 T (    if cut: ) N
+0 T (      # if cut, rank "right" higher than "left") N
+(415) # (      rank = recurse\(parts[:cut],left,rank\) + 1) N
+0 T (      rank = recurse\(parts[cut:],right,rank\)) N
+0 T (    else: ) N
+0 T (      # if no cut, then all get same rank) N
+0 T (      for part in parts: ) N
+(420) # (        part.rank = rank) N
+0 T (    return rank) N
+0 T (  recurse\(sorted\(data\),all\)) N
+0 T (  return data) N
+0 T () N
+(425) # (def maybeIgnore\(\(cut,left,right\), same,parts\):) N
+0 T (  if cut:) N
+0 T (    if same\(sum\(parts[:cut],Num\('upto'\)\),) N
+0 T (            sum\(parts[cut:],Num\('above'\)\)\):    ) N
+0 T (      cut = left = right = None) N
+("csc710sbse: hw5: Witschey") (Page 6/8) (Oct 14, 14 11:01) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(430) # (  return cut,left,right) p n
+0 T () N
+0 T (def minMu\(parts,all,big,epsilon\):) N
+0 T (  """Find a cut in the parts that maximizes) N
+0 T (  the expected value of the difference in) N
+(435) # (  the mean before and after the cut.) N
+0 T (  Reject splits that are insignificantly) N
+0 T (  different or that generate very small subsets.) N
+0 T (  """) N
+0 T (  cut,left,right = None,None,None) N
+(440) # (  before, mu     =  0, all.mu) N
+0 T (  for i,l,r in leftRight\(parts,epsilon\):) N
+0 T (    if big\(l.n\) and big\(r.n\):) N
+0 T (      n   = all.n * 1.0) N
+0 T (      now = l.n/n*\(mu- l.mu\)**2 + r.n/n*\(mu- r.mu\)**2  ) N
+(445) # (      if now > before:) N
+0 T (        before,cut,left,right = now,i,l,r) N
+0 T (  return cut,left,right) N
+0 T () N
+0 T (def leftRight\(parts,epsilon=0.01\):) N
+(450) # (  """Iterator. For all items in 'parts',) N
+0 T (  return everything to the left and everything) N
+0 T (  from here to the end. For reasons of) N
+0 T (  efficiency, take a first pass over the data) N
+0 T (  to pre-compute and cache right-hand-sides) N
+(455) # (  """) N
+0 T (  rights = {}) N
+0 T (  n = j = len\(parts\) - 1) N
+0 T (  while j > 0:) N
+0 T (    rights[j] = parts[j]) N
+(460) # (    if j < n: rights[j] += rights[j+1]) N
+0 T (    j -=1) N
+0 T (  left = parts[0]) N
+0 T (  for i,one in enumerate\(parts\):) N
+0 T (    if i> 0: ) N
+(465) # (      if parts[i]._median - parts[i-1]._median > epsilon:) N
+0 T (        yield i,left,rights[i]) N
+0 T (      left += one) N
+0 T (""") N
+0 T () N
+(470) # (## Putting it All Together) N
+0 T () N
+0 T (Driver for the demos:) N
+0 T () N
+0 T (""") N
+(475) # (def rdivDemo\(data\):) N
+0 T (  sb = StringBuilder\(\)) N
+0 T (  def z\(x\):) N
+0 T (    return int\(100 * \(x - lo\) / \(hi - lo + 0.00001\)\)) N
+0 T (  data = map\(lambda lst:Num\(lst[0],lst[1:]\),) N
+(480) # (             data\)) N
+0 T (  ranks=[]) N
+0 T (  for x in scottknott\(data,useA12=True\):) N
+0 T (    ranks += [\(x.rank,x.median\(\),x\)]) N
+0 T (  all=[]) N
+(485) # (  for _,__,x in sorted\(ranks\): all += x.all) N
+0 T (  all = sorted\(all\)) N
+0 T (  lo, hi = all[0], all[-1]) N
+0 T (  line = "----------------------------------------------------") N
+0 T (  last = None) N
+(490) # (  sb += \('%4s , %12s ,    %s   , %4s ' % \\) N
+0 T (               \('rank', 'name', 'med', 'iqr'\)\)+ "\\n"+ line + '\\n') N
+0 T (  for _,__,x in sorted\(ranks\):) N
+0 T (    q1,q2,q3 = x.quartiles\(\)) N
+0 T (    sb += \('%4s , %12s ,    %4s  ,  %4s ' % \\) N
+(495) # (                 \(x.rank+1, x.name, q2, q3 - q1\)\)  + \\) N
+0 T (              xtile\(x.all,lo=lo,hi=hi,width=30,show="%5.2f"\) + '\\n') N
+0 T (    last = x.rank ) N
+0 T (  return sb.as_str\(\)) N
+0 T () N
+(500) # (def rdiv8\(\):) N
+0 T (    rdivDemo\([) N
+0 T (        ['TPBs', 208, 176, 321, 128, 128],) N
+("csc710sbse: hw5: Witschey") (Page 7/8) (Oct 14, 14 11:01) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/rdiv.py) (16/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (8) 17
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (        ['phil', 688, 346, 290, 524],) p n
+0 T (        ["'zines", 28, 76, 32, 64],) N
+(505) # (        ['comp', 398, 312, 361, 436, 316]) N
+0 T (    ]\)) N
+0 T () N
+0 T (if __name__ == "__main__": rdiv8\(\)) N
+("csc710sbse: hw5: Witschey") (Page 8/8) (Oct 14, 14 11:01) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/rdiv.py) (17/17) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF
