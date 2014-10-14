@@ -29,7 +29,7 @@ class MaxWalkSat(Searcher):
         if log_objectives:
             rv.era_logs_by_objective = {f.__name__: defaultdict(NumberLog)
                 for f in self.model.ys}
-        if self.spec.log_eras_energy:
+        if self.spec.log_eras_best_energy:
             rv.era_logs_best_energy = defaultdict(NumberLog)
 
         def report(s):
@@ -59,7 +59,7 @@ class MaxWalkSat(Searcher):
             for f, v in dependents_outputs:
                 if log_objectives:
                     rv.era_logs_by_objective[f.__name__][era] += v
-                if self.spec.log_eras_energy:
+                if self.spec.log_eras_best_energy:
                     rv.era_logs_best_energy[era] += rv.best
 
 

@@ -59,7 +59,8 @@ class GeneticAlgorithm(Searcher):
 
         report = base.StringBuilder() if text_report else base.NullObject()
         energy_by_generation = defaultdict(
-            NumberLog if self.spec.log_eras_energy else base.NullObject)
+            NumberLog if self.spec.log_eras_best_energy else base.NullObject)
+
 
         population = tuple(compute_model_io(self.model, xs) for xs in init_xs)
 
@@ -89,7 +90,7 @@ class GeneticAlgorithm(Searcher):
                 for x in children)
             report += '\n'
 
-            energy_by_generation[gen].extend(c.energy for c in children)
+            energy_by_generation[gen] += best.energy
 
             population = children
             evals += len(population)

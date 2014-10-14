@@ -120,7 +120,7 @@ class NullObject(object):
 
 The = memo(
     Searcher=memo(era_length=50, terminate_early=True,
-        log_eras_energy=False, log_eras_by_objective=False,
+        log_eras_best_energy=True, log_eras_by_objective=False,
         iterations=1000, p_mutation=1/3),
     SimulatedAnnealer=memo(cooling_factor=.8),
     MaxWalkSat=memo(),

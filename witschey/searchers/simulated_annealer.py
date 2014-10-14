@@ -42,7 +42,7 @@ class SimulatedAnnealer(Searcher):
                 f.__name__: defaultdict(NumberLog)
                 for f in self.model.ys
             }
-        if self.spec.log_eras_energy:
+        if self.spec.log_eras_best_energy:
             rv.era_logs_best_energy = defaultdict(NumberLog)
         def report_append(s):
             if text_report:
@@ -89,7 +89,7 @@ class SimulatedAnnealer(Searcher):
             for f, v in zip(self.model.ys, best.ys):
                 if log_eras_by_objective:
                     rv.era_logs_by_objective[f.__name__][era] += v
-                if self.spec.log_eras_energy:
+                if self.spec.log_eras_best_energy:
                     rv.era_logs_best_energy[era] += best.energy
 
             if k % self.spec.era_length == 0 and k != 0:
