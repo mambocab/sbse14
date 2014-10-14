@@ -86,6 +86,9 @@ class SearcherConfig(object):
         return OrderedDict(searcher=self._searcher,
             model=self._model, **self._kw_dict)
 
+    def random_search_io(self):
+        return compute_model_io(self.model, self.model.random_input_vector())
+
     def __repr__(self):
         kw_string = ', '.join('{0}={1}'.format(k, v)
                 for k, v in self.as_dict().iteritems())
