@@ -23,7 +23,7 @@ def run(n=30, text_report=True):
         for searcher_cls in ss:
             for _ in xrange(n):
                 Output = namedtuple('Output', ('name', 'best'))
-                name = ('{}'.format(SSNAMES[searcher_cls]))
+                name = ('{}'.format(searcher_cls.shortname))
                 searcher = searcher_cls(model_cls)
                 out = searcher.run(text_report=text_report)
                 out.searcher = searcher_cls

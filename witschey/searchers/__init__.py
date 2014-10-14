@@ -10,6 +10,6 @@ SEARCHER_SHORTNAMES = {
     GeneticAlgorithm:      'GA',
     DifferentialEvolution: 'DE'
 }
-SEARCHER_SHORTNAMES.update(
-    {cls.__name__: shortname
-    for cls, shortname in SEARCHER_SHORTNAMES.iteritems()})
+
+for searcher_cls, shortname in SEARCHER_SHORTNAMES.iteritems():
+    searcher_cls.shortname = shortname
