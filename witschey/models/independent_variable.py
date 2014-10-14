@@ -4,9 +4,9 @@
 import random
 
 class IndependentVariable(object):
-    def __init__(self, min=None, max=None, type=float):
-        self.min = min
-        self.max = max
+    def __init__(self, lo=None, hi=None, type=float):
+        self.lo = lo
+        self.hi = hi
         self.type = type
 
     def __call__(self):
@@ -15,5 +15,5 @@ class IndependentVariable(object):
         elif self.type == int:
             f = random.randint
 
-        return f(self.min, self.max)
+        return f(self.lo, self.hi)
 
