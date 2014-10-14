@@ -1,0 +1,1215 @@
+%!PS-Adobe-3.0
+%%Title: searchout.txt
+%%For: Jim Witschey
+%%Creator: a2ps version 4.14
+%%CreationDate: Tue Oct 14 11:45:01 2014
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 8
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 20.000000 def
+/fnfs 15 def
+/bfs 8.895266 def
+/cw 5.337159 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 139.400000 mul
+def
+/ph
+   513.256824 th add
+def
+/pmw 0 def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+] def
+/y [
+  pmh ph add 0 mul ph add
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 5 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.736012 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (#### Schaffer) p n
+0 T (rank ,         name ,    med   ,  iqr ) N
+0 T (----------------------------------------------------) N
+0 T (   1 ,           SA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(5) # (   1 ,           SA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   1 ,           SA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   1 ,           GA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   1 ,           SA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   1 ,           GA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(10) # (   1 ,           GA ,       2  ,     0 \(*              |              \), 2.01,  2.01,  2.01,  2.01,  2.01) N
+0 T (   1 ,          MWS ,       2  ,     0 \(*              |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+0 T (   1 ,          MWS ,       2  ,     0 \(*              |              \), 2.05,  2.05,  2.05,  2.05,  2.05) N
+0 T (   1 ,           SA ,       2  ,     0 \(*              |              \), 2.09,  2.09,  2.09,  2.09,  2.09) N
+0 T (   1 ,           GA ,       2  ,     0 \(*              |              \), 2.23,  2.23,  2.23,  2.23,  2.23) N
+(15) # (   1 ,          MWS ,       2  ,     0 \(*              |              \), 2.44,  2.44,  2.44,  2.44,  2.44) N
+0 T (   1 ,           GA ,       6  ,     0 \(     *         |              \), 6.34,  6.34,  6.34,  6.34,  6.34) N
+0 T (   1 ,          MWS ,       6  ,     0 \(     *         |              \), 6.76,  6.76,  6.76,  6.76,  6.76) N
+0 T (   1 ,          MWS ,      26  ,     0 \(               |             *\),26.66, 26.66, 26.66, 26.66, 26.66) N
+0 T () N
+(20) # (#### Kursawe) N
+0 T (rank ,         name ,    med   ,  iqr ) N
+0 T (----------------------------------------------------) N
+0 T (   1 ,           SA ,     -13  ,     0 \(*              |              \),-13.24, -13.24, -13.24, -13.24, -13.24) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.82, -12.82, -12.82, -12.82, -12.82) N
+(25) # (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.45, -12.45, -12.45, -12.45, -12.45) N
+0 T (   2 ,           SA ,     -12  ,     0 \(*              |              \),-12.38, -12.38, -12.38, -12.38, -12.38) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.18, -12.18, -12.18, -12.18, -12.18) N
+(30) # (   3 ,           GA ,     -10  ,     0 \( *             |              \),-10.98, -10.98, -10.98, -10.98, -10.98) N
+0 T (   3 ,           GA ,     -10  ,     0 \(  *            |              \),-10.57, -10.57, -10.57, -10.57, -10.57) N
+0 T (   3 ,          MWS ,     -10  ,     0 \(  *            |              \),-10.24, -10.24, -10.24, -10.24, -10.24) N
+0 T (   3 ,           GA ,      -9  ,     0 \(  *            |              \),-9.70, -9.70, -9.70, -9.70, -9.70) N
+0 T (   4 ,          MWS ,      -7  ,     0 \(    *          |              \),-7.13, -7.13, -7.13, -7.13, -7.13) N
+(35) # (   4 ,          MWS ,      -6  ,     0 \(     *         |              \),-6.50, -6.50, -6.50, -6.50, -6.50) N
+0 T (   5 ,          MWS ,      -4  ,     0 \(      *        |              \),-4.78, -4.78, -4.78, -4.78, -4.78) N
+0 T (   5 ,          MWS ,      -3  ,     0 \(       *       |              \),-3.15, -3.15, -3.15, -3.15, -3.15) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(40) # (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.01,  2.01,  2.01,  2.01,  2.01) N
+(45) # (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+0 T (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.05,  2.05,  2.05,  2.05,  2.05) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.09,  2.09,  2.09,  2.09,  2.09) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.23,  2.23,  2.23,  2.23,  2.23) N
+0 T (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.44,  2.44,  2.44,  2.44,  2.44) N
+(50) # (   6 ,           GA ,       6  ,     0 \(              *|              \), 6.34,  6.34,  6.34,  6.34,  6.34) N
+0 T (   6 ,          MWS ,       6  ,     0 \(               *              \), 6.76,  6.76,  6.76,  6.76,  6.76) N
+0 T (   6 ,          MWS ,      26  ,     0 \(               |             *\),26.66, 26.66, 26.66, 26.66, 26.66) N
+0 T () N
+0 T (#### Fonseca) N
+(55) # (rank ,         name ,    med   ,  iqr ) N
+0 T (----------------------------------------------------) N
+0 T (   1 ,           SA ,     -13  ,     0 \(*              |              \),-13.24, -13.24, -13.24, -13.24, -13.24) N
+("csc710sbse: hw5: Witschey") (Page 1/8) (Oct 14, 14 11:44) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw5/searchout.txt) (1/8) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.736012 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.82, -12.82, -12.82, -12.82, -12.82) p n
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+(60) # (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.45, -12.45, -12.45, -12.45, -12.45) N
+0 T (   2 ,           SA ,     -12  ,     0 \(*              |              \),-12.38, -12.38, -12.38, -12.38, -12.38) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.18, -12.18, -12.18, -12.18, -12.18) N
+0 T (   3 ,           GA ,     -10  ,     0 \( *             |              \),-10.98, -10.98, -10.98, -10.98, -10.98) N
+(65) # (   3 ,           GA ,     -10  ,     0 \(  *            |              \),-10.57, -10.57, -10.57, -10.57, -10.57) N
+0 T (   3 ,          MWS ,     -10  ,     0 \(  *            |              \),-10.24, -10.24, -10.24, -10.24, -10.24) N
+0 T (   3 ,           GA ,      -9  ,     0 \(  *            |              \),-9.70, -9.70, -9.70, -9.70, -9.70) N
+0 T (   4 ,          MWS ,      -7  ,     0 \(    *          |              \),-7.13, -7.13, -7.13, -7.13, -7.13) N
+0 T (   4 ,          MWS ,      -6  ,     0 \(     *         |              \),-6.50, -6.50, -6.50, -6.50, -6.50) N
+(70) # (   4 ,          MWS ,      -4  ,     0 \(      *        |              \),-4.78, -4.78, -4.78, -4.78, -4.78) N
+0 T (   5 ,          MWS ,      -3  ,     0 \(       *       |              \),-3.15, -3.15, -3.15, -3.15, -3.15) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.01,  1.01,  1.01,  1.01,  1.01) N
+(75) # (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.04,  1.04,  1.04,  1.04,  1.04) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.08,  1.08,  1.08,  1.08,  1.08) N
+0 T (   5 ,          MWS ,       1  ,     0 \(          *    |              \), 1.09,  1.09,  1.09,  1.09,  1.09) N
+(80) # (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.16,  1.16,  1.16,  1.16,  1.16) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.23,  1.23,  1.23,  1.23,  1.23) N
+0 T (   5 ,          MWS ,       1  ,     0 \(           *   |              \), 1.45,  1.45,  1.45,  1.45,  1.45) N
+0 T (   5 ,          MWS ,       1  ,     0 \(           *   |              \), 1.56,  1.56,  1.56,  1.56,  1.56) N
+(85) # (   5 ,          MWS ,       1  ,     0 \(           *   |              \), 1.64,  1.64,  1.64,  1.64,  1.64) N
+0 T (   5 ,          MWS ,       1  ,     0 \(           *   |              \), 1.98,  1.98,  1.98,  1.98,  1.98) N
+0 T (   5 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   5 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   5 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(90) # (   5 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   5 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   5 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   5 ,           GA ,       2  ,     0 \(           *   |              \), 2.01,  2.01,  2.01,  2.01,  2.01) N
+0 T (   5 ,          MWS ,       2  ,     0 \(           *   |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+(95) # (   5 ,          MWS ,       2  ,     0 \(           *   |              \), 2.05,  2.05,  2.05,  2.05,  2.05) N
+0 T (   5 ,           SA ,       2  ,     0 \(           *   |              \), 2.09,  2.09,  2.09,  2.09,  2.09) N
+0 T (   5 ,           GA ,       2  ,     0 \(           *   |              \), 2.23,  2.23,  2.23,  2.23,  2.23) N
+0 T (   5 ,          MWS ,       2  ,     0 \(           *   |              \), 2.44,  2.44,  2.44,  2.44,  2.44) N
+0 T (   5 ,           GA ,       6  ,     0 \(              *|              \), 6.34,  6.34,  6.34,  6.34,  6.34) N
+(100) # (   5 ,          MWS ,       6  ,     0 \(               *              \), 6.76,  6.76,  6.76,  6.76,  6.76) N
+0 T (   5 ,          MWS ,      26  ,     0 \(               |             *\),26.66, 26.66, 26.66, 26.66, 26.66) N
+0 T () N
+0 T (#### ZDT1) N
+0 T (rank ,         name ,    med   ,  iqr ) N
+(105) # (----------------------------------------------------) N
+0 T (   1 ,           SA ,     -13  ,     0 \(*              |              \),-13.24, -13.24, -13.24, -13.24, -13.24) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.82, -12.82, -12.82, -12.82, -12.82) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+(110) # (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.45, -12.45, -12.45, -12.45, -12.45) N
+0 T (   2 ,           SA ,     -12  ,     0 \(*              |              \),-12.38, -12.38, -12.38, -12.38, -12.38) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.18, -12.18, -12.18, -12.18, -12.18) N
+0 T (   3 ,           GA ,     -10  ,     0 \( *             |              \),-10.98, -10.98, -10.98, -10.98, -10.98) N
+0 T (   3 ,           GA ,     -10  ,     0 \(  *            |              \),-10.57, -10.57, -10.57, -10.57, -10.57) N
+("csc710sbse: hw5: Witschey") (Page 2/8) (Oct 14, 14 11:44) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw5/searchout.txt) (2/8) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.736012 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(115) # (   3 ,          MWS ,     -10  ,     0 \(  *            |              \),-10.24, -10.24, -10.24, -10.24, -10.24) p n
+0 T (   3 ,           GA ,      -9  ,     0 \(  *            |              \),-9.70, -9.70, -9.70, -9.70, -9.70) N
+0 T (   4 ,          MWS ,      -7  ,     0 \(    *          |              \),-7.13, -7.13, -7.13, -7.13, -7.13) N
+0 T (   4 ,          MWS ,      -6  ,     0 \(     *         |              \),-6.50, -6.50, -6.50, -6.50, -6.50) N
+0 T (   5 ,          MWS ,      -4  ,     0 \(      *        |              \),-4.78, -4.78, -4.78, -4.78, -4.78) N
+(120) # (   5 ,          MWS ,      -3  ,     0 \(       *       |              \),-3.15, -3.15, -3.15, -3.15, -3.15) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.01,  1.01,  1.01,  1.01,  1.01) N
+0 T (   7 ,           GA ,       1  ,     0 \(          *    |              \), 1.04,  1.04,  1.04,  1.04,  1.04) N
+(125) # (   7 ,           GA ,       1  ,     0 \(          *    |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+0 T (   7 ,           SA ,       1  ,     0 \(          *    |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+0 T (   7 ,           GA ,       1  ,     0 \(          *    |              \), 1.08,  1.08,  1.08,  1.08,  1.08) N
+0 T (   7 ,          MWS ,       1  ,     0 \(          *    |              \), 1.09,  1.09,  1.09,  1.09,  1.09) N
+0 T (   8 ,           SA ,       1  ,     0 \(          *    |              \), 1.16,  1.16,  1.16,  1.16,  1.16) N
+(130) # (   8 ,           GA ,       1  ,     0 \(          *    |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   8 ,           GA ,       1  ,     0 \(          *    |              \), 1.23,  1.23,  1.23,  1.23,  1.23) N
+0 T (   9 ,          MWS ,       1  ,     0 \(           *   |              \), 1.45,  1.45,  1.45,  1.45,  1.45) N
+0 T (   9 ,          MWS ,       1  ,     0 \(           *   |              \), 1.56,  1.56,  1.56,  1.56,  1.56) N
+0 T (  10 ,          MWS ,       1  ,     0 \(           *   |              \), 1.64,  1.64,  1.64,  1.64,  1.64) N
+(135) # (  10 ,          MWS ,       1  ,     0 \(           *   |              \), 1.98,  1.98,  1.98,  1.98,  1.98) N
+0 T (  10 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (  10 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (  10 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (  10 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(140) # (  10 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (  10 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (  10 ,           GA ,       2  ,     0 \(           *   |              \), 2.01,  2.01,  2.01,  2.01,  2.01) N
+0 T (  10 ,          MWS ,       2  ,     0 \(           *   |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+0 T (  10 ,          MWS ,       2  ,     0 \(           *   |              \), 2.05,  2.05,  2.05,  2.05,  2.05) N
+(145) # (  10 ,           SA ,       2  ,     0 \(           *   |              \), 2.09,  2.09,  2.09,  2.09,  2.09) N
+0 T (  10 ,           GA ,       2  ,     0 \(           *   |              \), 2.23,  2.23,  2.23,  2.23,  2.23) N
+0 T (  10 ,          MWS ,       2  ,     0 \(           *   |              \), 2.44,  2.44,  2.44,  2.44,  2.44) N
+0 T (  11 ,           GA ,       6  ,     0 \(              *|              \), 6.34,  6.34,  6.34,  6.34,  6.34) N
+0 T (  11 ,           SA ,       6  ,     0 \(              *|              \), 6.66,  6.66,  6.66,  6.66,  6.66) N
+(150) # (  12 ,          MWS ,       6  ,     0 \(               *              \), 6.76,  6.76,  6.76,  6.76,  6.76) N
+0 T (  12 ,           SA ,       6  ,     0 \(               *              \), 6.86,  6.86,  6.86,  6.86,  6.86) N
+0 T (  13 ,           SA ,       7  ,     0 \(               *              \), 7.10,  7.10,  7.10,  7.10,  7.10) N
+0 T (  13 ,           GA ,       7  ,     0 \(               *              \), 7.23,  7.23,  7.23,  7.23,  7.23) N
+0 T (  14 ,           SA ,       7  ,     0 \(               *              \), 7.31,  7.31,  7.31,  7.31,  7.31) N
+(155) # (  14 ,           GA ,       7  ,     0 \(               *              \), 7.37,  7.37,  7.37,  7.37,  7.37) N
+0 T (  15 ,           SA ,       7  ,     0 \(               *              \), 7.47,  7.47,  7.47,  7.47,  7.47) N
+0 T (  15 ,           GA ,       7  ,     0 \(               *              \), 7.48,  7.48,  7.48,  7.48,  7.48) N
+0 T (  15 ,           GA ,       7  ,     0 \(               *              \), 7.69,  7.69,  7.69,  7.69,  7.69) N
+0 T (  15 ,           GA ,       7  ,     0 \(               *              \), 7.77,  7.77,  7.77,  7.77,  7.77) N
+(160) # (  16 ,          MWS ,       8  ,     0 \(               |*             \), 8.59,  8.59,  8.59,  8.59,  8.59) N
+0 T (  16 ,          MWS ,       8  ,     0 \(               |*             \), 8.72,  8.72,  8.72,  8.72,  8.72) N
+0 T (  16 ,          MWS ,       8  ,     0 \(               |*             \), 8.76,  8.76,  8.76,  8.76,  8.76) N
+0 T (  16 ,          MWS ,       9  ,     0 \(               |*             \), 9.11,  9.11,  9.11,  9.11,  9.11) N
+0 T (  17 ,          MWS ,      11  ,     0 \(               |  *           \),11.27, 11.27, 11.27, 11.27, 11.27) N
+(165) # (  17 ,          MWS ,      26  ,     0 \(               |             *\),26.66, 26.66, 26.66, 26.66, 26.66) N
+0 T () N
+0 T (#### ZDT3) N
+0 T (rank ,         name ,    med   ,  iqr ) N
+0 T (----------------------------------------------------) N
+(170) # (   1 ,           SA ,     -13  ,     0 \(*              |              \),-13.24, -13.24, -13.24, -13.24, -13.24) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.82, -12.82, -12.82, -12.82, -12.82) N
+("csc710sbse: hw5: Witschey") (Page 3/8) (Oct 14, 14 11:44) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw5/searchout.txt) (3/8) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (4) 4
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.736012 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) p n
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.45, -12.45, -12.45, -12.45, -12.45) N
+(175) # (   2 ,           SA ,     -12  ,     0 \(*              |              \),-12.38, -12.38, -12.38, -12.38, -12.38) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.18, -12.18, -12.18, -12.18, -12.18) N
+0 T (   3 ,           GA ,     -10  ,     0 \( *             |              \),-10.98, -10.98, -10.98, -10.98, -10.98) N
+0 T (   3 ,           GA ,     -10  ,     0 \(  *            |              \),-10.57, -10.57, -10.57, -10.57, -10.57) N
+0 T (   3 ,          MWS ,     -10  ,     0 \(  *            |              \),-10.24, -10.24, -10.24, -10.24, -10.24) N
+(180) # (   3 ,           GA ,      -9  ,     0 \(  *            |              \),-9.70, -9.70, -9.70, -9.70, -9.70) N
+0 T (   4 ,          MWS ,      -7  ,     0 \(    *          |              \),-7.13, -7.13, -7.13, -7.13, -7.13) N
+0 T (   4 ,          MWS ,      -6  ,     0 \(     *         |              \),-6.50, -6.50, -6.50, -6.50, -6.50) N
+0 T (   5 ,          MWS ,      -4  ,     0 \(      *        |              \),-4.78, -4.78, -4.78, -4.78, -4.78) N
+0 T (   5 ,          MWS ,      -3  ,     0 \(       *       |              \),-3.15, -3.15, -3.15, -3.15, -3.15) N
+(185) # (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.01,  1.01,  1.01,  1.01,  1.01) N
+0 T (   6 ,           GA ,       1  ,     0 \(          *    |              \), 1.04,  1.04,  1.04,  1.04,  1.04) N
+0 T (   6 ,           GA ,       1  ,     0 \(          *    |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+(190) # (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+0 T (   6 ,           GA ,       1  ,     0 \(          *    |              \), 1.08,  1.08,  1.08,  1.08,  1.08) N
+0 T (   6 ,          MWS ,       1  ,     0 \(          *    |              \), 1.09,  1.09,  1.09,  1.09,  1.09) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.16,  1.16,  1.16,  1.16,  1.16) N
+0 T (   6 ,           GA ,       1  ,     0 \(          *    |              \), 1.16,  1.16,  1.16,  1.16,  1.16) N
+(195) # (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+0 T (   6 ,           GA ,       1  ,     0 \(          *    |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+0 T (   6 ,           GA ,       1  ,     0 \(          *    |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+(200) # (   6 ,           GA ,       1  ,     0 \(          *    |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.20,  1.20,  1.20,  1.20,  1.20) N
+0 T (   6 ,           GA ,       1  ,     0 \(          *    |              \), 1.23,  1.23,  1.23,  1.23,  1.23) N
+0 T (   6 ,           SA ,       1  ,     0 \(          *    |              \), 1.26,  1.26,  1.26,  1.26,  1.26) N
+0 T (   6 ,          MWS ,       1  ,     0 \(           *   |              \), 1.45,  1.45,  1.45,  1.45,  1.45) N
+(205) # (   6 ,          MWS ,       1  ,     0 \(           *   |              \), 1.56,  1.56,  1.56,  1.56,  1.56) N
+0 T (   6 ,           GA ,       1  ,     0 \(           *   |              \), 1.62,  1.62,  1.62,  1.62,  1.62) N
+0 T (   6 ,          MWS ,       1  ,     0 \(           *   |              \), 1.64,  1.64,  1.64,  1.64,  1.64) N
+0 T (   6 ,          MWS ,       1  ,     0 \(           *   |              \), 1.98,  1.98,  1.98,  1.98,  1.98) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(210) # (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(215) # (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.01,  2.01,  2.01,  2.01,  2.01) N
+0 T (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+0 T (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.05,  2.05,  2.05,  2.05,  2.05) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.09,  2.09,  2.09,  2.09,  2.09) N
+(220) # (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.23,  2.23,  2.23,  2.23,  2.23) N
+0 T (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.44,  2.44,  2.44,  2.44,  2.44) N
+0 T (   6 ,          MWS ,       3  ,     0 \(            *  |              \), 3.06,  3.06,  3.06,  3.06,  3.06) N
+0 T (   6 ,          MWS ,       4  ,     0 \(             * |              \), 4.82,  4.82,  4.82,  4.82,  4.82) N
+0 T (   7 ,          MWS ,       6  ,     0 \(              *|              \), 6.12,  6.12,  6.12,  6.12,  6.12) N
+(225) # (   7 ,           GA ,       6  ,     0 \(              *|              \), 6.34,  6.34,  6.34,  6.34,  6.34) N
+0 T (   8 ,          MWS ,       6  ,     0 \(              *|              \), 6.56,  6.56,  6.56,  6.56,  6.56) N
+0 T (   8 ,           SA ,       6  ,     0 \(              *|              \), 6.66,  6.66,  6.66,  6.66,  6.66) N
+0 T (   9 ,          MWS ,       6  ,     0 \(               *              \), 6.76,  6.76,  6.76,  6.76,  6.76) N
+("csc710sbse: hw5: Witschey") (Page 4/8) (Oct 14, 14 11:44) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw5/searchout.txt) (4/8) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (5) 5
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.736012 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (   9 ,           SA ,       6  ,     0 \(               *              \), 6.86,  6.86,  6.86,  6.86,  6.86) p n
+(230) # (  10 ,           SA ,       7  ,     0 \(               *              \), 7.10,  7.10,  7.10,  7.10,  7.10) N
+0 T (  10 ,           GA ,       7  ,     0 \(               *              \), 7.23,  7.23,  7.23,  7.23,  7.23) N
+0 T (  11 ,           SA ,       7  ,     0 \(               *              \), 7.31,  7.31,  7.31,  7.31,  7.31) N
+0 T (  11 ,           GA ,       7  ,     0 \(               *              \), 7.37,  7.37,  7.37,  7.37,  7.37) N
+0 T (  12 ,           SA ,       7  ,     0 \(               *              \), 7.47,  7.47,  7.47,  7.47,  7.47) N
+(235) # (  12 ,           GA ,       7  ,     0 \(               *              \), 7.48,  7.48,  7.48,  7.48,  7.48) N
+0 T (  12 ,           GA ,       7  ,     0 \(               *              \), 7.69,  7.69,  7.69,  7.69,  7.69) N
+0 T (  12 ,           GA ,       7  ,     0 \(               *              \), 7.77,  7.77,  7.77,  7.77,  7.77) N
+0 T (  13 ,          MWS ,       8  ,     0 \(               |*             \), 8.20,  8.20,  8.20,  8.20,  8.20) N
+0 T (  13 ,          MWS ,       8  ,     0 \(               |*             \), 8.59,  8.59,  8.59,  8.59,  8.59) N
+(240) # (  14 ,          MWS ,       8  ,     0 \(               |*             \), 8.72,  8.72,  8.72,  8.72,  8.72) N
+0 T (  14 ,          MWS ,       8  ,     0 \(               |*             \), 8.76,  8.76,  8.76,  8.76,  8.76) N
+0 T (  14 ,          MWS ,       9  ,     0 \(               |*             \), 9.11,  9.11,  9.11,  9.11,  9.11) N
+0 T (  15 ,          MWS ,      11  ,     0 \(               |  *           \),11.27, 11.27, 11.27, 11.27, 11.27) N
+0 T (  15 ,          MWS ,      26  ,     0 \(               |             *\),26.66, 26.66, 26.66, 26.66, 26.66) N
+(245) # () N
+0 T (#### Viennet3) N
+0 T (rank ,         name ,    med   ,  iqr ) N
+0 T (----------------------------------------------------) N
+0 T (   1 ,           SA ,     -13  ,     0 \(*              |              \),-13.24, -13.24, -13.24, -13.24, -13.24) N
+(250) # (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.82, -12.82, -12.82, -12.82, -12.82) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.45, -12.45, -12.45, -12.45, -12.45) N
+0 T (   2 ,           SA ,     -12  ,     0 \(*              |              \),-12.38, -12.38, -12.38, -12.38, -12.38) N
+(255) # (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.18, -12.18, -12.18, -12.18, -12.18) N
+0 T (   3 ,           GA ,     -10  ,     0 \( *             |              \),-10.98, -10.98, -10.98, -10.98, -10.98) N
+0 T (   3 ,           GA ,     -10  ,     0 \(  *            |              \),-10.57, -10.57, -10.57, -10.57, -10.57) N
+0 T (   3 ,          MWS ,     -10  ,     0 \(  *            |              \),-10.24, -10.24, -10.24, -10.24, -10.24) N
+0 T (   3 ,           GA ,      -9  ,     0 \(  *            |              \),-9.70, -9.70, -9.70, -9.70, -9.70) N
+(260) # (   4 ,          MWS ,      -7  ,     0 \(    *          |              \),-7.13, -7.13, -7.13, -7.13, -7.13) N
+0 T (   4 ,          MWS ,      -6  ,     0 \(     *         |              \),-6.50, -6.50, -6.50, -6.50, -6.50) N
+0 T (   4 ,          MWS ,      -4  ,     0 \(      *        |              \),-4.78, -4.78, -4.78, -4.78, -4.78) N
+0 T (   5 ,          MWS ,      -3  ,     0 \(       *       |              \),-3.15, -3.15, -3.15, -3.15, -3.15) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+(265) # (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.01,  1.01,  1.01,  1.01,  1.01) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.04,  1.04,  1.04,  1.04,  1.04) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+(270) # (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.08,  1.08,  1.08,  1.08,  1.08) N
+0 T (   5 ,          MWS ,       1  ,     0 \(          *    |              \), 1.09,  1.09,  1.09,  1.09,  1.09) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.16,  1.16,  1.16,  1.16,  1.16) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.16,  1.16,  1.16,  1.16,  1.16) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+(275) # (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+(280) # (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.20,  1.20,  1.20,  1.20,  1.20) N
+0 T (   5 ,           GA ,       1  ,     0 \(          *    |              \), 1.23,  1.23,  1.23,  1.23,  1.23) N
+0 T (   5 ,           SA ,       1  ,     0 \(          *    |              \), 1.26,  1.26,  1.26,  1.26,  1.26) N
+0 T (   5 ,          MWS ,       1  ,     0 \(           *   |              \), 1.45,  1.45,  1.45,  1.45,  1.45) N
+0 T (   5 ,          MWS ,       1  ,     0 \(           *   |              \), 1.56,  1.56,  1.56,  1.56,  1.56) N
+(285) # (   5 ,           GA ,       1  ,     0 \(           *   |              \), 1.62,  1.62,  1.62,  1.62,  1.62) N
+("csc710sbse: hw5: Witschey") (Page 5/8) (Oct 14, 14 11:44) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw5/searchout.txt) (5/8) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (6) 6
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.736012 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (   5 ,          MWS ,       1  ,     0 \(           *   |              \), 1.64,  1.64,  1.64,  1.64,  1.64) p n
+0 T (   6 ,          MWS ,       1  ,     0 \(           *   |              \), 1.98,  1.98,  1.98,  1.98,  1.98) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(290) # (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.01,  2.01,  2.01,  2.01,  2.01) N
+(295) # (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+0 T (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.05,  2.05,  2.05,  2.05,  2.05) N
+0 T (   6 ,           SA ,       2  ,     0 \(           *   |              \), 2.09,  2.09,  2.09,  2.09,  2.09) N
+0 T (   6 ,           GA ,       2  ,     0 \(           *   |              \), 2.23,  2.23,  2.23,  2.23,  2.23) N
+(300) # (   6 ,          MWS ,       2  ,     0 \(           *   |              \), 2.44,  2.44,  2.44,  2.44,  2.44) N
+0 T (   6 ,          MWS ,       3  ,     0 \(            *  |              \), 3.06,  3.06,  3.06,  3.06,  3.06) N
+0 T (   6 ,          MWS ,       4  ,     0 \(             * |              \), 4.82,  4.82,  4.82,  4.82,  4.82) N
+0 T (   7 ,          MWS ,       6  ,     0 \(              *|              \), 6.12,  6.12,  6.12,  6.12,  6.12) N
+0 T (   7 ,           GA ,       6  ,     0 \(              *|              \), 6.34,  6.34,  6.34,  6.34,  6.34) N
+(305) # (   8 ,          MWS ,       6  ,     0 \(              *|              \), 6.56,  6.56,  6.56,  6.56,  6.56) N
+0 T (   8 ,           SA ,       6  ,     0 \(              *|              \), 6.66,  6.66,  6.66,  6.66,  6.66) N
+0 T (   9 ,          MWS ,       6  ,     0 \(               *              \), 6.76,  6.76,  6.76,  6.76,  6.76) N
+0 T (   9 ,           SA ,       6  ,     0 \(               *              \), 6.86,  6.86,  6.86,  6.86,  6.86) N
+0 T (  10 ,           SA ,       7  ,     0 \(               *              \), 7.10,  7.10,  7.10,  7.10,  7.10) N
+(310) # (  10 ,           GA ,       7  ,     0 \(               *              \), 7.23,  7.23,  7.23,  7.23,  7.23) N
+0 T (  11 ,           SA ,       7  ,     0 \(               *              \), 7.31,  7.31,  7.31,  7.31,  7.31) N
+0 T (  11 ,           GA ,       7  ,     0 \(               *              \), 7.37,  7.37,  7.37,  7.37,  7.37) N
+0 T (  12 ,           SA ,       7  ,     0 \(               *              \), 7.47,  7.47,  7.47,  7.47,  7.47) N
+0 T (  12 ,           GA ,       7  ,     0 \(               *              \), 7.48,  7.48,  7.48,  7.48,  7.48) N
+(315) # (  12 ,           GA ,       7  ,     0 \(               *              \), 7.69,  7.69,  7.69,  7.69,  7.69) N
+0 T (  12 ,           GA ,       7  ,     0 \(               *              \), 7.77,  7.77,  7.77,  7.77,  7.77) N
+0 T (  13 ,          MWS ,       8  ,     0 \(               |*             \), 8.20,  8.20,  8.20,  8.20,  8.20) N
+0 T (  13 ,          MWS ,       8  ,     0 \(               |*             \), 8.59,  8.59,  8.59,  8.59,  8.59) N
+0 T (  13 ,          MWS ,       8  ,     0 \(               |*             \), 8.72,  8.72,  8.72,  8.72,  8.72) N
+(320) # (  13 ,          MWS ,       8  ,     0 \(               |*             \), 8.76,  8.76,  8.76,  8.76,  8.76) N
+0 T (  13 ,          MWS ,       9  ,     0 \(               |*             \), 9.11,  9.11,  9.11,  9.11,  9.11) N
+0 T (  13 ,          MWS ,      11  ,     0 \(               |  *           \),11.27, 11.27, 11.27, 11.27, 11.27) N
+0 T (  14 ,           SA ,      15  ,     0 \(               |     *        \),15.98, 15.98, 15.98, 15.98, 15.98) N
+0 T (  14 ,           SA ,      15  ,     0 \(               |     *        \),15.98, 15.98, 15.98, 15.98, 15.98) N
+(325) # (  14 ,           SA ,      15  ,     0 \(               |     *        \),15.99, 15.99, 15.99, 15.99, 15.99) N
+0 T (  14 ,           SA ,      16  ,     0 \(               |     *        \),16.01, 16.01, 16.01, 16.01, 16.01) N
+0 T (  15 ,           SA ,      16  ,     0 \(               |      *       \),16.04, 16.04, 16.04, 16.04, 16.04) N
+0 T (  15 ,           GA ,      16  ,     0 \(               |      *       \),16.07, 16.07, 16.07, 16.07, 16.07) N
+0 T (  15 ,           GA ,      16  ,     0 \(               |      *       \),16.15, 16.15, 16.15, 16.15, 16.15) N
+(330) # (  16 ,           GA ,      16  ,     0 \(               |      *       \),16.49, 16.49, 16.49, 16.49, 16.49) N
+0 T (  16 ,          MWS ,      16  ,     0 \(               |      *       \),16.52, 16.52, 16.52, 16.52, 16.52) N
+0 T (  16 ,           GA ,      16  ,     0 \(               |      *       \),16.56, 16.56, 16.56, 16.56, 16.56) N
+0 T (  17 ,          MWS ,      16  ,     0 \(               |      *       \),16.87, 16.87, 16.87, 16.87, 16.87) N
+0 T (  17 ,           GA ,      16  ,     0 \(               |      *       \),16.92, 16.92, 16.92, 16.92, 16.92) N
+(335) # (  18 ,          MWS ,      17  ,     0 \(               |      *       \),17.14, 17.14, 17.14, 17.14, 17.14) N
+0 T (  18 ,          MWS ,      17  ,     0 \(               |       *      \),17.50, 17.50, 17.50, 17.50, 17.50) N
+0 T (  19 ,          MWS ,      17  ,     0 \(               |       *      \),17.63, 17.63, 17.63, 17.63, 17.63) N
+0 T (  19 ,          MWS ,      26  ,     0 \(               |             *\),26.66, 26.66, 26.66, 26.66, 26.66) N
+0 T () N
+(340) # (#### DTLZ7) N
+0 T (rank ,         name ,    med   ,  iqr ) N
+0 T (----------------------------------------------------) N
+("csc710sbse: hw5: Witschey") (Page 6/8) (Oct 14, 14 11:44) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw5/searchout.txt) (6/8) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (7) 7
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.736012 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (   1 ,           SA ,     -13  ,     0 \(*              |              \),-13.24, -13.24, -13.24, -13.24, -13.24) p n
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.82, -12.82, -12.82, -12.82, -12.82) N
+(345) # (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   1 ,           SA ,     -12  ,     0 \(*              |              \),-12.70, -12.70, -12.70, -12.70, -12.70) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.45, -12.45, -12.45, -12.45, -12.45) N
+0 T (   2 ,           SA ,     -12  ,     0 \(*              |              \),-12.38, -12.38, -12.38, -12.38, -12.38) N
+0 T (   2 ,           GA ,     -12  ,     0 \(*              |              \),-12.18, -12.18, -12.18, -12.18, -12.18) N
+(350) # (   3 ,           GA ,     -10  ,     0 \(*              |              \),-10.98, -10.98, -10.98, -10.98, -10.98) N
+0 T (   3 ,           GA ,     -10  ,     0 \(*              |              \),-10.57, -10.57, -10.57, -10.57, -10.57) N
+0 T (   3 ,          MWS ,     -10  ,     0 \(*              |              \),-10.24, -10.24, -10.24, -10.24, -10.24) N
+0 T (   3 ,           GA ,      -9  ,     0 \(*              |              \),-9.70, -9.70, -9.70, -9.70, -9.70) N
+0 T (   4 ,          MWS ,      -7  ,     0 \(*              |              \),-7.13, -7.13, -7.13, -7.13, -7.13) N
+(355) # (   4 ,          MWS ,      -6  ,     0 \(*              |              \),-6.50, -6.50, -6.50, -6.50, -6.50) N
+0 T (   4 ,          MWS ,      -4  ,     0 \(*              |              \),-4.78, -4.78, -4.78, -4.78, -4.78) N
+0 T (   5 ,          MWS ,      -3  ,     0 \(*              |              \),-3.15, -3.15, -3.15, -3.15, -3.15) N
+0 T (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+0 T (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.00,  1.00,  1.00,  1.00,  1.00) N
+(360) # (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.01,  1.01,  1.01,  1.01,  1.01) N
+0 T (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.04,  1.04,  1.04,  1.04,  1.04) N
+0 T (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+0 T (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.05,  1.05,  1.05,  1.05,  1.05) N
+0 T (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.08,  1.08,  1.08,  1.08,  1.08) N
+(365) # (   5 ,          MWS ,       1  ,     0 \(*              |              \), 1.09,  1.09,  1.09,  1.09,  1.09) N
+0 T (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.16,  1.16,  1.16,  1.16,  1.16) N
+0 T (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.16,  1.16,  1.16,  1.16,  1.16) N
+0 T (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+0 T (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+(370) # (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.17,  1.17,  1.17,  1.17,  1.17) N
+0 T (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.19,  1.19,  1.19,  1.19,  1.19) N
+0 T (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.20,  1.20,  1.20,  1.20,  1.20) N
+(375) # (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.23,  1.23,  1.23,  1.23,  1.23) N
+0 T (   5 ,           SA ,       1  ,     0 \(*              |              \), 1.26,  1.26,  1.26,  1.26,  1.26) N
+0 T (   5 ,          MWS ,       1  ,     0 \(*              |              \), 1.45,  1.45,  1.45,  1.45,  1.45) N
+0 T (   5 ,          MWS ,       1  ,     0 \(*              |              \), 1.56,  1.56,  1.56,  1.56,  1.56) N
+0 T (   5 ,           GA ,       1  ,     0 \(*              |              \), 1.62,  1.62,  1.62,  1.62,  1.62) N
+(380) # (   5 ,          MWS ,       1  ,     0 \(*              |              \), 1.64,  1.64,  1.64,  1.64,  1.64) N
+0 T (   6 ,          MWS ,       1  ,     0 \(*              |              \), 1.98,  1.98,  1.98,  1.98,  1.98) N
+0 T (   6 ,           SA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+(385) # (   6 ,           GA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           SA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(*              |              \), 2.00,  2.00,  2.00,  2.00,  2.00) N
+0 T (   6 ,           GA ,       2  ,     0 \(*              |              \), 2.01,  2.01,  2.01,  2.01,  2.01) N
+0 T (   6 ,          MWS ,       2  ,     0 \(*              |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+(390) # (   6 ,           GA ,       2  ,     0 \(*              |              \), 2.03,  2.03,  2.03,  2.03,  2.03) N
+0 T (   6 ,          MWS ,       2  ,     0 \(*              |              \), 2.05,  2.05,  2.05,  2.05,  2.05) N
+0 T (   6 ,           SA ,       2  ,     0 \(*              |              \), 2.09,  2.09,  2.09,  2.09,  2.09) N
+0 T (   6 ,           GA ,       2  ,     0 \(*              |              \), 2.23,  2.23,  2.23,  2.23,  2.23) N
+0 T (   6 ,          MWS ,       2  ,     0 \(*              |              \), 2.44,  2.44,  2.44,  2.44,  2.44) N
+(395) # (   6 ,          MWS ,       3  ,     0 \(*              |              \), 3.06,  3.06,  3.06,  3.06,  3.06) N
+0 T (   6 ,          MWS ,       4  ,     0 \(*              |              \), 4.82,  4.82,  4.82,  4.82,  4.82) N
+0 T (   7 ,          MWS ,       6  ,     0 \(*              |              \), 6.12,  6.12,  6.12,  6.12,  6.12) N
+0 T (   7 ,           GA ,       6  ,     0 \(*              |              \), 6.34,  6.34,  6.34,  6.34,  6.34) N
+0 T (   8 ,          MWS ,       6  ,     0 \(*              |              \), 6.56,  6.56,  6.56,  6.56,  6.56) N
+("csc710sbse: hw5: Witschey") (Page 7/8) (Oct 14, 14 11:44) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw5/searchout.txt) (7/8) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (8) 8
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 3.736012 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+(400) # (   8 ,           SA ,       6  ,     0 \(*              |              \), 6.66,  6.66,  6.66,  6.66,  6.66) p n
+0 T (   9 ,          MWS ,       6  ,     0 \(*              |              \), 6.76,  6.76,  6.76,  6.76,  6.76) N
+0 T (   9 ,           SA ,       6  ,     0 \(*              |              \), 6.86,  6.86,  6.86,  6.86,  6.86) N
+0 T (  10 ,           SA ,       7  ,     0 \(*              |              \), 7.10,  7.10,  7.10,  7.10,  7.10) N
+0 T (  10 ,           GA ,       7  ,     0 \(*              |              \), 7.23,  7.23,  7.23,  7.23,  7.23) N
+(405) # (  11 ,           SA ,       7  ,     0 \(*              |              \), 7.31,  7.31,  7.31,  7.31,  7.31) N
+0 T (  11 ,           GA ,       7  ,     0 \(*              |              \), 7.37,  7.37,  7.37,  7.37,  7.37) N
+0 T (  12 ,           SA ,       7  ,     0 \(*              |              \), 7.47,  7.47,  7.47,  7.47,  7.47) N
+0 T (  12 ,           GA ,       7  ,     0 \(*              |              \), 7.48,  7.48,  7.48,  7.48,  7.48) N
+0 T (  12 ,           GA ,       7  ,     0 \(*              |              \), 7.69,  7.69,  7.69,  7.69,  7.69) N
+(410) # (  12 ,           GA ,       7  ,     0 \(*              |              \), 7.77,  7.77,  7.77,  7.77,  7.77) N
+0 T (  13 ,          MWS ,       8  ,     0 \(*              |              \), 8.20,  8.20,  8.20,  8.20,  8.20) N
+0 T (  13 ,          MWS ,       8  ,     0 \(*              |              \), 8.59,  8.59,  8.59,  8.59,  8.59) N
+0 T (  13 ,          MWS ,       8  ,     0 \(*              |              \), 8.72,  8.72,  8.72,  8.72,  8.72) N
+0 T (  13 ,          MWS ,       8  ,     0 \(*              |              \), 8.76,  8.76,  8.76,  8.76,  8.76) N
+(415) # (  13 ,          MWS ,       9  ,     0 \(*              |              \), 9.11,  9.11,  9.11,  9.11,  9.11) N
+0 T (  13 ,          MWS ,      11  ,     0 \(*              |              \),11.27, 11.27, 11.27, 11.27, 11.27) N
+0 T (  14 ,           SA ,      15  ,     0 \(*              |              \),15.98, 15.98, 15.98, 15.98, 15.98) N
+0 T (  14 ,           SA ,      15  ,     0 \(*              |              \),15.98, 15.98, 15.98, 15.98, 15.98) N
+0 T (  14 ,           SA ,      15  ,     0 \(*              |              \),15.99, 15.99, 15.99, 15.99, 15.99) N
+(420) # (  14 ,           SA ,      16  ,     0 \(*              |              \),16.01, 16.01, 16.01, 16.01, 16.01) N
+0 T (  15 ,           SA ,      16  ,     0 \(*              |              \),16.04, 16.04, 16.04, 16.04, 16.04) N
+0 T (  15 ,           GA ,      16  ,     0 \(*              |              \),16.07, 16.07, 16.07, 16.07, 16.07) N
+0 T (  15 ,           GA ,      16  ,     0 \(*              |              \),16.15, 16.15, 16.15, 16.15, 16.15) N
+0 T (  16 ,           GA ,      16  ,     0 \(*              |              \),16.49, 16.49, 16.49, 16.49, 16.49) N
+(425) # (  16 ,          MWS ,      16  ,     0 \(*              |              \),16.52, 16.52, 16.52, 16.52, 16.52) N
+0 T (  16 ,           GA ,      16  ,     0 \(*              |              \),16.56, 16.56, 16.56, 16.56, 16.56) N
+0 T (  17 ,          MWS ,      16  ,     0 \(*              |              \),16.87, 16.87, 16.87, 16.87, 16.87) N
+0 T (  17 ,           GA ,      16  ,     0 \(*              |              \),16.92, 16.92, 16.92, 16.92, 16.92) N
+0 T (  17 ,          MWS ,      17  ,     0 \(*              |              \),17.14, 17.14, 17.14, 17.14, 17.14) N
+(430) # (  17 ,          MWS ,      17  ,     0 \(*              |              \),17.50, 17.50, 17.50, 17.50, 17.50) N
+0 T (  18 ,          MWS ,      17  ,     0 \(*              |              \),17.63, 17.63, 17.63, 17.63, 17.63) N
+0 T (  18 ,          MWS ,      26  ,     0 \(*              |              \),26.66, 26.66, 26.66, 26.66, 26.66) N
+0 T (  19 ,           GA ,    3070  ,     0 \(*              |              \),3070.85, 3070.85, 3070.85, 3070.85, 3070.85) N
+0 T (  19 ,           SA ,    3223  ,     0 \(*              |              \),3223.13, 3223.13, 3223.13, 3223.13, 3223.13) N
+(435) # (  20 ,           GA ,    3265  ,     0 \(*              |              \),3265.19, 3265.19, 3265.19, 3265.19, 3265.19) N
+0 T (  20 ,           SA ,    3292  ,     0 \(*              |              \),3292.80, 3292.80, 3292.80, 3292.80, 3292.80) N
+0 T (  21 ,           GA ,    3409  ,     0 \(*              |              \),3409.23, 3409.23, 3409.23, 3409.23, 3409.23) N
+0 T (  21 ,           SA ,    3438  ,     0 \(*              |              \),3438.12, 3438.12, 3438.12, 3438.12, 3438.12) N
+0 T (  22 ,           SA ,    3510  ,     0 \(*              |              \),3510.81, 3510.81, 3510.81, 3510.81, 3510.81) N
+(440) # (  23 ,           SA ,    3520  ,     0 \(*              |              \),3520.06, 3520.06, 3520.06, 3520.06, 3520.06) N
+0 T (  23 ,           GA ,    3553  ,     0 \(*              |              \),3553.01, 3553.01, 3553.01, 3553.01, 3553.01) N
+0 T (  23 ,           GA ,    3730  ,     0 \(*              |              \),3730.36, 3730.36, 3730.36, 3730.36, 3730.36) N
+0 T (  24 ,          MWS ,    4084  ,     0 \(*              |              \),4084.32, 4084.32, 4084.32, 4084.32, 4084.32) N
+0 T (  25 ,          MWS ,    4750  ,     0 \(*              |              \),4750.67, 4750.67, 4750.67, 4750.67, 4750.67) N
+(445) # (  26 ,          MWS ,    5610  ,     0 \(*              |              \),5610.16, 5610.16, 5610.16, 5610.16, 5610.16) N
+0 T (  27 ,          MWS ,    19035  ,    0 \(*              |              \),19035.07, 19035.07, 19035.07, 19035.07, 19035.07) N
+0 T (  28 ,          MWS ,    2015755  ,  0 \(               |             *\),2015755.47, 2015755.47, 2015755.47, 2015755.47, 2015755.47) N
+0 T () N
+("csc710sbse: hw5: Witschey") (Page 8/8) (Oct 14, 14 11:44) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw5/searchout.txt) (8/8) (Tuesday October 14, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF
