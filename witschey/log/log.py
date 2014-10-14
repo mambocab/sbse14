@@ -61,7 +61,8 @@ class Log(object):
             # leads to uniform sample of entire run
             if random.random() <= self.max_size / len(self):
                 changed = True
-                self._cache[self.random_index()] = x
+                self._cache.remove(random.choice(self._cache))
+                self._cache.add(x)
 
         if changed:
             self._invalidate_statistics()
