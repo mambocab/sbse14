@@ -115,6 +115,9 @@ class Log(object):
         else:
             return SymbolLog()
 
+    def contents(self):
+        return self._cache.as_list()
+
 
 def statistic(f):
     '''
