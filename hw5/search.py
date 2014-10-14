@@ -14,11 +14,11 @@ import timeit
 def run(n=30, text_report=True):
     ss, ms = Searcher.__subclasses__(), Model.__subclasses__()
     random.seed(1)
-    outs = []
-    last_logs = defaultdict(list)
     for model_cls in ms:
+        outs = []
         print("#### {}".format(model_cls.__name__))
         bests = defaultdict(list)
+        last_logs = defaultdict(list)
         for searcher_cls in ss:
             for _ in xrange(n):
                 Output = namedtuple('Output', ('name', 'best'))
@@ -37,4 +37,4 @@ def run(n=30, text_report=True):
         print(rdivDemo(rdiv_in))
 
 if __name__ == '__main__':
-    run(n = 5, text_report=False)
+    run(n=5, text_report=False)
