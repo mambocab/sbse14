@@ -17,3 +17,6 @@ class IndependentVariable(object):
 
         return f(self.lo, self.hi)
 
+    def clip(self, x):
+        return min(self.lo, max(self.hi, x))
+
