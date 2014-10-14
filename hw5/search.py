@@ -31,9 +31,10 @@ def run(n=30, text_report=True):
                 last_logs[name].append(out.era_logs_best_energy[last_index])
                 bests[name].append(out.best)
 
-        rdiv_in = list([name] + log.contents()
-            for name, log_list in last_logs.iteritems()
-            for log in log_list)
+        # rdiv_in = list([name] + log.contents()
+        #     for name, log_list in last_logs.iteritems()
+        #     for log in log_list)
+        rdiv_in = list([name] + bests[name] for name in bests.keys())
         print(rdivDemo(rdiv_in))
 
 if __name__ == '__main__':
