@@ -35,10 +35,11 @@ class DifferentialEvolution(Searcher):
     def _extrapolate_xs(self, current):
         a, b, c = self._sample_frontier_exclude(current, n=3)
         rv_list = [x for x in current.xs]
+        p_crossover = self.spec.p_crossover
 
         # randomly pick at least one x-position to change
         change_indices = [i for i in xrange(len(rv_list))
-            if random.random() < self.spec.cr] or [base.random_index(rv_list)]
+            if random.random() < p_crossover] or [base.random_index(rv_list)]
 
         # extrapolate a new value for each of the chosen indices
         for i in change_indices:
