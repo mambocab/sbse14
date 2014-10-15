@@ -12,13 +12,13 @@ class DifferentialEvolution(Searcher):
 
     def run(self, text_report=True):
         n_candiates = self.spec.n_candiates
-        self.frontier = [self.random_search_io() for _ in xrange(n_candiates)]
+        self._frontier = [self.random_search_io() for _ in xrange(n_candiates)]
 
         for _ in xrange(self.spec.generations):
             pass
 
     def _sample_frontier_exclude(self, ex, n=3):
-        flen = len(self.frontier)
+        flen = len(self._frontier)
         if flen < n:
             e = 'cannot sample {} values from frontier of length {}'.format(
                 n, flen)
