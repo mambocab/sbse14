@@ -5,7 +5,7 @@ import math, random
 from model import Model
 from independent_variable import IndependentVariable as IV
 
-def randint_matrix(x, lo=-100, hi=100):
+def _randint_matrix(x, lo=-100, hi=100):
     "returns x by x matrix of random integers in [lo, hi]"
     return [[random.randint(lo, hi) for i in xrange(x)]
         for j in xrange(x)]
@@ -25,7 +25,7 @@ class Schwefel(Model):
             for _ in xrange(d)))
 
         # "a_ij, b_ij are integer random numbers in the range [-100, 100]"
-        a, b = randint_matrix(d), randint_matrix(d)
+        a, b = _randint_matrix(d), _randint_matrix(d)
         # "alpha... [is a vector] of random numbers in [-pi, pi]"
         alpha = [random.uniform(-math.pi, math.pi) for _ in xrange(d)]
 
