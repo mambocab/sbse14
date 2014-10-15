@@ -1,11 +1,18 @@
 from __future__ import division, print_function, unicode_literals
 
-import json, random, functools, sys, math, itertools, collections
+import random
+import functools
+import sys
+import math
+import itertools
+import collections
+
 
 def pretty_input(t):
     float_format = lambda x: '{: .2f}'.format(x)
     str_tuple = tuple(float_format(x).encode(sys.stdout.encoding) for x in t)
     return ', '.join(s for s in str_tuple)
+
 
 def pairs(xs):
     # from https://docs.python.org/2/library/itertools.html
@@ -14,7 +21,8 @@ def pairs(xs):
     for p in itertools.izip(a, b):
         yield p
 
-class memo(object):
+
+class memo(object):  # noqa -- TODO: rethink this name
     '''adapted from https://github.com/timm/sbse14/wiki/basepy'''
 
     def __init__(self, **kwargs):
@@ -26,10 +34,10 @@ class memo(object):
             indent=indent,
             infix=infix,
             sep=sep,
-            d = self.__dict__ if d is None else d) + '}'
+            d=self.__dict__ if d is None else d) + '}'
 
     def _to_str(self, depth, indent, infix, sep, d):
-        after, before, reps = [], [], []
+        after, before = [], []
         rv = ' ' * depth * indent
         for k in sorted([s for s in d.keys() if s[0] != '_']):
             val = d[k]
@@ -38,23 +46,26 @@ class memo(object):
             else:
                 before.append('{}{}{}'.format(k, infix, repr(val)))
         rv += sep.join(before)
-        if after: rv += ','
+        if after:
+            rv += ','
         rv += '\n'
 
         for k in after:
             rv += ''.join([' ' * depth * indent, k, infix, '{\n'])
             k = d[k]
             k = k if type(k) == dict else k.__dict__
-            rv += ''.join([self._to_str(depth=depth+1,indent=indent,
-                infix=infix, sep=sep, d=k),
-                ' ' * depth * indent,
-                '}\n'])
+            rv += ''.join([self._to_str(depth=depth+1, indent=indent,
+                           infix=infix, sep=sep, d=k),
+                           ' ' * depth * indent,
+                           '}\n'])
 
         return rv
+
 
 def memoize(f):
     'memoizer for single-arg functions'
     d = {}
+
     @functools.wraps(f)
     def wrapper(x):
         try:
@@ -65,12 +76,15 @@ def memoize(f):
 
     return wrapper
 
+
 @memoize
 def memo_sqrt(x):
     return math.sqrt(x)
 
+
 def tuple_replace(t, replace_at, value):
     return tuple(value if i == replace_at else v for i, v in enumerate(t))
+
 
 def random_index(x):
     if isinstance(x, dict):
@@ -79,11 +93,12 @@ def random_index(x):
         return random.randint(0, len(x) - 1)
     raise ValueError('{} is not a list, tuple or dict'.format(x))
 
+
 class StringBuilder(object):
     def __init__(self, *args):
         self._s = ''.join(args)
         self._next = []
-    
+
     def append(self, arg):
         'recurse through iterables in args, adding all strings to _next '
         'raises TypeError if it finds a non-Iterable non-string'
@@ -104,7 +119,7 @@ class StringBuilder(object):
             self._s += ''.join(self._next)
             self._next = []
         return self._s
-    
+
     def __repr__(self):
         return "{}('{}')".format(self.__class__.__name__, self.as_str())
 
