@@ -1,9 +1,10 @@
 from __future__ import division, print_function
 
-import random
-from witschey import base
+import random, itertools
 
-from witschey.searcher import compute_model_io
+from witschey import base
+from witschey.base import memo
+from witschey.searchers.searcher import Searcher, compute_model_io
 
 class DifferentialEvolution(Searcher):
 
