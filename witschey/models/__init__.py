@@ -9,4 +9,5 @@ from viennet3 import Viennet3
 from dtlz7 import DTLZ7
 from schwefel import Schwefel
 
-del model
+__all__ = [Model, IndependentVariable, Schaffer, Kursawe, Fonseca,
+           ZDT1, ZDT3, Viennet3, DTLZ7, Schwefel]
