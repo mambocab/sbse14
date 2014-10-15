@@ -13,7 +13,8 @@ class DifferentialEvolution(Searcher):
 
     def run(self, text_report=True):
         n_candiates = self.spec.n_candiates
-        self._frontier = [self.random_search_io() for _ in xrange(n_candiates)]
+        self._frontier = [self.random_search_io()
+            for _ in xrange(n_candiates)]
 
         for _ in xrange(self.spec.generations):
             self._update_frontier()
