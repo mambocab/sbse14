@@ -44,7 +44,6 @@ class DifferentialEvolution(Searcher):
         # extrapolate a new value for each of the chosen indices
         for i in change_indices:
             extrapolated = a.xs[i] + self.spec.f * (b.xs[i] - c.xs[i])
-            x.clip(extrapolated)
-            rv_list[i] = extrapolated
+            rv_list[i] = self.model.xs[i].clip(extrapolated)
 
         return tuple(rv_list)
