@@ -23,14 +23,10 @@ class DifferentialEvolution(Searcher):
             e = 'cannot sample {} values from frontier of length {}'.format(
                 n, flen)
             raise ValueError(e)
-        # if frontier has only n+1 elements, avoid thrashing
-        if flen == n + 1:
-            return tuple(i for i in set(self.frontier) - {ex})
 
-        rv = {ex}
-        while ex in rv:
-            rv = random.sample(self.frontier, n)
-        return tuple(rv)
+        sample = self._frontier[:]
+        sample.remove(ex)
+        return random.sample(sample, n)
 
     def _extrapolate_xs(self, current):
         a, b, c = self._sample_frontier_exclude(current, n=3)
