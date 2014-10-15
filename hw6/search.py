@@ -28,13 +28,9 @@ def run(n=30, text_report=True):
                 out = searcher.run(text_report=text_report)
                 out.searcher = searcher_cls
                 outs.append(out)
-                last_index = max(out.era_logs_best_energy.keys())
-                last_logs[name].append(out.era_logs_best_energy[last_index])
                 bests[name].append(out.best)
 
-        rdiv_in = list([name] + log.contents()
-            for name, log_list in last_logs.iteritems()
-            for log in log_list)
+        rdiv_in = list([name] + best for name, best in bests.iteritems())
         print(rdivDemo(rdiv_in))
 
 if __name__ == '__main__':
