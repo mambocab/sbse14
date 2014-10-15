@@ -12,7 +12,7 @@ from __future__ import division
 import sys,random,math
 sys.dont_write_bytecode = True
 
-from witschey.base import StringBuilder
+import texttable
 
 """
 
@@ -478,7 +478,7 @@ Driver for the demos:
 
 """
 def rdivDemo(data):
-  sb = StringBuilder()
+  rows = []
   def z(x):
     return int(100 * (x - lo) / (hi - lo + 0.00001))
   data = map(lambda lst:Num(lst[0],lst[1:]),
@@ -490,24 +490,29 @@ def rdivDemo(data):
   for _,__,x in sorted(ranks): all += x.all
   all = sorted(all)
   lo, hi = all[0], all[-1]
-  line = "----------------------------------------------------"
   last = None
-  sb += ('%4s , %12s ,    %s   , %4s ' % \
-               ('rank', 'name', 'med', 'iqr'))+ "\n"+ line + '\n'
+  rows.append(['rank', 'name', 'med', 'iqr', '',
+    '10%', '30%', '50%', '70%', '90%'])
   for _,__,x in sorted(ranks):
     q1,q2,q3 = x.quartiles()
-    sb += ('%4s , %12s ,    %4s  ,  %4s ' % \
-                 (x.rank+1, x.name, q2, q3 - q1))  + \
-              xtile(x.all,lo=lo,hi=hi,width=30,show="%5.2f") + '\n'
-    last = x.rank 
-  return sb.as_str()
+    xtile_out = xtile(x.all,lo=lo,hi=hi,width=30,show="%5.2f", as_list=True)
+    row_xtile = [xtile_out[0]] + map(lambda x: x + ',', xtile_out[1:-1]) +\
+      [xtile_out[-1]]
+    rows.append([x.rank+1] +
+      map(lambda x: str(x) + ',', [x.name, q2]) + [q3 - q1] + row_xtile)
+    last = x.rank
+  table = texttable.Texttable(200)
+  table.set_cols_align(['r', 'l', 'r', 'r', 'c', 'r', 'r', 'r', 'r', 'r'])
+  table.set_deco(texttable.Texttable.HEADER)
+  table.add_rows(rows)
+  return table.draw()
 
 def rdiv8():
-    rdivDemo([
+    print(rdivDemo([
         ['TPBs', 208, 176, 321, 128, 128],
         ['phil', 688, 346, 290, 524],
         ["'zines", 28, 76, 32, 64],
         ['comp', 398, 312, 361, 436, 316]
-    ])
+    ]))
 
 if __name__ == "__main__": rdiv8()
