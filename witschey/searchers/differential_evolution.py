@@ -16,7 +16,24 @@ class DifferentialEvolution(Searcher):
         self._frontier = [self.random_search_io() for _ in xrange(n_candiates)]
 
         for _ in xrange(self.spec.generations):
-            pass
+            self._update_frontier()
+
+        energy = lambda x: x.energy
+
+        rv = memo(best=min(self._frontier, key=energy).energy)
+        return rv
+
+    def _update_frontier(self):
+        bested, better = [], []
+        for x in self._frontier:
+            new = compute_model_io(self.model, self._extrapolate_xs(x))
+            if new.energy > x.energy:
+                bested.append(x)
+                better.append(new)
+
+        keep = lambda x: id(x) not in map(id, bested)
+
+        self._frontier = filter(keep, self._frontier) + list(better)
 
     def _sample_frontier_exclude(self, ex, n=3):
         flen = len(self._frontier)
