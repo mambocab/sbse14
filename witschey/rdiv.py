@@ -69,7 +69,8 @@ def pairs(lst):
 def xtile(lst,lo=0,hi=100,width=50,
              chops=[0.1 ,0.3,0.5,0.7,0.9],
              marks=["-" ," "," ","-"," "],
-             bar="|",star="*",show=" %3.0f"):
+             bar="|",star="*",show=" %3.0f",
+             as_list=False):
   """The function _xtile_ takes a list of (possibly)
   unsorted numbers and presents them as a horizontal
   xtile chart (in ascii format). The default is a 
@@ -94,6 +95,10 @@ def xtile(lst,lo=0,hi=100,width=50,
     marks = marks[1:]
   out[int(width/2)]    = bar
   out[place(pos(0.5))] = star 
+  if as_list:
+    rv = ['(' + ''.join(out) + ")"]
+    rv.extend(show % x for x in what)
+    return rv
   return '('+''.join(out) +  ")," +  pretty(what)
 
 def _tileX() :
