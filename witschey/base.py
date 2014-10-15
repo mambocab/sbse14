@@ -108,22 +108,36 @@ class StringBuilder(object):
     def __repr__(self):
         return "{}('{}')".format(self.__class__.__name__, self.as_str())
 
+
 class NullObject(object):
     __slots__ = ()
-    def __init__(self, *args, **kw):         return None
-    def __getattribute__(self, *name, **kw): return self
-    def __setattr__(self, *args, **kw):      return self
-    def __iadd__(self, *args, **kw):         return self
-    def __call__(self, *args, **kw):         return self
-    def __bool__(self, *args, **kw):         return False
+
+    def __init__(self, *args, **kw):
+        return None
+
+    def __getattribute__(self, *name, **kw):
+        return self
+
+    def __setattr__(self, *args, **kw):
+        return self
+
+    def __iadd__(self, *args, **kw):
+        return self
+
+    def __call__(self, *args, **kw):
+        return self
+
+    def __bool__(self, *args, **kw):
+        return False
+
     __nonzero__ = __bool__
 
 The = memo(
     Searcher=memo(era_length=50, terminate_early=True,
-        log_eras_best_energy=True, log_eras_by_objective=False,
-        iterations=1000, p_mutation=1/3, epsilon=.01),
+                  log_eras_best_energy=True, log_eras_by_objective=False,
+                  iterations=1000, p_mutation=1/3, epsilon=.01),
     SimulatedAnnealer=memo(cooling_factor=.8),
     MaxWalkSat=memo(),
     GeneticAlgorithm=memo(population_size=50, p_mutation=.6),
     DifferentialEvolution=memo(generations=100, n_candiates=100,
-        f=.75, p_crossover=.3))
+                               f=.75, p_crossover=.3))
