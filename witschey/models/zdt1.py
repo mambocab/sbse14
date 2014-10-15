@@ -20,5 +20,5 @@ class ZDT1(Model):
             gxs = g(xs)
             return gxs * (1 - math.sqrt(xs[0] / gxs))
 
-        ivs = tuple(IV(min=0, max=1) for _ in xrange(30))
+        ivs = tuple(IV(lo=0, hi=1) for _ in xrange(30))
         super(ZDT1, self).__init__(independents=ivs, dependents=(f1, f2, g))

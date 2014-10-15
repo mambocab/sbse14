@@ -38,5 +38,5 @@ class DTLZ7(Model):
 
         fs = tuple(generated_fs + [final_f])
 
-        independents = tuple(IV(min=0, max=1) for _ in xrange(ivs))
+        independents = tuple(IV(lo=0, hi=1) for _ in xrange(ivs))
         super(DTLZ7, self).__init__(independents=independents, dependents=fs)

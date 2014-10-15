@@ -36,7 +36,7 @@ class Viennet3(Model):
 
             return a - b
 
-        ivs = (IV(min=-3, max=3), IV(min=-3, max=3))
+        ivs = (IV(lo=-3, hi=3), IV(lo=-3, hi=3))
 
         super(Viennet3, self).__init__(
             independents=ivs, dependents=(f1, f2, f3))

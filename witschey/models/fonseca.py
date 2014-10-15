@@ -10,7 +10,7 @@ from witschey.base import memo_sqrt
 
 class Fonseca(Model):
     def __init__(self, ivs=3):
-        ivs = tuple(IV(min=-4, max=4) for _ in xrange(ivs - 1))
+        ivs = tuple(IV(lo=-4, hi=4) for _ in xrange(ivs - 1))
 
         def f1(xs):
             e = sum((x - (1 / memo_sqrt(i+1))) ** 2 for i, x in enumerate(xs))

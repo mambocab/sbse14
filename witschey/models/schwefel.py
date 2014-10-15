@@ -21,7 +21,7 @@ class Schwefel(Model):
         f_bias = -460 # magic number from model specification
 
         # input space is d values from -pi to pi
-        independents = tuple((IV(min=-math.pi, max=math.pi)
+        independents = tuple((IV(lo=-math.pi, hi=math.pi)
             for _ in xrange(d)))
 
         # "a_ij, b_ij are integer random numbers in the range [-100, 100]"

@@ -9,7 +9,7 @@ from independent_variable import IndependentVariable as IV
 
 class Kursawe(Model):
     def __init__(self, ivs=3, a=0.8, b=3):
-        ivs = tuple(IV(min=-5, max=5) for _ in xrange(ivs - 1))
+        ivs = tuple(IV(lo=-5, hi=5) for _ in xrange(ivs - 1))
         self.a = a
         self.b = b
 

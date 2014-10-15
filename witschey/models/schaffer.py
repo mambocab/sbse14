@@ -6,7 +6,7 @@ from independent_variable import IndependentVariable as IV
 
 class Schaffer(Model):
     def __init__(self, ivs=1):
-        ivs = tuple(IV(min=-10^5, max=10^5) for _ in xrange(ivs))
+        ivs = tuple(IV(lo=-10^5, hi=10^5) for _ in xrange(ivs))
         # we use def instead of lambdas so the functions keep their __name__s
         def f1(xs):
             return sum(x ** 2 for x in xs)
