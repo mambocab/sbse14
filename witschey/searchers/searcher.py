@@ -40,6 +40,9 @@ class Searcher(object):
     def __init__(self, model, *args, **kw):
         self.model = model()
 
+    def random_search_io(self):
+        return compute_model_io(self.model, self.model.random_input_vector())
+
     def run(*args, **kwargs):
         raise NotImplementedError()
 
@@ -85,9 +88,6 @@ class SearcherConfig(object):
         "gives back a dict with the searcher and model first"
         return OrderedDict(searcher=self._searcher,
             model=self._model, **self._kw_dict)
-
-    def random_search_io(self):
-        return compute_model_io(self.model, self.model.random_input_vector())
 
     def __repr__(self):
         kw_string = ', '.join('{0}={1}'.format(k, v)
