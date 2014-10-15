@@ -102,9 +102,8 @@ class MaxWalkSat(Searcher):
 
                 else:
                     for j in self.local_search_inputs(
-                        self.model.xs[dimension].min,
-                        self.model.xs[dimension].max
-                        ):
+                        self.model.xs[dimension].lo,
+                        self.model.xs[dimension].hi):
                         if self.terminate: break
 
                         state = tuple_replace(state,
