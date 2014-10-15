@@ -1,14 +1,17 @@
 from __future__ import print_function, division
 
-import math, random
+import math
+import random
 
 from model import Model
-from independent_variable import IndependentVariable as IV
+from independent_variable import IndependentVariable as IV  # noqa
+
 
 def _randint_matrix(x, lo=-100, hi=100):
     "returns x by x matrix of random integers in [lo, hi]"
     return [[random.randint(lo, hi) for i in xrange(x)]
-        for j in xrange(x)]
+            for j in xrange(x)]
+
 
 class Schwefel(Model):
     """Schwefel's problem 2.13, as described in "Problem Definitions and
@@ -16,33 +19,31 @@ class Schwefel(Model):
     Optimization", p. 15. Quotes in comments are from this description unless
     otherwise"""
 
-
     def __init__(self, d=10):
-        f_bias = -460 # magic number from model specification
+        f_bias = -460  # magic number from model specification
 
         # input space is d values from -pi to pi
         independents = tuple((IV(lo=-math.pi, hi=math.pi)
-            for _ in xrange(d)))
+                             for _ in xrange(d)))
 
-        # "a_ij, b_ij are integer random numbers in the range [-100, 100]"
-        a, b = _randint_matrix(d), _randint_matrix(d)
+        # "q_ij, r_ij are integer random numbers in the range [-100, 100]"
+        q, r = _randint_matrix(d), _randint_matrix(d)
         # "alpha... [is a vector] of random numbers in [-pi, pi]"
         alpha = [random.uniform(-math.pi, math.pi) for _ in xrange(d)]
 
         # 1D matrix of d sums
-        A = [sum(a[i][j] * math.sin(alpha[j]) + b[i][j] * math.cos(alpha[j])
-                for j in xrange(d))
-            for i in xrange(d)]
+        a = [sum(q[i][j] * math.sin(alpha[j]) + r[i][j] * math.cos(alpha[j])
+             for j in xrange(d)) for i in xrange(d)]
 
-        def B_sum(i):
-            # generate a function for B_i = sum(a_ij sin(x) + b_ij cos(x))
-            a_sin = lambda j, x: a[i][j] * math.sin(x)
-            b_cos = lambda j, x: b[i][j] * math.cos(x)
-            f = lambda x: sum(a_sin(j, x) + b_cos(j, x) for j in xrange(d))
+        def b_sum(i):
+            # generate a function for b_i = sum(q_ij sin(x) + r_ij cos(x))
+            q_sin = lambda j, x: q[i][j] * math.sin(x)
+            r_cos = lambda j, x: r[i][j] * math.cos(x)
+            f = lambda x: sum(q_sin(j, x) + r_cos(j, x) for j in xrange(d))
             return f
 
-        # generate 1D matrix of functions B_i
-        B = [B_sum(i) for i in xrange(d)]
+        # generate 1D matrix of functions b_i
+        b = [b_sum(i) for i in xrange(d)]
 
         # and finally, here's the function to minimize
         def f12(xs):
@@ -51,7 +52,7 @@ class Schwefel(Model):
                     self.__name__, d)
                 raise ValueError(e)
 
-            return sum((A[i] - B[i](x))**2 + f_bias for i, x in enumerate(xs))
+            return sum((a[i] - b[i](x))**2 + f_bias for i, x in enumerate(xs))
 
         super(Schwefel, self).__init__(
             independents=independents, dependents=(f12,))
