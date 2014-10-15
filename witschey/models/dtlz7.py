@@ -11,9 +11,8 @@ from independent_variable import IndependentVariable as IV  # noqa
 class DTLZ7(Model):
     def __init__(self, ivs=30, dvs=20):
 
-        # h/t http://stackoverflow.com/a/13184536/3408454
         # dynamically generate these suckers
-
+        # h/t http://stackoverflow.com/a/13184536/3408454
         generated_fs = []
         for x in xrange(1, dvs):
             f = lambda xs: xs[x]
