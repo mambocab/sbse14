@@ -20,7 +20,9 @@ class DTLZ7(Model):
             generated_fs.append(f)
 
         def g(xs):
-            return 1 + (9 / abs(xs[-1])) * sum(xs)
+            # avoid divide by 0 errors
+            denom = abs(xs[-1]) or .0001
+            return 1 + (9 / denom) * sum(xs)
 
         def h(xs, fs=generated_fs, g=g):
             s = 0
