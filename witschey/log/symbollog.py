@@ -4,7 +4,7 @@ import math
 import random
 
 from log import Log, statistic
-from base import memo
+from witschey.base import memo
 
 
 class SymbolLog(Log):
