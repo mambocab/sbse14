@@ -48,3 +48,8 @@ class TestMemo(TestCase):
         assert_equal(m.a, v1)
         assert_equal(m.b, v2)
 
+    def test_string(self):
+        m = base.memo(a=base.memo(a=1, b=2), b=2)
+        s = '{\n    b: 2\n    a: {\n        a: 1, b: 2\n    }\n}'
+        assert_equal(m.to_str(), s)
+
