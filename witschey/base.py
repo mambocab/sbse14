@@ -9,8 +9,8 @@ import collections
 
 
 def pretty_input(t):
-    float_format = lambda x: '{: .2f}'.format(x)
-    str_tuple = tuple(float_format(x).encode(sys.stdout.encoding) for x in t)
+    float_format = lambda x: '{:.2f}'.format(x)
+    str_tuple = tuple(float_format(x) for x in t)
     return ', '.join(s for s in str_tuple)
 
 
