@@ -67,3 +67,34 @@ class TestPrettyInput(TestCase):
         s = '44.86, 3.14, 10.00'
         assert_equal(base.pretty_input(t), s)
 
+
+class TestMemoizer(TestCase):
+
+    def setUp(self):
+        self.mock = mock.MagicMock()
+        self.mock.method.__name__ = 'foo'
+        self.memo_mock = base.memoize(self.mock.method)
+
+    def test_called_once(self):
+        a = 1
+        self.memo_mock(a)
+        self.mock.method.assert_called_once_with(a)
+
+        # and again! call should hit the dict, not the mock
+        self.memo_mock(a)
+        self.mock.method.assert_called_once_with(a)
+
+
+    def test_called_with_two_values(self):
+        a, b = 1, 2
+        self.memo_mock(a)
+        self.memo_mock(b)
+        assert_equal(self.mock.method.mock_calls,
+                     [mock.call(a), mock.call(b)])
+
+        # and again! calls should hit the dict, not the mock
+        self.memo_mock(a)
+        self.memo_mock(b)
+        assert_equal(self.mock.method.mock_calls,
+                     [mock.call(a), mock.call(b)])
+
