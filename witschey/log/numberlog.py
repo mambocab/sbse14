@@ -1,10 +1,9 @@
 from __future__ import division
 
-import sys
-
 from log import Log
 from witschey import base
 from witschey import basic_stats
+
 
 class NumberLog(Log):
 
@@ -15,7 +14,8 @@ class NumberLog(Log):
 
     @property
     def hi(self):
-        return self._cache[-1] # assumes SortedList implementation
+        return self._cache[-1]  # assumes SortedList implementation
+
     @property
     def lo(self):
         return self._cache[0]  # assumes SortedList implementation
@@ -26,7 +26,7 @@ class NumberLog(Log):
 
         super(NumberLog, self)._invalidate_statistics()
 
-    def norm(self,x):
+    def norm(self, x):
         "normalize the argument with respect to maximum and minimum"
         if self.hi == self.lo:
             raise ValueError('hi and lo of {} are equal'.format(self.__name__))
@@ -38,10 +38,10 @@ class NumberLog(Log):
         self._valid_statistics = True
 
     def _generate_report(self):
-        return memo(median=self.median(), iqr=self.iqr(),
-            lo=self.lo, hi=self.hi)
+        return base.memo(median=self.median(), iqr=self.iqr(),
+                         lo=self.lo, hi=self.hi)
 
-    def ish(self,f=0.1):
+    def ish(self, f=0.1):
         """return a num likely to be similar to/representative of
         nums in the distribution"""
         return self.any() + f*(self.any() - self.any())
@@ -75,7 +75,10 @@ class NumberLog(Log):
         return basic_stats.xtile(self._cache, *args, **kw)
 
     def better(self, log2):
-        if not self._cache or not log2._cache: return False
-        if self.median() < log2.median(): return True
-        if self.iqr() < log2.iqr(): return True
+        if not self._cache or not log2._cache:
+            return False
+        if self.median() < log2.median():
+            return True
+        if self.iqr() < log2.iqr():
+            return True
         return False

@@ -1,6 +1,11 @@
 from __future__ import division
 
+import math
+import random
+
 from log import Log, statistic
+from base import memo
+
 
 class SymbolLog(Log):
     """a Log for symbols"""
@@ -41,10 +46,9 @@ class SymbolLog(Log):
         return {k: v / len(self._cache) for k, v in self.counts().items()}
 
     def generate_report(self):
-        return memo(
-            distribution = self.distribution(),
-            entropy      = self.entropy(),
-            mode         = self.mode())
+        return memo(distribution=self.distribution(),
+                    entropy=self.entropy(),
+                    mode=self.mode())
 
     @statistic
     def ish(self):
@@ -58,7 +62,7 @@ class SymbolLog(Log):
         return random.choice(self._cache)
 
     @statistic
-    def entropy(self,e=0):
+    def entropy(self, e=0):
         n = len(self._cache)
         for k, v in self.counts().items():
             p = v / n
