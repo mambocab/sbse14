@@ -108,13 +108,6 @@ class Log(object):
         s = '_prepare_data() not implemented for ' + self.__class__.__name__
         raise NotImplementedError(s)
 
-    @staticmethod
-    def log_for(t):
-        if t == int or t == float or isinstance(t, (int, float)):
-            return NumberLog()
-        else:
-            return SymbolLog()
-
     def contents(self):
         return self._cache.as_list()
 
