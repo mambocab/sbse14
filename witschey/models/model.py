@@ -3,14 +3,16 @@ from __future__ import division, print_function
 # all adapted from Dr. Tim Menzies' model code:
 # https://github.com/timm/sbse14/blob/master/models.py
 
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+
 
 class Model(object):
     # allows us to get all subclasses with __subclasses__()
     __metaclass__ = ABCMeta
 
     def __init__(self, independents=None, dependents=None,
-        energy_min=None, energy_max=None, enforce_energy_constraints=False):
+                 energy_min=None, energy_max=None,
+                 enforce_energy_constraints=False):
         if independents is None or dependents is None:
             raise ValueError
 
@@ -36,7 +38,7 @@ class Model(object):
         energy_total = sum(energy_vector)
 
         if self.enforce_energy_constraints:
-            energy_errmsg ='current energy {} not in range [{}, {}]'.format(
+            energy_errmsg = 'current energy {} not in range [{}, {}]'.format(
                 energy_total, self.energy_min, self.energy_max)
 
         if self.energy_min is None or self.energy_min > energy_total:

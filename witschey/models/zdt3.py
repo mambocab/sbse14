@@ -6,7 +6,7 @@ from __future__ import division
 import math
 
 from model import Model
-from independent_variable import IndependentVariable as IV
+from independent_variable import IndependentVariable as IV  # noqa
 from witschey.base import memo_sqrt
 
 
@@ -29,4 +29,3 @@ class ZDT3(Model):
         ivs = tuple(IV(lo=0, hi=1) for _ in xrange(30))
 
         super(ZDT3, self).__init__(independents=ivs, dependents=(f1, f2, g))
-

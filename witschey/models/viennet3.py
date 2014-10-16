@@ -5,7 +5,7 @@ from __future__ import division
 import math
 
 from model import Model
-from independent_variable import IndependentVariable as IV
+from independent_variable import IndependentVariable as IV  # noqa
 
 
 class Viennet3(Model):
