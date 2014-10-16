@@ -1,11 +1,14 @@
 from __future__ import division, print_function
 
-import random, functools, collections
+import random
+import functools
+import collections
+import itertools
 
 from sortedcontainers import SortedList
 
 from witschey import base
-from witschey.base import memo
+
 
 class Log(object):
     """Keep a random sample of stuff seen so far. Based on Dr. Menzies'
@@ -14,11 +17,11 @@ class Log(object):
     MAX_SIZE = 256
 
     def __init__(self, inits=None, label=None, max_size=MAX_SIZE):
-        self._cache            = SortedList()
-        self._report           = None
-        self.label             = label or ''
-        self._n                = 0
-        self.max_size          = max_size
+        self._cache = SortedList()
+        self._report = None
+        self.label = label or ''
+        self._n = 0
+        self.max_size = max_size
         self._valid_statistics = False
         self._invalidate_statistics()
         if inits:
@@ -29,7 +32,8 @@ class Log(object):
 
     @classmethod
     def wrap(cls, x, max_size=MAX_SIZE):
-        if isinstance(x, cls): return x
+        if isinstance(x, cls):
+            return x
         return cls(inits=x, max_size=max_size)
 
     def __len__(self):
@@ -56,7 +60,7 @@ class Log(object):
             changed = True
             self._cache.add(x)
         # cache is full: maybe replace an old item
-        else: 
+        else:
             # items less likely to be replaced later in the run:
             # leads to uniform sample of entire run
             if random.random() <= self.max_size / len(self):
@@ -72,7 +76,7 @@ class Log(object):
 
     def __add__(self, x, max_size=MAX_SIZE):
         inits = itertools.chain(self._cache, x._cache)
-        return NumberLog(inits=inits, max_size=max_size)
+        return self.__class__(inits=inits, max_size=max_size)
 
     def any(self):
         return random.choice(self._cache)
