@@ -13,3 +13,7 @@ SEARCHER_SHORTNAMES = {
 
 for searcher_cls, shortname in SEARCHER_SHORTNAMES.iteritems():
     searcher_cls.shortname = shortname
+
+__all__ = [Searcher, SearcherConfig,
+           SimulatedAnnealer, MaxWalkSat,
+           GeneticAlgorithm, DifferentialEvolution]
