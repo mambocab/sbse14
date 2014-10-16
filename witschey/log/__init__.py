@@ -1,5 +1,5 @@
 from log import Log
-from numberlog import NumberLog; del numberlog
-from symbollog import SymbolLog; del symbollog
+from numberlog import NumberLog
+from symbollog import SymbolLog
 
-del log
+__all__ = [Log, NumberLog, SymbolLog]
