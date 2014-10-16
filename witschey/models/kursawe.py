@@ -5,7 +5,8 @@ from __future__ import division
 import math
 
 from model import Model
-from independent_variable import IndependentVariable as IV
+from independent_variable import IndependentVariable as IV  # noqa
+
 
 class Kursawe(Model):
     def __init__(self, ivs=3, a=0.8, b=3):
