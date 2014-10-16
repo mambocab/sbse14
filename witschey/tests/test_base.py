@@ -98,3 +98,11 @@ class TestMemoizer(TestCase):
         assert_equal(self.mock.method.mock_calls,
                      [mock.call(a), mock.call(b)])
 
+
+    def test_memo_sqrt(self):
+        """This test doesn't give us much, except the assurance that we're 
+        actually using math.sqrt.
+        """
+        assert_equal(base.memo_sqrt(4), 2)
+        assert_equal(base.memo_sqrt(9), 3)
+        assert_equal(base.memo_sqrt(4), 2)
