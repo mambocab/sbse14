@@ -7,6 +7,7 @@ import math
 from model import Model
 from independent_variable import IndependentVariable as IV
 
+
 class Viennet3(Model):
 
     def __init__(self):
