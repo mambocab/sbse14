@@ -1,7 +1,9 @@
+from __future__ import division, print_function
 # all adapted from Dr. Tim Menzies' model code:
 # https://github.com/timm/sbse14/blob/master/models.py
 
 import random
+
 
 class IndependentVariable(object):
     def __init__(self, lo=None, hi=None, type=float):
@@ -19,4 +21,3 @@ class IndependentVariable(object):
 
     def clip(self, x):
         return max(self.lo, min(self.hi, x))
-
