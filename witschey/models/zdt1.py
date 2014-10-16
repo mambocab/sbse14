@@ -5,7 +5,8 @@ from __future__ import division
 import math
 
 from model import Model
-from independent_variable import IndependentVariable as IV
+from independent_variable import IndependentVariable as IV  # noqa
+
 
 class ZDT1(Model):
     def __init__(self, ivs=30):
