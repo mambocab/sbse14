@@ -29,7 +29,7 @@ class memo(object):  # noqa -- TODO: rethink this name
         self.__dict__.update(kwargs)
 
     def to_str(self, depth=0, indent=4, infix=': ', sep=', ', d=None):
-        return '{\n' + self._to_str(
+        return '{' + self._to_str(
             depth=depth + 1,
             indent=indent,
             infix=infix,
@@ -38,20 +38,20 @@ class memo(object):  # noqa -- TODO: rethink this name
 
     def _to_str(self, depth, indent, infix, sep, d):
         after, before = [], []
-        rv = ' ' * depth * indent
+        rv = ''
         for k in sorted([s for s in d.keys() if s[0] != '_']):
             val = d[k]
             if isinstance(val, memo) or type(val) == dict:
                 after.append(k)
             else:
                 before.append('{}{}{}'.format(k, infix, repr(val)))
-        rv += sep.join(before)
-        if after:
-            rv += ','
+        if before:
+            rv += '\n' + ' ' * depth * indent
+            rv += sep.join(before)
         rv += '\n'
 
         for k in after:
-            rv += ''.join([' ' * depth * indent, k, infix, '{\n'])
+            rv += ''.join([' ' * depth * indent, k, infix, '{'])
             k = d[k]
             k = k if type(k) == dict else k.__dict__
             rv += ''.join([self._to_str(depth=depth+1, indent=indent,
