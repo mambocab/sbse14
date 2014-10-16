@@ -32,11 +32,11 @@ class DTLZ7(Model):
                 b = 1 + math.sin(3 * math.pi * fxs)
                 s += a * b
 
-            return ivs - s
+            return dvs - s
 
         def final_f(xs):
             return (1 + g(xs)) * h(xs)
-        final_f.__name__ = 'f{}'.format(ivs)
+        final_f.__name__ = 'f{}'.format(dvs)
 
         fs = tuple(generated_fs + [final_f])
 
