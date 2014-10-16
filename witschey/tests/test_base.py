@@ -53,3 +53,17 @@ class TestMemo(TestCase):
         s = '{\n    b: 2\n    a: {\n        a: 1, b: 2\n    }\n}'
         assert_equal(m.to_str(), s)
 
+
+class TestPrettyInput(TestCase):
+
+    def test_empty(self):
+        assert_equal(base.pretty_input(tuple()), "")
+
+    def test_one(self):
+        assert_equal(base.pretty_input((-55.2,)), "-55.20")
+
+    def test_many(self):
+        t = (44.85555, 3.14, 10)
+        s = '44.86, 3.14, 10.00'
+        assert_equal(base.pretty_input(t), s)
+
