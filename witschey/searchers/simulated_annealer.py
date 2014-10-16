@@ -1,12 +1,14 @@
 from __future__ import division, print_function
 
-import random, math
+import random
+import math
 from collections import defaultdict
 from copy import deepcopy
 
 from searcher import Searcher, SearchIO, compute_model_io
 from witschey.base import memo
 from witschey.log import NumberLog
+
 
 def p(old, new, temp, cooling_factor):
     """
@@ -25,7 +27,7 @@ def p(old, new, temp, cooling_factor):
     rv = math.exp(-exponent)
     if rv > 1:
         raise ValueError('p returning greater than one',
-            rv, old, new, temp)
+                         rv, old, new, temp)
     return rv * cooling_factor
 
 
@@ -44,6 +46,7 @@ class SimulatedAnnealer(Searcher):
             }
         if self.spec.log_eras_best_energy:
             rv.era_logs_best_energy = defaultdict(NumberLog)
+
         def report_append(s):
             if text_report:
                 rv.report += s
@@ -57,14 +60,16 @@ class SimulatedAnnealer(Searcher):
         self.lives = 4
 
         for k in range(self.spec.iterations):
-            if self.lives <= 0 and self.spec.terminate_early: break
+            if self.lives <= 0 and self.spec.terminate_early:
+                break
 
             neighbor_candidate_xs = self.model.random_input_vector()
-            neighbor_xs = tuple(current.xs[i]
-                if random.random() < self.spec.p_mutation else v
-                for i, v in enumerate(neighbor_candidate_xs))
+            n_gen = (current.xs[i]
+                     if random.random() < self.spec.p_mutation else v
+                     for i, v in enumerate(neighbor_candidate_xs))
+            neighbor_xs = tuple(n_gen)
 
-            neighbor = compute_model_io(self.model, neighbor_candidate_xs)
+            neighbor = compute_model_io(self.model, neighbor_xs)
 
             if neighbor.energy < best.energy:
                 best, current = neighbor, neighbor
@@ -97,14 +102,17 @@ class SimulatedAnnealer(Searcher):
 
                 self.lives -= 1
 
-                if not self.spec.terminate_early: break
+                if not self.spec.terminate_early:
+                    break
                 for logs in rv.era_logs_by_objective.values():
-                    if era not in logs: break
-                    if len(logs.keys()) < 2: break
+                    if era not in logs:
+                        break
+                    if len(logs.keys()) < 2:
+                        break
 
                     prev_log = logs[logs.keys().index(era) - 1]
-                    if logs[era].better(prev_log): self.lives += 1
+                    if logs[era].better(prev_log):
+                        self.lives += 1
 
         rv.best = best.energy
         return rv
-

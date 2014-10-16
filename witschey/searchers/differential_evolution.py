@@ -1,10 +1,11 @@
 from __future__ import division, print_function
 
-import random, itertools
+import random
 
 from witschey import base
 from witschey.base import memo
 from witschey.searchers.searcher import Searcher, compute_model_io
+
 
 class DifferentialEvolution(Searcher):
 
@@ -14,7 +15,7 @@ class DifferentialEvolution(Searcher):
     def run(self, text_report=True):
         n_candiates = self.spec.n_candiates
         self._frontier = [self.random_search_io()
-            for _ in xrange(n_candiates)]
+                          for _ in xrange(n_candiates)]
 
         for _ in xrange(self.spec.generations):
             self._update_frontier()
@@ -54,7 +55,9 @@ class DifferentialEvolution(Searcher):
 
         # randomly pick at least one x-position to change
         change_indices = [i for i in xrange(len(rv_list))
-            if random.random() < p_crossover] or [base.random_index(rv_list)]
+                          if random.random() < p_crossover]
+        if not change_indices:
+            change_indices = [base.random_index(rv_list)]
 
         # extrapolate a new value for each of the chosen indices
         for i in change_indices:

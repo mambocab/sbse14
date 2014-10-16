@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 
-import itertools, random, collections
+import itertools
+import random
 from collections import defaultdict
 
 from witschey import base
@@ -10,8 +11,9 @@ from witschey.log import NumberLog
 
 # adapted from Chris Theisen's code
 #     his code provided the shell that I worked in and styled to my liking
-#Structure from:
-#http://www.cleveralgorithms.com/nature-inspired/evolution/genetic_algorithm.html
+# Structure from:
+# www.cleveralgorithms.com/nature-inspired/evolution/genetic_algorithm.html
+
 
 class GeneticAlgorithm(Searcher):
 
@@ -22,28 +24,30 @@ class GeneticAlgorithm(Searcher):
         i = base.random_index(child)
         return base.tuple_replace(child, i, self.model.xs[i]())
 
-    def crossover(self, parent1, parent2, crossovers=1):
+    def crossover(self, parent1, parent2, xovers=1):
         if len(parent1) != len(parent2):
             raise ValueError('parents must be same length to breed')
         if len(parent1) == 1:
             return random.choice((parent1, parent2))
 
-        if crossovers < 1:
+        if xovers < 1:
             raise ValueError('cannot have fewer than 1 crossover')
-        crossovers = min(len(parent1) - 2, crossovers)
-        # print(crossovers)
-        x_pts = itertools.chain((0,),
-            sorted(random.sample(xrange(1, len(parent1) - 1), crossovers)),
-            (None,))
+        xovers = min(len(parent1) - 2, xovers)
+        xovers = sorted(random.sample(xrange(1, len(parent1) - 1), xovers))
+        x_pts = itertools.chain((0,), xovers, (None,))
 
-        ugh_mom_dad = itertools.cycle((parent1, parent2))
+        cycle_parents = itertools.cycle((parent1, parent2))
+        parent_point_zip = itertools.izip(cycle_parents, base.pairs(x_pts))
 
         segments = [itertools.islice(parent, p[0], p[1])
-            for parent, p in itertools.izip(ugh_mom_dad, base.pairs(x_pts))]
+                    for parent, p in parent_point_zip]
 
         return tuple(itertools.chain(*segments))
-    
-    def select_parents(self, population, output_size): #all possible parents
+
+    def select_parents(self, population, output_size):
+        """generates all possible parent pairs from population, clipped to
+        output_size
+        """
         fore = itertools.combinations(population, 2)
         back = itertools.combinations(reversed(population), 2)
         all_parents = set(fore).union(set(back))
@@ -61,10 +65,7 @@ class GeneticAlgorithm(Searcher):
         energy_by_generation = defaultdict(
             NumberLog if self.spec.log_eras_best_energy else base.NullObject)
 
-
         population = tuple(compute_model_io(self.model, xs) for xs in init_xs)
-
-        stop = False
 
         best = min(population, key=energy)
 
@@ -85,9 +86,8 @@ class GeneticAlgorithm(Searcher):
             best = min(best, best_in_pop, key=energy)
 
             report += str(best.energy)
-            # passing an iterable so it isn't calculated for NullStringBuilder
             report += ('+' if x.energy < prev_best_energy else '.'
-                for x in children)
+                       for x in children)
             report += '\n'
 
             energy_by_generation[gen] += best.energy
@@ -95,11 +95,13 @@ class GeneticAlgorithm(Searcher):
             population = children
             evals += len(population)
 
-            if evals > self.spec.iterations: break
-            #some "is significantly better" termination logic here
+            if evals > self.spec.iterations:
+                break
+            # TODO: some "is significantly better" termination logic here
 
         rv = memo(best=best.energy, evals=evals)
-        if report: rv.report = report.as_str()
+        if report:
+            rv.report = report.as_str()
         if energy_by_generation:
             rv.era_logs_best_energy = energy_by_generation
 

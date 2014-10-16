@@ -8,6 +8,7 @@ from datetime import datetime
 import abc
 from types import NoneType
 
+
 class Searcher(object):
     # allows us to get all subclasses with __subclasses__()
     __metaclass__ = abc.ABCMeta
@@ -28,7 +29,7 @@ class Searcher(object):
                 d.update(getattr(The, k).__dict__)
 
         # then, add the kwargs to the constructor call to the dict.
-        # NB: this happens after adding options from The, so 
+        # NB: this happens after adding options from The, so
         #     call-specific options override the globals
         d.update(kwargs)
 
@@ -46,6 +47,7 @@ class Searcher(object):
     def run(*args, **kwargs):
         raise NotImplementedError()
 
+
 class SearcherConfig(object):
 
     def __init__(self, searcher=None, model=None, **kwargs):
@@ -56,12 +58,12 @@ class SearcherConfig(object):
         s = searcher or self.searcher
         m = model or self.model
         kw = self._kw_dict.copy().update(kwargs) or {}
-
         return s(m, **kw)
 
     @property
     def searcher(self):
         return self._searcher
+
     @searcher.setter
     def searcher(self, value):
         if isinstance(value, NoneType) or issubclass(value, Searcher):
@@ -72,6 +74,7 @@ class SearcherConfig(object):
     @property
     def model(self):
         return self._model
+
     @model.setter
     def model(self, value):
         if isinstance(value, NoneType) or issubclass(value, Model):
@@ -80,24 +83,25 @@ class SearcherConfig(object):
             raise TypeError('{} is not a Model or None'.format(value))
 
     def update(self, searcher=None, model=None, **kwargs):
-        if searcher is not None: self.searcher = searcher
-        if model    is not None: self.model    = model
+        if searcher is not None:
+            self.searcher = searcher
+        if model is not None:
+            self.model = model
         self._kw_dict.update(kwargs)
 
     def as_dict(self):
         "gives back a dict with the searcher and model first"
         return OrderedDict(searcher=self._searcher,
-            model=self._model, **self._kw_dict)
+                           model=self._model, **self._kw_dict)
 
     def __repr__(self):
         kw_string = ', '.join('{0}={1}'.format(k, v)
-                for k, v in self.as_dict().iteritems())
+                              for k, v in self.as_dict().iteritems())
         return '{0}({1})'.format(self.__class__.__name__, kw_string)
 
 SearchIO = namedtuple('SearchIO', ('xs', 'ys', 'energy'))
 
+
 def compute_model_io(model, xs):
     ys = model(xs)
     return SearchIO(xs, ys, model.energy(ys))
-
-
