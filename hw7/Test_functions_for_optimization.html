@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr" class="client-nojs">
+<head>
+<meta charset="UTF-8" />
+<title>Test functions for optimization - Wikipedia, the free encyclopedia</title>
+<meta name="generator" content="MediaWiki 1.25wmf3" />
+<link rel="alternate" href="android-app://org.wikipedia/http/en.m.wikipedia.org/wiki/Test_functions_for_optimization" />
+<link rel="alternate" type="application/x-wiki" title="Edit this page" href="/w/index.php?title=Test_functions_for_optimization&amp;action=edit" />
+<link rel="edit" title="Edit this page" href="/w/index.php?title=Test_functions_for_optimization&amp;action=edit" />
+<link rel="apple-touch-icon" href="//bits.wikimedia.org/apple-touch/wikipedia.png" />
+<link rel="shortcut icon" href="//bits.wikimedia.org/favicon/wikipedia.ico" />
+<link rel="search" type="application/opensearchdescription+xml" href="/w/opensearch_desc.php" title="Wikipedia (en)" />
+<link rel="EditURI" type="application/rsd+xml" href="//en.wikipedia.org/w/api.php?action=rsd" />
+<link rel="alternate" hreflang="x-default" href="/wiki/Test_functions_for_optimization" />
+<link rel="copyright" href="//creativecommons.org/licenses/by-sa/3.0/" />
+<link rel="alternate" type="application/atom+xml" title="Wikipedia Atom feed" href="/w/index.php?title=Special:RecentChanges&amp;feed=atom" />
+<link rel="canonical" href="http://en.wikipedia.org/wiki/Test_functions_for_optimization" />
+<link rel="stylesheet" href="//bits.wikimedia.org/en.wikipedia.org/load.php?debug=false&amp;lang=en&amp;modules=ext.gadget.DRN-wizard%2CReferenceTooltips%2Ccharinsert%2Cfeatured-articles-links%2CrefToolbar%2Cteahouse%7Cext.math.styles%7Cext.rtlcite%2Cwikihiero%2CwikimediaBadges%7Cext.uls.nojs%7Cext.visualEditor.viewPageTarget.noscript%7Cmediawiki.legacy.commonPrint%2Cshared%7Cmediawiki.skinning.interface%7Cmediawiki.ui.button%7Cskins.vector.styles%7Cwikibase.client.init&amp;only=styles&amp;skin=vector&amp;*" />
+<meta name="ResourceLoaderDynamicStyles" content="" />
+<link rel="stylesheet" href="//bits.wikimedia.org/en.wikipedia.org/load.php?debug=false&amp;lang=en&amp;modules=site&amp;only=styles&amp;skin=vector&amp;*" />
+<style>a:lang(ar),a:lang(kk-arab),a:lang(mzn),a:lang(ps),a:lang(ur){text-decoration:none}
+/* cache key: enwiki:resourceloader:filter:minify-css:7:3904d24a08aa08f6a68dc338f9be277e */</style>
+<script src="//bits.wikimedia.org/en.wikipedia.org/load.php?debug=false&amp;lang=en&amp;modules=startup&amp;only=scripts&amp;skin=vector&amp;*"></script>
+<script>if(window.mw){
+mw.config.set({"wgCanonicalNamespace":"","wgCanonicalSpecialPageName":false,"wgNamespaceNumber":0,"wgPageName":"Test_functions_for_optimization","wgTitle":"Test functions for optimization","wgCurRevisionId":619643514,"wgRevisionId":619643514,"wgArticleId":37526558,"wgIsArticle":true,"wgIsRedirect":false,"wgAction":"view","wgUserName":null,"wgUserGroups":["*"],"wgCategories":["Mathematical optimization","Constraint programming","Convex optimization","Types of functions"],"wgBreakFrames":false,"wgPageContentLanguage":"en","wgPageContentModel":"wikitext","wgSeparatorTransformTable":["",""],"wgDigitTransformTable":["",""],"wgDefaultDateFormat":"dmy","wgMonthNames":["","January","February","March","April","May","June","July","August","September","October","November","December"],"wgMonthNamesShort":["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"wgRelevantPageName":"Test_functions_for_optimization","wgIsProbablyEditable":true,"wgRestrictionEdit":[],"wgRestrictionMove":[],"wgWikiEditorEnabledModules":{"toolbar":true,"dialogs":true,"hidesig":true,"preview":false,"previewDialog":false,"publish":false},"wgBetaFeaturesFeatures":[],"wgMediaViewerOnClick":true,"wgMediaViewerEnabledByDefault":true,"wgVisualEditor":{"isPageWatched":false,"pageLanguageCode":"en","pageLanguageDir":"ltr","svgMaxSize":4096,"namespacesWithSubpages":{"6":0,"8":0,"1":true,"2":true,"3":true,"4":true,"5":true,"7":true,"9":true,"10":true,"11":true,"12":true,"13":true,"14":true,"15":true,"100":true,"101":true,"102":true,"103":true,"104":true,"105":true,"106":true,"107":true,"108":true,"109":true,"110":true,"111":true,"447":true,"2600":false,"828":true,"829":true}},"wikilove-recipient":"","wikilove-anon":0,"wgHHVMStart":1412726400000,"wgULSAcceptLanguageList":["en-us","en"],"wgULSCurrentAutonym":"English","wgFlaggedRevsParams":{"tags":{"status":{"levels":1,"quality":2,"pristine":3}}},"wgStableRevisionId":null,"wgCategoryTreePageCategoryOptions":"{\"mode\":0,\"hideprefix\":20,\"showcount\":true,\"namespaces\":false}","wgNoticeProject":"wikipedia","wgWikibaseItemId":"Q7705773"});
+}</script><script>if(window.mw){
+mw.loader.implement("user.options",function($,jQuery){mw.user.options.set({"ccmeonemails":0,"cols":80,"date":"default","diffonly":0,"disablemail":0,"editfont":"default","editondblclick":0,"editsectiononrightclick":0,"enotifminoredits":0,"enotifrevealaddr":0,"enotifusertalkpages":1,"enotifwatchlistpages":0,"extendwatchlist":0,"fancysig":0,"forceeditsummary":0,"gender":"unknown","hideminor":0,"hidepatrolled":0,"imagesize":2,"math":0,"minordefault":0,"newpageshidepatrolled":0,"nickname":"","norollbackdiff":0,"numberheadings":0,"previewonfirst":0,"previewontop":1,"rcdays":7,"rclimit":50,"rows":25,"showhiddencats":false,"shownumberswatching":1,"showtoolbar":1,"skin":"vector","stubthreshold":0,"thumbsize":4,"underline":2,"uselivepreview":0,"usenewrc":0,"watchcreations":1,"watchdefault":0,"watchdeletion":0,"watchlistdays":3,"watchlisthideanons":0,"watchlisthidebots":0,"watchlisthideliu":0,"watchlisthideminor":0,"watchlisthideown":0,"watchlisthidepatrolled":0,"watchmoves":0,"watchrollback":0,
+"wllimit":250,"useeditwarning":1,"prefershttps":1,"flaggedrevssimpleui":1,"flaggedrevsstable":0,"flaggedrevseditdiffs":true,"flaggedrevsviewdiffs":false,"usebetatoolbar":1,"usebetatoolbar-cgd":1,"visualeditor-enable":0,"visualeditor-betatempdisable":0,"visualeditor-enable-experimental":0,"visualeditor-enable-language":0,"visualeditor-hidebetawelcome":0,"wikilove-enabled":1,"mathJax":false,"echo-subscriptions-web-page-review":true,"echo-subscriptions-email-page-review":false,"ep_showtoplink":false,"ep_bulkdelorgs":false,"ep_bulkdelcourses":true,"ep_showdyk":true,"echo-subscriptions-web-education-program":true,"echo-subscriptions-email-education-program":false,"echo-notify-show-link":true,"echo-show-alert":true,"echo-email-frequency":0,"echo-email-format":"html","echo-subscriptions-email-system":true,"echo-subscriptions-web-system":true,"echo-subscriptions-email-user-rights":true,"echo-subscriptions-web-user-rights":true,"echo-subscriptions-email-other":false,
+"echo-subscriptions-web-other":true,"echo-subscriptions-email-edit-user-talk":false,"echo-subscriptions-web-edit-user-talk":true,"echo-subscriptions-email-reverted":false,"echo-subscriptions-web-reverted":true,"echo-subscriptions-email-article-linked":false,"echo-subscriptions-web-article-linked":false,"echo-subscriptions-email-mention":false,"echo-subscriptions-web-mention":true,"echo-subscriptions-web-edit-thank":true,"echo-subscriptions-email-edit-thank":false,"echo-subscriptions-web-flow-discussion":true,"echo-subscriptions-email-flow-discussion":false,"gettingstarted-task-toolbar-show-intro":true,"uls-preferences":"","multimediaviewer-enable":true,"language":"en","variant-gan":"gan","variant-iu":"iu","variant-kk":"kk","variant-ku":"ku","variant-shi":"shi","variant-sr":"sr","variant-tg":"tg","variant-uz":"uz","variant-zh":"zh","searchNs0":true,"searchNs1":false,"searchNs2":false,"searchNs3":false,"searchNs4":false,"searchNs5":false,"searchNs6":false,"searchNs7":false,"searchNs8":
+false,"searchNs9":false,"searchNs10":false,"searchNs11":false,"searchNs12":false,"searchNs13":false,"searchNs14":false,"searchNs15":false,"searchNs100":false,"searchNs101":false,"searchNs108":false,"searchNs109":false,"searchNs118":false,"searchNs119":false,"searchNs446":false,"searchNs447":false,"searchNs710":false,"searchNs711":false,"searchNs828":false,"searchNs829":false,"searchNs2600":false,"gadget-teahouse":1,"gadget-ReferenceTooltips":1,"gadget-geonotice":1,"gadget-DRN-wizard":1,"gadget-charinsert":1,"gadget-refToolbar":1,"gadget-mySandbox":1,"gadget-featured-articles-links":1,"variant":"en"});},{},{});mw.loader.implement("user.tokens",function($,jQuery){mw.user.tokens.set({"editToken":"+\\","patrolToken":"+\\","watchToken":"+\\"});},{},{});
+/* cache key: enwiki:resourceloader:filter:minify-js:7:8d55686787f352ccb6a28352f979b72d */
+}</script>
+<script>if(window.mw){
+mw.loader.load(["mediawiki.page.startup","mediawiki.legacy.wikibits","mediawiki.legacy.ajax","ext.centralauth.centralautologin","mmv.head","ext.visualEditor.viewPageTarget.init","ext.uls.init","ext.uls.interface","ext.centralNotice.bannerController","skins.vector.js"]);
+}</script>
+<link rel="dns-prefetch" href="//meta.wikimedia.org" />
+<!--[if lt IE 7]><style type="text/css">body{behavior:url("/w/static-1.25wmf3/skins/Vector/csshover.min.htc")}</style><![endif]-->
+</head>
+<body class="mediawiki ltr sitedir-ltr ns-0 ns-subject page-Test_functions_for_optimization skin-vector action-view vector-animateLayout">
+		<div id="mw-page-base" class="noprint"></div>
+		<div id="mw-head-base" class="noprint"></div>
+		<div id="content" class="mw-body" role="main">
+			<a id="top"></a>
+
+							<div id="siteNotice"><!-- CentralNotice --></div>
+						<h1 id="firstHeading" class="firstHeading" lang="en"><span dir="auto">Test functions for optimization</span></h1>
+						<div id="bodyContent" class="mw-body-content">
+									<div id="siteSub">From Wikipedia, the free encyclopedia</div>
+								<div id="contentSub"></div>
+												<div id="jump-to-nav" class="mw-jump">
+					Jump to:					<a href="#mw-navigation">navigation</a>, 					<a href="#p-search">search</a>
+				</div>
+				<div id="mw-content-text" lang="en" dir="ltr" class="mw-content-ltr"><p>In applied mathematics, <b>test functions</b>, known as <b>artificial landscapes</b>, are useful to evaluate characteristics of optimization algorithms, such as:</p>
+<ul>
+<li>Velocity of convergence.</li>
+<li>Precision.</li>
+<li>Robustness.</li>
+<li>General performance.</li>
+</ul>
+<p>Here some test functions are presented with the aim of giving an idea about the different situations that optimization algorithms have to face when coping with these kinds of problems. In the first part, some objective functions for single-objective optimization cases are presented. In the second part, test functions with their respective Pareto fronts for <a href="/wiki/Multi-objective_optimization" title="Multi-objective optimization">multi-objective optimization</a> problems (MOP) are given.</p>
+<p>The artificial landscapes presented herein for single-objective optimization problems are taken from Bäck,<sup id="cite_ref-1" class="reference"><a href="#cite_note-1"><span>[</span>1<span>]</span></a></sup> Haupt et. al.<sup id="cite_ref-2" class="reference"><a href="#cite_note-2"><span>[</span>2<span>]</span></a></sup> and from Rody Oldenhuis software.<sup id="cite_ref-3" class="reference"><a href="#cite_note-3"><span>[</span>3<span>]</span></a></sup> Given the amount of problems (55 in total), just a few are presented here. The complete list of test functions is found on the Mathworks website.<sup id="cite_ref-4" class="reference"><a href="#cite_note-4"><span>[</span>4<span>]</span></a></sup></p>
+<p>The test functions used to evaluate the algorithms for MOP were taken from Deb,<sup id="cite_ref-Deb:2002_5-0" class="reference"><a href="#cite_note-Deb:2002-5"><span>[</span>5<span>]</span></a></sup> Binh et. al.<sup id="cite_ref-Binh97_6-0" class="reference"><a href="#cite_note-Binh97-6"><span>[</span>6<span>]</span></a></sup> and Binh.<sup id="cite_ref-Binh99_7-0" class="reference"><a href="#cite_note-Binh99-7"><span>[</span>7<span>]</span></a></sup> You can download the software developed by Deb,<sup id="cite_ref-Deb_nsga_8-0" class="reference"><a href="#cite_note-Deb_nsga-8"><span>[</span>8<span>]</span></a></sup> which implements the NSGA-II procedure with GAs, or the program posted on Internet,<sup id="cite_ref-9" class="reference"><a href="#cite_note-9"><span>[</span>9<span>]</span></a></sup> which implements the NSGA-II procedure with ES.</p>
+<p>Just a general form of the equation, a plot of the objective function, boundaries of the object variables and the coordinates of global minima are given herein.</p>
+<p></p>
+<div id="toc" class="toc">
+<div id="toctitle">
+<h2>Contents</h2>
+</div>
+<ul>
+<li class="toclevel-1 tocsection-1"><a href="#Test_functions_for_single-objective_optimization_problems"><span class="tocnumber">1</span> <span class="toctext">Test functions for single-objective optimization problems</span></a></li>
+<li class="toclevel-1 tocsection-2"><a href="#Test_functions_for_multi-objective_optimization_problems"><span class="tocnumber">2</span> <span class="toctext">Test functions for multi-objective optimization problems</span></a></li>
+<li class="toclevel-1 tocsection-3"><a href="#See_also"><span class="tocnumber">3</span> <span class="toctext">See also</span></a></li>
+<li class="toclevel-1 tocsection-4"><a href="#References"><span class="tocnumber">4</span> <span class="toctext">References</span></a></li>
+</ul>
+</div>
+<p></p>
+<h2><span class="mw-headline" id="Test_functions_for_single-objective_optimization_problems">Test functions for single-objective optimization problems</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Test_functions_for_optimization&amp;action=edit&amp;section=1" title="Edit section: Test functions for single-objective optimization problems">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<table class="wikitable" style="text-align:center">
+<tr>
+<th>Name</th>
+<th>Plot</th>
+<th>Formula</th>
+<th>Minimum</th>
+<th>Search domain</th>
+</tr>
+<tr>
+<td>Ackley's function:</td>
+<td><a href="/wiki/File:Ackley%27s_function.pdf" class="image" title="Ackley's function for n=2"><img alt="Ackley's function for n=2" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/98/Ackley%27s_function.pdf/page1-200px-Ackley%27s_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/98/Ackley%27s_function.pdf/page1-300px-Ackley%27s_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/98/Ackley%27s_function.pdf/page1-400px-Ackley%27s_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = -20\exp\left(-0.2\sqrt{0.5\left(x^{2}+y^{2}\right)}\right)" src="//upload.wikimedia.org/math/7/0/8/7086f5b7116892a7a2c09658fc3ac6a2.png" />
+<p><img class="mwe-math-fallback-png-inline tex" alt="-\exp\left(0.5\left(\cos\left(2\pi x\right)+\cos\left(2\pi y\right)\right)\right) + 20 + e" src="//upload.wikimedia.org/math/2/b/8/2b86f348864171fd3fe437bb05f15888.png" /></p>
+</td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(0,0) = 0" src="//upload.wikimedia.org/math/5/f/0/5f016edb975be55400ad115e27b32b33.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-5\le x,y \le 5" src="//upload.wikimedia.org/math/7/4/c/74c0d0bbb38681cf4998f35d76748d13.png" /></td>
+</tr>
+<tr>
+<td>Sphere function</td>
+<td><a href="/wiki/File:Sphere_function_in_3D.pdf" class="image" title="Sphere function for n=2"><img alt="Sphere function for n=2" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Sphere_function_in_3D.pdf/page1-200px-Sphere_function_in_3D.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Sphere_function_in_3D.pdf/page1-300px-Sphere_function_in_3D.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Sphere_function_in_3D.pdf/page1-400px-Sphere_function_in_3D.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(\boldsymbol{x}) = \sum_{i=1}^{n} x_{i}^{2}" src="//upload.wikimedia.org/math/0/7/7/0770a5cfa1d5ad1f6c403315cca90493.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x_{1}, \dots, x_{n}) = f(0, \dots, 0) = 0" src="//upload.wikimedia.org/math/7/0/a/70a7231688ab8a6746e6096e69f858b3.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-\infty \le x_{i} \le \infty" src="//upload.wikimedia.org/math/6/e/d/6edd4ad0bea50fa9b2f0dbacd62fa911.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1 \le i \le n" src="//upload.wikimedia.org/math/e/0/1/e0126ca144c4391269883a91304ade8d.png" /></td>
+</tr>
+<tr>
+<td><a href="/wiki/Rosenbrock_function" title="Rosenbrock function">Rosenbrock function</a></td>
+<td><a href="/wiki/File:Rosenbrock%27s_function_in_3D.pdf" class="image" title="Rosenbrock's function for n=2"><img alt="Rosenbrock's function for n=2" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Rosenbrock%27s_function_in_3D.pdf/page1-200px-Rosenbrock%27s_function_in_3D.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Rosenbrock%27s_function_in_3D.pdf/page1-300px-Rosenbrock%27s_function_in_3D.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Rosenbrock%27s_function_in_3D.pdf/page1-400px-Rosenbrock%27s_function_in_3D.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(\boldsymbol{x}) = \sum_{i=1}^{n-1} \left[ 100 \left(x_{i+1} - x_{i}^{2}\right)^{2} + \left(x_{i} - 1\right)^{2}\right]" src="//upload.wikimedia.org/math/8/c/e/8ce1d6b5e80401a6df5e97bb984bb9b7.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Min} =
+\begin{cases}
+n=2 &amp; \rightarrow \quad f(1,1) = 0, \\
+n=3 &amp; \rightarrow \quad f(1,1,1) = 0, \\
+n&gt;3 &amp; \rightarrow \quad f\left(\underbrace{1,\dots,1}_{(n) \text{ times}}\right) = 0 \\
+\end{cases}
+" src="//upload.wikimedia.org/math/a/a/6/aa624d2d2f3478149d2060aa39bd0d70.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-\infty \le x_{i} \le \infty" src="//upload.wikimedia.org/math/6/e/d/6edd4ad0bea50fa9b2f0dbacd62fa911.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1 \le i \le n" src="//upload.wikimedia.org/math/e/0/1/e0126ca144c4391269883a91304ade8d.png" /></td>
+</tr>
+<tr>
+<td>Beale's function</td>
+<td><a href="/wiki/File:Beale%27s_function.pdf" class="image" title="Beale's function"><img alt="Beale's function" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/de/Beale%27s_function.pdf/page1-200px-Beale%27s_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/de/Beale%27s_function.pdf/page1-300px-Beale%27s_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/de/Beale%27s_function.pdf/page1-400px-Beale%27s_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = \left( 1.5 - x + xy \right)^{2} + \left( 2.25 - x + xy^{2}\right)^{2}" src="//upload.wikimedia.org/math/3/b/1/3b15d11d7ac9fcb8a95eca0103e662f9.png" />
+<p><img class="mwe-math-fallback-png-inline tex" alt="+ \left(2.625 - x+ xy^{3}\right)^{2}" src="//upload.wikimedia.org/math/2/8/6/286031b6d263321f0e0ec8df94268ed7.png" /></p>
+</td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(3, 0.5) = 0" src="//upload.wikimedia.org/math/9/5/3/953ffb3e2c4f5e118bf99ae08d628928.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-4.5 \le x,y \le 4.5" src="//upload.wikimedia.org/math/8/c/d/8cdb222f76f0057114b01e42cfb94547.png" /></td>
+</tr>
+<tr>
+<td>Goldstein–Price function:</td>
+<td><a href="/wiki/File:Goldstein_Price_function.pdf" class="image" title="Goldstein–Price function"><img alt="Goldstein–Price function" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Goldstein_Price_function.pdf/page1-200px-Goldstein_Price_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Goldstein_Price_function.pdf/page1-300px-Goldstein_Price_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Goldstein_Price_function.pdf/page1-400px-Goldstein_Price_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = \left(1+\left(x+y+1\right)^{2}\left(19-14x+3x^{2}-14y+6xy+3y^{2}\right)\right)" src="//upload.wikimedia.org/math/8/b/a/8baf5a97d1da80ae980f31dfe64dd38e.png" />
+<p><img class="mwe-math-fallback-png-inline tex" alt="\left(30+\left(2x-3y\right)^{2}\left(18-32x+12x^{2}+48y-36xy+27y^{2}\right)\right)" src="//upload.wikimedia.org/math/a/4/a/a4aa1bd1c69fe8fff6e166d3e58ceefc.png" /></p>
+</td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(0, -1) = 3" src="//upload.wikimedia.org/math/c/a/1/ca1ddafcb04a6e6a6ae0f18ab7d05bef.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-2 \le x,y \le 2" src="//upload.wikimedia.org/math/8/a/e/8aeba209c8d782e6bc5e7deb3e67185b.png" /></td>
+</tr>
+<tr>
+<td>Booth's function:</td>
+<td><a href="/wiki/File:Booth%27s_function.pdf" class="image" title="Booth's function"><img alt="Booth's function" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Booth%27s_function.pdf/page1-200px-Booth%27s_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Booth%27s_function.pdf/page1-300px-Booth%27s_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Booth%27s_function.pdf/page1-400px-Booth%27s_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = \left( x + 2y -7\right)^{2} + \left(2x +y - 5\right)^{2}" src="//upload.wikimedia.org/math/1/2/9/12967a6ff134008912f51e987329a836.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(1,3) = 0" src="//upload.wikimedia.org/math/0/5/5/055863e85006f018a9e8b0e81ad05c44.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-10 \le x,y \le 10" src="//upload.wikimedia.org/math/f/6/2/f62c23749130abcc0f58812312d81d2f.png" /></td>
+</tr>
+<tr>
+<td>Bukin function N.6:</td>
+<td><a href="/wiki/File:Bukin_function_6.pdf" class="image" title="Bukin function N.6"><img alt="Bukin function N.6" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Bukin_function_6.pdf/page1-200px-Bukin_function_6.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Bukin_function_6.pdf/page1-300px-Bukin_function_6.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Bukin_function_6.pdf/page1-400px-Bukin_function_6.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = 100\sqrt{\left|y - 0.01x^{2}\right|} + 0.01 \left|x+10 \right|.\quad" src="//upload.wikimedia.org/math/7/c/2/7c2720707ce29bc026ab2ab5d04d3112.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(-10,1) = 0" src="//upload.wikimedia.org/math/b/e/6/be663a6e4cbcd0148d5fafa7557f0b46.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-15\le x \le -5" src="//upload.wikimedia.org/math/4/e/6/4e6e800dafcbee806b61b159cf154003.png" />, <img class="mwe-math-fallback-png-inline tex" alt="-3\le y \le 3" src="//upload.wikimedia.org/math/5/5/e/55efcad39df4d9e197a05ef0daebc53f.png" /></td>
+</tr>
+<tr>
+<td>Matyas function:</td>
+<td><a href="/wiki/File:Matyas_function.pdf" class="image" title="Matyas function"><img alt="Matyas function" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/63/Matyas_function.pdf/page1-200px-Matyas_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/63/Matyas_function.pdf/page1-300px-Matyas_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/63/Matyas_function.pdf/page1-400px-Matyas_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = 0.26 \left( x^{2} + y^{2}\right) - 0.48 xy" src="//upload.wikimedia.org/math/7/0/e/70ebe91870f74c9c27e11fc405758e7c.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(0,0) = 0" src="//upload.wikimedia.org/math/5/f/0/5f016edb975be55400ad115e27b32b33.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-10\le x,y \le 10" src="//upload.wikimedia.org/math/f/6/2/f62c23749130abcc0f58812312d81d2f.png" /></td>
+</tr>
+<tr>
+<td>Lévi function N.13:</td>
+<td><a href="/wiki/File:Levi_function_13.pdf" class="image" title="Lévi function N.13"><img alt="Lévi function N.13" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Levi_function_13.pdf/page1-200px-Levi_function_13.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Levi_function_13.pdf/page1-300px-Levi_function_13.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Levi_function_13.pdf/page1-400px-Levi_function_13.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = \sin^{2}\left(3\pi x\right)+\left(x-1\right)^{2}\left(1+\sin^{2}\left(3\pi y\right)\right)" src="//upload.wikimedia.org/math/f/4/6/f46d8e7dd0eee182fbc26231ab23270e.png" />
+<p><img class="mwe-math-fallback-png-inline tex" alt="+\left(y-1\right)^{2}\left(1+\sin^{2}\left(2\pi y\right)\right)" src="//upload.wikimedia.org/math/6/3/0/630b9e6027484a559662101a88d149fb.png" /></p>
+</td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(1,1) = 0" src="//upload.wikimedia.org/math/d/1/a/d1a4057d4c4d73f5fbbba0882d3b91fb.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-10\le x,y \le 10" src="//upload.wikimedia.org/math/f/6/2/f62c23749130abcc0f58812312d81d2f.png" /></td>
+</tr>
+<tr>
+<td>Three-hump camel function:</td>
+<td><a href="/wiki/File:Three_Hump_Camel_function.pdf" class="image" title="Three Hump Camel function"><img alt="Three Hump Camel function" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Three_Hump_Camel_function.pdf/page1-200px-Three_Hump_Camel_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Three_Hump_Camel_function.pdf/page1-300px-Three_Hump_Camel_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Three_Hump_Camel_function.pdf/page1-400px-Three_Hump_Camel_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = 2x^{2} - 1.05x^{4} + \frac{x^{6}}{6} + xy + y^{2}" src="//upload.wikimedia.org/math/4/e/a/4ea72f3ba2372ccf14bfc629db744dc8.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(0,0) = 0" src="//upload.wikimedia.org/math/5/f/0/5f016edb975be55400ad115e27b32b33.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-5\le x,y \le 5" src="//upload.wikimedia.org/math/7/4/c/74c0d0bbb38681cf4998f35d76748d13.png" /></td>
+</tr>
+<tr>
+<td>Easom function:</td>
+<td><a href="/wiki/File:Easom_function.pdf" class="image" title="Easom function"><img alt="Easom function" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/63/Easom_function.pdf/page1-200px-Easom_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/63/Easom_function.pdf/page1-300px-Easom_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/63/Easom_function.pdf/page1-400px-Easom_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = -\cos \left(x\right)\cos \left(y\right) \exp\left(-\left(\left(x-\pi\right)^{2} + \left(y-\pi\right)^{2}\right)\right)" src="//upload.wikimedia.org/math/d/2/7/d27b0c107f83e0ecbba4d3a9e5a44f4e.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(\pi , \pi) = -1" src="//upload.wikimedia.org/math/e/f/9/ef9984217b41eed58e49209aee16350d.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-100\le x,y \le 100" src="//upload.wikimedia.org/math/b/b/2/bb2c95c435f7c655da7bcdec2d3fc4ef.png" /></td>
+</tr>
+<tr>
+<td>Cross-in-tray function:</td>
+<td><a href="/wiki/File:Cross-in-tray_function.pdf" class="image" title="Cross-in-tray function"><img alt="Cross-in-tray function" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Cross-in-tray_function.pdf/page1-200px-Cross-in-tray_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Cross-in-tray_function.pdf/page1-300px-Cross-in-tray_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Cross-in-tray_function.pdf/page1-400px-Cross-in-tray_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = -0.0001 \left( \left| \sin \left(x\right) \sin \left(y\right) \exp \left( \left|100 - \frac{\sqrt{x^{2} + y^{2}}}{\pi} \right|\right)\right| + 1 \right)^{0.1}" src="//upload.wikimedia.org/math/5/1/6/516946f57ab367894e27072c55b5d7b8.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Min} =
+\begin{cases}
+      f\left(1.34941, -1.34941\right) &amp; = -2.06261 \\
+      f\left(1.34941,  1.34941\right) &amp; = -2.06261 \\
+      f\left(-1.34941, 1.34941\right) &amp; = -2.06261 \\
+      f\left(-1.34941,-1.34941\right) &amp; = -2.06261 \\
+\end{cases}
+" src="//upload.wikimedia.org/math/4/f/a/4fa9b02abc5c843efc172976c382a666.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-10\le x,y \le 10" src="//upload.wikimedia.org/math/f/6/2/f62c23749130abcc0f58812312d81d2f.png" /></td>
+</tr>
+<tr>
+<td>Eggholder function:</td>
+<td><a href="/wiki/File:Eggholder_function.pdf" class="image" title="Eggholder function"><img alt="Eggholder function" src="//upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Eggholder_function.pdf/page1-200px-Eggholder_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Eggholder_function.pdf/page1-300px-Eggholder_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/e/e7/Eggholder_function.pdf/page1-400px-Eggholder_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = - \left(y+47\right) \sin \left(\sqrt{\left|y + \frac{x}{2}+47\right|}\right) - x \sin \left(\sqrt{\left|x - \left(y + 47 \right)\right|}\right)" src="//upload.wikimedia.org/math/4/4/5/4458d5801998faad06311fc4d71a1ef8.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(512, 404.2319) = -959.6407" src="//upload.wikimedia.org/math/5/3/8/538c4e4b487e5e7981334a0ca1bc2e07.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-512\le x,y \le 512" src="//upload.wikimedia.org/math/f/1/4/f145fb1d88c523c34cf2892538c114a0.png" /></td>
+</tr>
+<tr>
+<td>Hölder table function:</td>
+<td><a href="/wiki/File:Holder_table_function.pdf" class="image" title="Holder table function"><img alt="Holder table function" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/72/Holder_table_function.pdf/page1-200px-Holder_table_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/72/Holder_table_function.pdf/page1-300px-Holder_table_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/72/Holder_table_function.pdf/page1-400px-Holder_table_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = - \left|\sin \left(x\right) \cos \left(y\right) \exp \left(\left|1 - \frac{\sqrt{x^{2} + y^{2}}}{\pi} \right|\right)\right|" src="//upload.wikimedia.org/math/3/9/e/39ee51b98f4c9dbcd2b22eaa674ed20e.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Min} =
+\begin{cases}
+      f\left(8.05502,  9.66459\right) &amp; = -19.2085 \\
+      f\left(-8.05502,  9.66459\right) &amp; = -19.2085 \\
+      f\left(8.05502,-9.66459\right) &amp; = -19.2085 \\
+      f\left(-8.05502,-9.66459\right) &amp; = -19.2085
+\end{cases}
+" src="//upload.wikimedia.org/math/2/d/8/2d8c4c31443c3843f7ab393930726df3.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-10\le x,y \le 10" src="//upload.wikimedia.org/math/f/6/2/f62c23749130abcc0f58812312d81d2f.png" /></td>
+</tr>
+<tr>
+<td>McCormick function:</td>
+<td><a href="/wiki/File:McCormick_function.pdf" class="image" title="McCormick function"><img alt="McCormick function" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/c0/McCormick_function.pdf/page1-200px-McCormick_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/c0/McCormick_function.pdf/page1-300px-McCormick_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/c0/McCormick_function.pdf/page1-400px-McCormick_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = \sin \left(x+y\right) + \left(x-y\right)^{2} - 1.5x + 2.5y + 1" src="//upload.wikimedia.org/math/d/5/e/d5e383a458e442419ac27e36808c32ef.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(-0.54719,-1.54719) = -1.9133" src="//upload.wikimedia.org/math/7/0/1/701f47bad89fa243c3bb76fcb676e37d.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-1.5\le x \le 4" src="//upload.wikimedia.org/math/3/a/c/3ac60b00b5fcaf11195e33429ac943ea.png" />, <img class="mwe-math-fallback-png-inline tex" alt="-3\le y \le 4" src="//upload.wikimedia.org/math/6/a/a/6aa5f9347281091a8e59d27076d14441.png" /></td>
+</tr>
+<tr>
+<td>Schaffer function N. 2:</td>
+<td><a href="/wiki/File:Schaffer_function_2.pdf" class="image" title="Schaffer function N.2"><img alt="Schaffer function N.2" src="//upload.wikimedia.org/wikipedia/commons/thumb/4/46/Schaffer_function_2.pdf/page1-200px-Schaffer_function_2.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/4/46/Schaffer_function_2.pdf/page1-300px-Schaffer_function_2.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/4/46/Schaffer_function_2.pdf/page1-400px-Schaffer_function_2.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = 0.5 + \frac{\sin^{2}\left(x^{2} - y^{2}\right) - 0.5}{\left(1 + 0.001\left(x^{2} + y^{2}\right) \right)^{2}}" src="//upload.wikimedia.org/math/8/8/a/88a1ca3ecd4549f69151753dc6dc51c5.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(0, 0) = 0" src="//upload.wikimedia.org/math/5/f/0/5f016edb975be55400ad115e27b32b33.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-100\le x,y \le 100" src="//upload.wikimedia.org/math/b/b/2/bb2c95c435f7c655da7bcdec2d3fc4ef.png" /></td>
+</tr>
+<tr>
+<td>Schaffer function N. 4:</td>
+<td><a href="/wiki/File:Schaffer_function_4.pdf" class="image" title="Schaffer function N.4"><img alt="Schaffer function N.4" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Schaffer_function_4.pdf/page1-200px-Schaffer_function_4.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Schaffer_function_4.pdf/page1-300px-Schaffer_function_4.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/ac/Schaffer_function_4.pdf/page1-400px-Schaffer_function_4.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = 0.5 + \frac{\cos\left(\sin \left( \left|x^{2} - y^{2}\right|\right)\right) - 0.5}{\left(1 + 0.001\left(x^{2} + y^{2}\right) \right)^{2}}" src="//upload.wikimedia.org/math/a/c/2/ac2d5494f99e297f43bfb19ec621ab9f.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(0,1.25313) = 0.292579" src="//upload.wikimedia.org/math/9/e/7/9e7a36ebedcc6c6edc99c22debae8b1f.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-100\le x,y \le 100" src="//upload.wikimedia.org/math/b/b/2/bb2c95c435f7c655da7bcdec2d3fc4ef.png" /></td>
+</tr>
+<tr>
+<td>Styblinski–Tang function:</td>
+<td><a href="/wiki/File:Styblinski-Tang_function.pdf" class="image" title="Styblinski-Tang function"><img alt="Styblinski-Tang function" src="//upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Styblinski-Tang_function.pdf/page1-200px-Styblinski-Tang_function.pdf.jpg" width="200" height="150" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Styblinski-Tang_function.pdf/page1-300px-Styblinski-Tang_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Styblinski-Tang_function.pdf/page1-400px-Styblinski-Tang_function.pdf.jpg 2x" data-file-width="1200" data-file-height="900" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(\boldsymbol{x}) = \frac{\sum_{i=1}^{n} x_{i}^{4} - 16x_{i}^{2} + 5x_{i}}{2}" src="//upload.wikimedia.org/math/d/f/8/df8c675d63cd4a76b847d27a3820195f.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f\left(\underbrace{-2.903534, \ldots, -2.903534}_{(n) \text{ times}} \right) = -39.16599n" src="//upload.wikimedia.org/math/b/4/e/b4ea9996b936cc0a9ca2fe3fd9111fbb.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-5\le x_{i} \le 5" src="//upload.wikimedia.org/math/b/6/5/b65caa6a87f6bffc44c0653c2d6f6f6f.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1\le i \le n" src="//upload.wikimedia.org/math/e/0/1/e0126ca144c4391269883a91304ade8d.png" />.</td>
+</tr>
+<tr>
+<td>Simionescu function:<sup id="cite_ref-10" class="reference"><a href="#cite_note-10"><span>[</span>10<span>]</span></a></sup></td>
+<td><a href="/wiki/File:Simionescu%27s_function.PNG" class="image" title="Simionescu function"><img alt="Simionescu function" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Simionescu%27s_function.PNG/200px-Simionescu%27s_function.PNG" width="200" height="194" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Simionescu%27s_function.PNG/300px-Simionescu%27s_function.PNG 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Simionescu%27s_function.PNG/400px-Simionescu%27s_function.PNG 2x" data-file-width="720" data-file-height="700" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(x,y) = 0.1xy" src="//upload.wikimedia.org/math/f/f/a/ffa07cdb0ca710d5334c04b084c0d80d.png" />,
+<p><img class="mwe-math-fallback-png-inline tex" alt="\text{subjected to: }  x^2+y^2\le\left(r_{T}+r_{S}\cos\left(n \arctan \frac{x}{y} \right)\right)^2" src="//upload.wikimedia.org/math/9/9/3/993be01030c1c08c87c1682b895948c4.png" /> <img class="mwe-math-fallback-png-inline tex" alt="\text{where: }  r_{T}=1, r_{S}=0.2 \text{ and } n = 8" src="//upload.wikimedia.org/math/0/5/f/05fc0a9c77be1d02ec26662afe486c2b.png" /></p>
+</td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="f(\pm 0.84852813,\mp 0.84852813) = -0.072" src="//upload.wikimedia.org/math/1/9/d/19d0beb7bac682c4e2be784e7942f093.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-1.25\le x,y \le 1.25" src="//upload.wikimedia.org/math/6/5/0/6502291620392cdc2dbb40981e0f945b.png" /></td>
+</tr>
+</table>
+<h2><span class="mw-headline" id="Test_functions_for_multi-objective_optimization_problems">Test functions for multi-objective optimization problems</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Test_functions_for_optimization&amp;action=edit&amp;section=2" title="Edit section: Test functions for multi-objective optimization problems">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<table class="wikitable" style="text-align:center">
+<tr>
+<th>Name</th>
+<th>Plot</th>
+<th>Functions</th>
+<th>Constraints</th>
+<th>Search domain</th>
+</tr>
+<tr>
+<td>Binh and Korn function:</td>
+<td><a href="/wiki/File:Binh_and_Korn_function.pdf" class="image" title="Binh and Korn function"><img alt="Binh and Korn function" src="//upload.wikimedia.org/wikipedia/commons/thumb/7/70/Binh_and_Korn_function.pdf/page1-200px-Binh_and_Korn_function.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/7/70/Binh_and_Korn_function.pdf/page1-300px-Binh_and_Korn_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/7/70/Binh_and_Korn_function.pdf/page1-400px-Binh_and_Korn_function.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x,y\right) &amp; = 4x^{2} + 4y^{2} \\
+      f_{2}\left(x,y\right) &amp; = \left(x - 5\right)^{2} + \left(y - 5\right)^{2} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/2/a/2/2a225cef75b9bb876dcc78cad7df2502.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{s.t.} =
+\begin{cases}
+      g_{1}\left(x,y\right) &amp; = \left(x - 5\right)^{2} + y^{2} \leq 25 \\
+      g_{2}\left(x,y\right) &amp; = \left(x - 8\right)^{2} + \left(y + 3\right)^{2} \geq 7.7 \\
+\end{cases}
+" src="//upload.wikimedia.org/math/7/0/f/70f8dfb7d525ac1250bc314d34ed5dfc.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0\le x \le 5" src="//upload.wikimedia.org/math/5/e/e/5eeec66b519c31b484f825bac95773cf.png" />, <img class="mwe-math-fallback-png-inline tex" alt="0\le y \le 3" src="//upload.wikimedia.org/math/b/a/d/bad3b5f3950609c43cb22da64452b9c4.png" /></td>
+</tr>
+<tr>
+<td>Chakong and Haimes function:</td>
+<td><a href="/wiki/File:Chakong_and_Haimes_function.pdf" class="image" title="Chakong and Haimes function"><img alt="Chakong and Haimes function" src="//upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Chakong_and_Haimes_function.pdf/page1-200px-Chakong_and_Haimes_function.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Chakong_and_Haimes_function.pdf/page1-300px-Chakong_and_Haimes_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Chakong_and_Haimes_function.pdf/page1-400px-Chakong_and_Haimes_function.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x,y\right) &amp; = 2 + \left(x-2\right)^{2} + \left(y-1\right)^{2} \\
+      f_{2}\left(x,y\right) &amp; = 9x + \left(y - 1\right)^{2} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/0/a/e/0aedef73abc89725d0b7344403845c21.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{s.t.} =
+\begin{cases}
+      g_{1}\left(x,y\right) &amp; = x^{2} + y^{2} \leq 225 \\
+      g_{2}\left(x,y\right) &amp; = x - 3y + 10 \leq 0 \\
+\end{cases}
+" src="//upload.wikimedia.org/math/2/2/e/22e6765cef4cee34b8392810c4966881.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-20\le x,y \le 20" src="//upload.wikimedia.org/math/f/d/7/fd7d9ce22ab0332e1cdb989a332b8be7.png" /></td>
+</tr>
+<tr>
+<td>Fonseca and Fleming function:</td>
+<td><a href="/wiki/File:Fonseca_and_Fleming_function.pdf" class="image" title="Fonseca and Fleming function"><img alt="Fonseca and Fleming function" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/59/Fonseca_and_Fleming_function.pdf/page1-200px-Fonseca_and_Fleming_function.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/59/Fonseca_and_Fleming_function.pdf/page1-300px-Fonseca_and_Fleming_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/59/Fonseca_and_Fleming_function.pdf/page1-400px-Fonseca_and_Fleming_function.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(\boldsymbol{x}\right) &amp; = 1 - \exp \left(-\sum_{i=1}^{n} \left(x_{i} - \frac{1}{\sqrt{n}} \right)^{2} \right) \\
+      f_{2}\left(\boldsymbol{x}\right) &amp; = 1 - \exp \left(-\sum_{i=1}^{n} \left(x_{i} + \frac{1}{\sqrt{n}} \right)^{2} \right) \\
+\end{cases}
+" src="//upload.wikimedia.org/math/f/8/f/f8f17e904fec02577bc8e5dd9e52bbe6.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-4\le x_{i} \le 4" src="//upload.wikimedia.org/math/7/5/f/75f46ca60711bcc37eb932a576223f1b.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1\le i \le n" src="//upload.wikimedia.org/math/e/0/1/e0126ca144c4391269883a91304ade8d.png" /></td>
+</tr>
+<tr>
+<td>Test function 4:<sup id="cite_ref-Binh99_7-1" class="reference"><a href="#cite_note-Binh99-7"><span>[</span>7<span>]</span></a></sup></td>
+<td><a href="/wiki/File:Test_function_4_-_Binh.pdf" class="image" title="Test function 4.[7]"><img alt="Test function 4.[7]" src="//upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Test_function_4_-_Binh.pdf/page1-200px-Test_function_4_-_Binh.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Test_function_4_-_Binh.pdf/page1-300px-Test_function_4_-_Binh.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Test_function_4_-_Binh.pdf/page1-400px-Test_function_4_-_Binh.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x,y\right) &amp; = x^{2} - y \\
+      f_{2}\left(x,y\right) &amp; = -0.5x - y - 1 \\
+\end{cases}
+" src="//upload.wikimedia.org/math/9/7/c/97cb4e9930f635300df4169d0960c926.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{s.t.} =
+\begin{cases}
+      g_{1}\left(x,y\right) &amp; = 6.5 - \frac{x}{6} - y \geq 0 \\
+      g_{2}\left(x,y\right) &amp; = 7.5  - 0.5x - y \geq 0 \\
+      g_{3}\left(x,y\right) &amp; = 30  - 5x - y \geq 0 \\
+\end{cases}
+" src="//upload.wikimedia.org/math/e/2/e/e2eaad8c8fa6f40b7c3d710ba65aaf7c.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-7\le x,y \le 4" src="//upload.wikimedia.org/math/0/5/0/050f9a16d9f166f07ef9b8b391f05f8b.png" /></td>
+</tr>
+<tr>
+<td>Kursawe function:</td>
+<td><a href="/wiki/File:Kursawe_function.pdf" class="image" title="Kursawe function"><img alt="Kursawe function" src="//upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kursawe_function.pdf/page1-200px-Kursawe_function.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kursawe_function.pdf/page1-300px-Kursawe_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/5/53/Kursawe_function.pdf/page1-400px-Kursawe_function.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(\boldsymbol{x}\right) &amp; = \sum_{i=1}^{2} \left[-10 \exp \left(-0.2 \sqrt{x_{i}^{2} + x_{i+1}^{2}} \right) \right] \\
+      &amp; \\
+      f_{2}\left(\boldsymbol{x}\right) &amp; = \sum_{i=1}^{3} \left[\left|x_{i}\right|^{0.8}  + 5 \sin \left(x_{i}^{3} \right) \right] \\
+\end{cases}
+" src="//upload.wikimedia.org/math/5/3/d/53df694c5b4d7733f3db9047108739a7.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-5\le x_{i} \le 5" src="//upload.wikimedia.org/math/b/6/5/b65caa6a87f6bffc44c0653c2d6f6f6f.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1\le i \le 3" src="//upload.wikimedia.org/math/7/1/1/71183a7639769e71f6834a2856872017.png" />.</td>
+</tr>
+<tr>
+<td>Schaffer function N. 1:</td>
+<td><a href="/wiki/File:Schaffer_function_1.pdf" class="image" title="Schaffer function N.1"><img alt="Schaffer function N.1" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Schaffer_function_1.pdf/page1-200px-Schaffer_function_1.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Schaffer_function_1.pdf/page1-300px-Schaffer_function_1.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Schaffer_function_1.pdf/page1-400px-Schaffer_function_1.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x\right) &amp; = x^{2} \\
+      f_{2}\left(x\right) &amp; = \left(x-2\right)^{2} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/d/a/a/daa9bf29c0f124ffe2607485ee5a9421.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-A\le x \le A" src="//upload.wikimedia.org/math/5/4/b/54ba7c78e8623663d3ba3f41f32fe22a.png" />. Values of <img class="mwe-math-fallback-png-inline tex" alt="A" src="//upload.wikimedia.org/math/7/f/c/7fc56270e7a70fa81a5935b72eacbe29.png" /> form <img class="mwe-math-fallback-png-inline tex" alt="10" src="//upload.wikimedia.org/math/d/3/d/d3d9446802a44259755d38e6d163e820.png" /> to <img class="mwe-math-fallback-png-inline tex" alt="10^{5}" src="//upload.wikimedia.org/math/d/3/d/d3db61fda9390cde206a8c6d13b9f6fb.png" /> have been used successfully. Higher values of <img class="mwe-math-fallback-png-inline tex" alt="A" src="//upload.wikimedia.org/math/7/f/c/7fc56270e7a70fa81a5935b72eacbe29.png" /> increase the difficulty of the problem.</td>
+</tr>
+<tr>
+<td>Schaffer function N. 2:</td>
+<td><a href="/wiki/File:Schaffer_function_2_-_multi-objective.pdf" class="image" title="Schaffer function N.2"><img alt="Schaffer function N.2" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Schaffer_function_2_-_multi-objective.pdf/page1-200px-Schaffer_function_2_-_multi-objective.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Schaffer_function_2_-_multi-objective.pdf/page1-300px-Schaffer_function_2_-_multi-objective.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Schaffer_function_2_-_multi-objective.pdf/page1-400px-Schaffer_function_2_-_multi-objective.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x\right) &amp; = \begin{cases}
+                                -x,   &amp; \text{if } x \le 1 \\
+                                 x-2, &amp; \text{if } 1 &lt; x \le 3 \\
+                                 4-x, &amp; \text{if } 3 &lt; x \le 4 \\
+                                 x-4, &amp; \text{if } x &gt; 4 \\
+                              \end{cases} \\
+      f_{2}\left(x\right) &amp; = \left(x-5\right)^{2} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/3/d/4/3d45deb1970038d138d1fc045c7306d2.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-5\le x \le 10" src="//upload.wikimedia.org/math/c/5/0/c5023099e13c94b0653593bc2c1f51ab.png" />.</td>
+</tr>
+<tr>
+<td>Poloni's two objective function:</td>
+<td><a href="/wiki/File:Poloni%27s_two_objective_function.pdf" class="image" title="Poloni's two objective function"><img alt="Poloni's two objective function" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Poloni%27s_two_objective_function.pdf/page1-200px-Poloni%27s_two_objective_function.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Poloni%27s_two_objective_function.pdf/page1-300px-Poloni%27s_two_objective_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Poloni%27s_two_objective_function.pdf/page1-400px-Poloni%27s_two_objective_function.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x,y\right) &amp; = \left[1 + \left(A_{1} - B_{1}\left(x,y\right) \right)^{2} + \left(A_{2} - B_{2}\left(x,y\right) \right)^{2} \right] \\
+      f_{2}\left(x,y\right) &amp; = \left(x + 3\right)^{2} + \left(y + 1 \right)^{2} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/f/f/d/ffd85ecde4700b0d4a5834389fa6f492.png" />
+<p><img class="mwe-math-fallback-png-inline tex" alt="\text{where} =
+\begin{cases}
+      A_{1} &amp; = 0.5 \sin \left(1\right) - 2 \cos \left(1\right) + \sin \left(2\right) - 1.5 \cos \left(2\right)  \\
+      A_{2} &amp; = 1.5 \sin \left(1\right) - \cos \left(1\right) + 2 \sin \left(2\right) - 0.5 \cos \left(2\right)  \\
+      B_{1}\left(x,y\right) &amp; = 0.5 \sin \left(x\right) - 2 \cos \left(x\right) + \sin \left(y\right) - 1.5 \cos \left(y\right)  \\
+      B_{2}\left(x,y\right) &amp; = 1.5 \sin \left(x\right) - \cos \left(x\right) + 2 \sin \left(y\right) - 0.5 \cos \left(y\right)
+\end{cases}
+" src="//upload.wikimedia.org/math/a/b/5/ab5be64380f22d06d147e4bbcbbe81b5.png" /></p>
+</td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-\pi\le x,y \le \pi" src="//upload.wikimedia.org/math/0/c/c/0ccf60e87dde96242ace3030b176d381.png" /></td>
+</tr>
+<tr>
+<td>Zitzler–Deb–Thiele's function N. 1:</td>
+<td><a href="/wiki/File:Zitzler-Deb-Thiele%27s_function_1.pdf" class="image" title="Zitzler-Deb-Thiele's function N.1"><img alt="Zitzler-Deb-Thiele's function N.1" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Zitzler-Deb-Thiele%27s_function_1.pdf/page1-200px-Zitzler-Deb-Thiele%27s_function_1.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Zitzler-Deb-Thiele%27s_function_1.pdf/page1-300px-Zitzler-Deb-Thiele%27s_function_1.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Zitzler-Deb-Thiele%27s_function_1.pdf/page1-400px-Zitzler-Deb-Thiele%27s_function_1.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(\boldsymbol{x}\right) &amp; = x_{1} \\
+      f_{2}\left(\boldsymbol{x}\right) &amp; = g\left(\boldsymbol{x}\right) h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) \\
+      g\left(\boldsymbol{x}\right) &amp; = 1 + \frac{9}{29} \sum_{i=2}^{30} x_{i} \\
+      h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) &amp; = 1 - \sqrt{\frac{f_{1}\left(\boldsymbol{x}\right)}{g\left(\boldsymbol{x}\right)}} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/7/9/c/79cef1f87327ff1d604acfc9228f8d33.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0\le x_{i} \le 1" src="//upload.wikimedia.org/math/a/4/f/a4ff96d4e98c2f50b7c5402511b070c4.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1\le i \le 30" src="//upload.wikimedia.org/math/5/e/3/5e384046647283ddc1b058bf707c0974.png" />.</td>
+</tr>
+<tr>
+<td>Zitzler–Deb–Thiele's function N. 2:</td>
+<td><a href="/wiki/File:Zitzler-Deb-Thiele%27s_function_2.pdf" class="image" title="Zitzler-Deb-Thiele's function N.2"><img alt="Zitzler-Deb-Thiele's function N.2" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Zitzler-Deb-Thiele%27s_function_2.pdf/page1-200px-Zitzler-Deb-Thiele%27s_function_2.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Zitzler-Deb-Thiele%27s_function_2.pdf/page1-300px-Zitzler-Deb-Thiele%27s_function_2.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Zitzler-Deb-Thiele%27s_function_2.pdf/page1-400px-Zitzler-Deb-Thiele%27s_function_2.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(\boldsymbol{x}\right) &amp; = x_{1} \\
+      f_{2}\left(\boldsymbol{x}\right) &amp; = g\left(\boldsymbol{x}\right) h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) \\
+      g\left(\boldsymbol{x}\right) &amp; = 1 + \frac{9}{29} \sum_{i=2}^{30} x_{i} \\
+      h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) &amp; = 1 - \left(\frac{f_{1}\left(\boldsymbol{x}\right)}{g\left(\boldsymbol{x}\right)}\right)^{2} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/6/7/7/6775888e88cf75c2c1933a56272da025.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0\le x_{i} \le 1" src="//upload.wikimedia.org/math/a/4/f/a4ff96d4e98c2f50b7c5402511b070c4.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1\le i \le 30" src="//upload.wikimedia.org/math/5/e/3/5e384046647283ddc1b058bf707c0974.png" />.</td>
+</tr>
+<tr>
+<td>Zitzler–Deb–Thiele's function N. 3:</td>
+<td><a href="/wiki/File:Zitzler-Deb-Thiele%27s_function_3.pdf" class="image" title="Zitzler-Deb-Thiele's function N.3"><img alt="Zitzler-Deb-Thiele's function N.3" src="//upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Zitzler-Deb-Thiele%27s_function_3.pdf/page1-200px-Zitzler-Deb-Thiele%27s_function_3.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Zitzler-Deb-Thiele%27s_function_3.pdf/page1-300px-Zitzler-Deb-Thiele%27s_function_3.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Zitzler-Deb-Thiele%27s_function_3.pdf/page1-400px-Zitzler-Deb-Thiele%27s_function_3.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(\boldsymbol{x}\right) &amp; = x_{1} \\
+      f_{2}\left(\boldsymbol{x}\right) &amp; = g\left(\boldsymbol{x}\right) h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) \\
+      g\left(\boldsymbol{x}\right) &amp; = 1 + \frac{9}{29} \sum_{i=2}^{30} x_{i} \\
+      h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) &amp; = 1 - \sqrt{\frac{f_{1}\left(\boldsymbol{x}\right)}{g\left(\boldsymbol{x} \right)}} - \left(\frac{f_{1}\left(\boldsymbol{x}\right)}{g\left(\boldsymbol{x}\right)} \right) \sin \left(10 \pi f_{1} \left(\boldsymbol{x} \right) \right)
+\end{cases}
+" src="//upload.wikimedia.org/math/1/f/3/1f3ae1ef4a3f1ac9843a3562a56a99e0.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0\le x_{i} \le 1" src="//upload.wikimedia.org/math/a/4/f/a4ff96d4e98c2f50b7c5402511b070c4.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1\le i \le 30" src="//upload.wikimedia.org/math/5/e/3/5e384046647283ddc1b058bf707c0974.png" />.</td>
+</tr>
+<tr>
+<td>Zitzler–Deb–Thiele's function N. 4:</td>
+<td><a href="/wiki/File:Zitzler-Deb-Thiele%27s_function_4.pdf" class="image" title="caption2  = Zitzler-Deb-Thiele's function N.4"><img alt="caption2  = Zitzler-Deb-Thiele's function N.4" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Zitzler-Deb-Thiele%27s_function_4.pdf/page1-220px-Zitzler-Deb-Thiele%27s_function_4.pdf.jpg" width="220" height="166" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Zitzler-Deb-Thiele%27s_function_4.pdf/page1-330px-Zitzler-Deb-Thiele%27s_function_4.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/dd/Zitzler-Deb-Thiele%27s_function_4.pdf/page1-440px-Zitzler-Deb-Thiele%27s_function_4.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(\boldsymbol{x}\right) &amp; = x_{1} \\
+      f_{2}\left(\boldsymbol{x}\right) &amp; = g\left(\boldsymbol{x}\right) h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) \\
+      g\left(\boldsymbol{x}\right) &amp; = 91 + \sum_{i=2}^{10} \left(x_{i}^{2} - 10 \cos \left(4 \pi x_{i}\right) \right) \\
+      h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) &amp; = 1 - \sqrt{\frac{f_{1}\left(\boldsymbol{x}\right)}{g\left(\boldsymbol{x} \right)}}
+\end{cases}
+" src="//upload.wikimedia.org/math/9/5/1/9511bddd6ad70c5166de8b96b26b732a.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0\le x_{1} \le 1" src="//upload.wikimedia.org/math/8/f/4/8f48650b31a2639149508d58396958a8.png" />, <img class="mwe-math-fallback-png-inline tex" alt="-5\le x_{i} \le 5" src="//upload.wikimedia.org/math/b/6/5/b65caa6a87f6bffc44c0653c2d6f6f6f.png" />, <img class="mwe-math-fallback-png-inline tex" alt="2\le i \le 10" src="//upload.wikimedia.org/math/a/e/6/ae6f2c6ba4bc4bbfc51a2aaaa730fd82.png" /></td>
+</tr>
+<tr>
+<td>Zitzler–Deb–Thiele's function N. 6:</td>
+<td><a href="/wiki/File:Zitzler-Deb-Thiele%27s_function_6.pdf" class="image" title="Zitzler-Deb-Thiele's function N.6"><img alt="Zitzler-Deb-Thiele's function N.6" src="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Zitzler-Deb-Thiele%27s_function_6.pdf/page1-200px-Zitzler-Deb-Thiele%27s_function_6.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Zitzler-Deb-Thiele%27s_function_6.pdf/page1-300px-Zitzler-Deb-Thiele%27s_function_6.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Zitzler-Deb-Thiele%27s_function_6.pdf/page1-400px-Zitzler-Deb-Thiele%27s_function_6.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(\boldsymbol{x}\right) &amp; = 1 - \exp \left(-4x_{1}\right)\sin^{6}\left(6 \pi x_{1} \right) \\
+      f_{2}\left(\boldsymbol{x}\right) &amp; = g\left(\boldsymbol{x}\right) h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) \\
+      g\left(\boldsymbol{x}\right) &amp; = 1 + 9 \left[\frac{\sum_{i=2}^{10} x_{i}}{9}\right]^{0.25} \\
+      h \left(f_{1}\left(\boldsymbol{x}\right),g\left(\boldsymbol{x}\right)\right) &amp; = 1 - \left(\frac{f_{1}\left(\boldsymbol{x}\right)}{g\left(\boldsymbol{x} \right)}\right)^{2} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/8/5/a/85a057897bdc21201097a9ad2396ace8.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0\le x_{i} \le 1" src="//upload.wikimedia.org/math/a/4/f/a4ff96d4e98c2f50b7c5402511b070c4.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1\le i \le 10" src="//upload.wikimedia.org/math/f/9/a/f9a357e0248a4a1959f691d37848f1de.png" />.</td>
+</tr>
+<tr>
+<td>Viennet function:</td>
+<td><a href="/wiki/File:Viennet_function.pdf" class="image" title="Viennet function"><img alt="Viennet function" src="//upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Viennet_function.pdf/page1-200px-Viennet_function.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Viennet_function.pdf/page1-300px-Viennet_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Viennet_function.pdf/page1-400px-Viennet_function.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x,y\right) &amp; = 0.5\left(x^{2} + y^{2}\right) + \sin\left(x^{2} + y^{2} \right) \\
+      f_{2}\left(x,y\right) &amp; = \frac{\left(3x - 2y + 4\right)^{2}}{8} +  \frac{\left(x - y + 1\right)^{2}}{27} + 15 \\
+      f_{3}\left(x,y\right) &amp; = \frac{1}{x^{2} + y^{2} + 1} - 1.1 \exp \left(- \left(x^{2} + y^{2} \right) \right) \\
+\end{cases}
+" src="//upload.wikimedia.org/math/0/4/7/047b2b0d1cecd1ce9cbd851d704c0062.png" /></td>
+<td></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="-3\le x,y \le 3" src="//upload.wikimedia.org/math/5/f/a/5faae305ba568618c9b2de8aa3c98583.png" />.</td>
+</tr>
+<tr>
+<td>Osyczka and Kundu function:</td>
+<td><a href="/wiki/File:Osyczka_and_Kundu_function.pdf" class="image" title="Osyczka and Kundu function"><img alt="Osyczka and Kundu function" src="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Osyczka_and_Kundu_function.pdf/page1-200px-Osyczka_and_Kundu_function.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/2/25/Osyczka_and_Kundu_function.pdf/page1-300px-Osyczka_and_Kundu_function.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/2/25/Osyczka_and_Kundu_function.pdf/page1-400px-Osyczka_and_Kundu_function.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(\boldsymbol{x}\right) &amp; = -25 \left(x_{1}-2\right)^{2} - \left(x_{2}-2\right)^{2} - \left(x_{3}-1\right)^{2}
+- \left(x_{4}-4\right)^{2} - \left(x_{5}-1\right)^{2} \\
+      f_{2}\left(\boldsymbol{x}\right) &amp; = \sum_{i=1}^{6} x_{i}^{2} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/4/f/1/4f183d2f5c6b4081b747c996eb374993.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{s.t.} =
+\begin{cases}
+      g_{1}\left(\boldsymbol{x}\right) &amp; = x_{1} + x_{2} - 2 \geq 0 \\
+      g_{2}\left(\boldsymbol{x}\right) &amp; = 6 - x_{1} - x_{2} \geq 0 \\
+      g_{3}\left(\boldsymbol{x}\right) &amp; = 2 - x_{2} + x_{1} \geq 0 \\
+      g_{4}\left(\boldsymbol{x}\right) &amp; = 2 - x_{1} + 3x_{2} \geq 0 \\
+      g_{5}\left(\boldsymbol{x}\right) &amp; = 4 - \left(x_{3}-3\right)^{2} - x_{4} \geq 0 \\
+      g_{6}\left(\boldsymbol{x}\right) &amp; = \left(x_{5} - 3\right)^{2} + x_{6} - 4 \geq 0
+\end{cases}
+" src="//upload.wikimedia.org/math/b/f/0/bf0a7f19f0648fdee792a147362c755c.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0\le x_{1},x_{2},x_{6} \le 10" src="//upload.wikimedia.org/math/0/5/7/05766d8b501eebd8420b64be78bcc62f.png" />, <img class="mwe-math-fallback-png-inline tex" alt="1\le x_{3},x_{5} \le 5" src="//upload.wikimedia.org/math/8/2/b/82b64d3c05f3445c5c3c99ab57e0a456.png" />, <img class="mwe-math-fallback-png-inline tex" alt="0\le x_{4} \le 6" src="//upload.wikimedia.org/math/2/a/b/2ab736a3f3320c5983e5ea0828529fad.png" />.</td>
+</tr>
+<tr>
+<td>CTP1 function (2 variables):<sup id="cite_ref-Deb:2002_5-1" class="reference"><a href="#cite_note-Deb:2002-5"><span>[</span>5<span>]</span></a></sup></td>
+<td><a href="/wiki/File:CTP1_function_(2_variables).pdf" class="image" title="CTP1 function (2 variables).[5]"><img alt="CTP1 function (2 variables).[5]" src="//upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CTP1_function_%282_variables%29.pdf/page1-200px-CTP1_function_%282_variables%29.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CTP1_function_%282_variables%29.pdf/page1-300px-CTP1_function_%282_variables%29.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/d/d4/CTP1_function_%282_variables%29.pdf/page1-400px-CTP1_function_%282_variables%29.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x,y\right) &amp; = x \\
+      f_{2}\left(x,y\right) &amp; = \left(1 + y\right) \exp \left(-\frac{x}{1+y} \right)
+\end{cases}
+" src="//upload.wikimedia.org/math/0/c/c/0cc912a3a91dcb222c32e6fddbf7dc5f.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{s.t.} =
+\begin{cases}
+      g_{1}\left(x,y\right) &amp; = \frac{f_{2}\left(x,y\right)}{0.858 \exp \left(-0.541 f_{1}\left(x,y\right)\right)} \geq 1 \\
+      g_{1}\left(x,y\right) &amp; = \frac{f_{2}\left(x,y\right)}{0.728 \exp \left(-0.295 f_{1}\left(x,y\right)\right)} \geq 1
+\end{cases}
+" src="//upload.wikimedia.org/math/1/b/1/1b1f7d644ab8c42193afae425a267e80.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0\le x,y \le 1" src="//upload.wikimedia.org/math/a/2/0/a205ca8f5f3e92c29e6150cc93ff66a8.png" />.</td>
+</tr>
+<tr>
+<td>Constr-Ex problem:<sup id="cite_ref-Deb:2002_5-3" class="reference"><a href="#cite_note-Deb:2002-5"><span>[</span>5<span>]</span></a></sup></td>
+<td><a href="/wiki/File:Constr-Ex_problem.pdf" class="image" title="Constr-Ex problem.[5]"><img alt="Constr-Ex problem.[5]" src="//upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Constr-Ex_problem.pdf/page1-200px-Constr-Ex_problem.pdf.jpg" width="200" height="151" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Constr-Ex_problem.pdf/page1-300px-Constr-Ex_problem.pdf.jpg 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Constr-Ex_problem.pdf/page1-400px-Constr-Ex_problem.pdf.jpg 2x" data-file-width="1218" data-file-height="918" /></a></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{Minimize} =
+\begin{cases}
+      f_{1}\left(x,y\right) &amp; = x \\
+      f_{2}\left(x,y\right) &amp; = \frac{1 + y}{x} \\
+\end{cases}
+" src="//upload.wikimedia.org/math/b/f/5/bf549046d5ab642f54fde3437ba4bb7b.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="\text{s.t.} =
+\begin{cases}
+      g_{1}\left(x,y\right) &amp; = y + 9x \geq 6 \\
+      g_{1}\left(x,y\right) &amp; = -y + 9x \geq 1 \\
+\end{cases}
+" src="//upload.wikimedia.org/math/1/1/5/11502d0757b029b2abefa84e40160053.png" /></td>
+<td><img class="mwe-math-fallback-png-inline tex" alt="0.1\le x \le 1" src="//upload.wikimedia.org/math/a/0/9/a090e2c7e9baa381911a3e4244a6914b.png" />, <img class="mwe-math-fallback-png-inline tex" alt="0\le y \le 5" src="//upload.wikimedia.org/math/8/1/4/814fba64ab251b7ebd76daea34f72dee.png" /></td>
+</tr>
+</table>
+<h2><span class="mw-headline" id="See_also">See also</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Test_functions_for_optimization&amp;action=edit&amp;section=3" title="Edit section: See also">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<ul>
+<li><a href="/wiki/Himmelblau%27s_function" title="Himmelblau's function">Himmelblau's function</a></li>
+<li><a href="/wiki/Rosenbrock_function" title="Rosenbrock function">Rosenbrock function</a></li>
+<li><a href="/wiki/Rastrigin_function" title="Rastrigin function">Rastrigin function</a></li>
+<li><a href="/wiki/Shekel_function" title="Shekel function">Shekel function</a></li>
+</ul>
+<h2><span class="mw-headline" id="References">References</span><span class="mw-editsection"><span class="mw-editsection-bracket">[</span><a href="/w/index.php?title=Test_functions_for_optimization&amp;action=edit&amp;section=4" title="Edit section: References">edit</a><span class="mw-editsection-bracket">]</span></span></h2>
+<ol class="references">
+<li id="cite_note-1"><span class="mw-cite-backlink"><b><a href="#cite_ref-1">^</a></b></span> <span class="reference-text"><span class="citation book">Bäck, Thomas (1995). <i>Evolutionary algorithms in theory and practice&#160;: evolution strategies, evolutionary programming, genetic algorithms</i>. Oxford: Oxford University Press. p.&#160;328. <a href="/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&#160;<a href="/wiki/Special:BookSources/0-19-509971-0" title="Special:BookSources/0-19-509971-0">0-19-509971-0</a>.</span><span title="ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3ATest+functions+for+optimization&amp;rft.au=B%C3%A4ck%2C+Thomas&amp;rft.aufirst=Thomas&amp;rft.aulast=B%C3%A4ck&amp;rft.btitle=Evolutionary+algorithms+in+theory+and+practice+%3A+evolution+strategies%2C+evolutionary+programming%2C+genetic+algorithms&amp;rft.date=1995&amp;rft.genre=book&amp;rft.isbn=0-19-509971-0&amp;rft.pages=328&amp;rft.place=Oxford&amp;rft.pub=Oxford+University+Press&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook" class="Z3988"><span style="display:none;">&#160;</span></span></span></li>
+<li id="cite_note-2"><span class="mw-cite-backlink"><b><a href="#cite_ref-2">^</a></b></span> <span class="reference-text"><span class="citation book">Haupt, Randy L. Haupt, Sue Ellen (2004). <i>Practical genetic algorithms with DC-Rom</i> (2nd ed. ed.). New York: J. Wiley. <a href="/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&#160;<a href="/wiki/Special:BookSources/0-471-45565-2" title="Special:BookSources/0-471-45565-2">0-471-45565-2</a>.</span><span title="ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3ATest+functions+for+optimization&amp;rft.aufirst=Randy+L.+Haupt%2C+Sue+Ellen&amp;rft.au=Haupt%2C+Randy+L.+Haupt%2C+Sue+Ellen&amp;rft.aulast=Haupt&amp;rft.btitle=Practical+genetic+algorithms+with+DC-Rom&amp;rft.date=2004&amp;rft.edition=2nd+ed.&amp;rft.genre=book&amp;rft.isbn=0-471-45565-2&amp;rft.place=New+York&amp;rft.pub=J.+Wiley&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook" class="Z3988"><span style="display:none;">&#160;</span></span></span></li>
+<li id="cite_note-3"><span class="mw-cite-backlink"><b><a href="#cite_ref-3">^</a></b></span> <span class="reference-text"><span class="citation web">Oldenhuis, Rody. <a rel="nofollow" class="external text" href="http://www.mathworks.com/matlabcentral/fileexchange/23147-many-testfunctions-for-global-optimizers">"Many test functions for global optimizers"</a>. Mathworks<span class="reference-accessdate">. Retrieved 1 November 2012</span>.</span><span title="ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3ATest+functions+for+optimization&amp;rft.aufirst=Rody&amp;rft.aulast=Oldenhuis&amp;rft.au=Oldenhuis%2C+Rody&amp;rft.btitle=Many+test+functions+for+global+optimizers&amp;rft.genre=book&amp;rft_id=http%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Ffileexchange%2F23147-many-testfunctions-for-global-optimizers&amp;rft.pub=Mathworks&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook" class="Z3988"><span style="display:none;">&#160;</span></span></span></li>
+<li id="cite_note-4"><span class="mw-cite-backlink"><b><a href="#cite_ref-4">^</a></b></span> <span class="reference-text"><span class="citation web">Ortiz, Gilberto A. <a rel="nofollow" class="external text" href="http://www.mathworks.com/matlabcentral/fileexchange/35801-evolution-strategies-es">"Evolution Strategies (ES)"</a>. Mathworks<span class="reference-accessdate">. Retrieved 1 November 2012</span>.</span><span title="ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3ATest+functions+for+optimization&amp;rft.aufirst=Gilberto+A.&amp;rft.aulast=Ortiz&amp;rft.au=Ortiz%2C+Gilberto+A.&amp;rft.btitle=Evolution+Strategies+%28ES%29&amp;rft.genre=book&amp;rft_id=http%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Ffileexchange%2F35801-evolution-strategies-es&amp;rft.pub=Mathworks&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook" class="Z3988"><span style="display:none;">&#160;</span></span></span></li>
+<li id="cite_note-Deb:2002-5"><span class="mw-cite-backlink">^ <a href="#cite_ref-Deb:2002_5-0"><sup><i><b>a</b></i></sup></a> <a href="#cite_ref-Deb:2002_5-1"><sup><i><b>b</b></i></sup></a> <a href="#cite_ref-Deb:2002_5-2"><sup><i><b>c</b></i></sup></a> <a href="#cite_ref-Deb:2002_5-3"><sup><i><b>d</b></i></sup></a> <a href="#cite_ref-Deb:2002_5-4"><sup><i><b>e</b></i></sup></a></span> <span class="reference-text">Deb, Kalyanmoy (2002) Multiobjective optimization using evolutionary algorithms (Repr. ed.). Chichester [u.a.]: Wiley. <a href="/wiki/Special:BookSources/047187339X" class="internal mw-magiclink-isbn">ISBN 0-471-87339-X</a>.</span></li>
+<li id="cite_note-Binh97-6"><span class="mw-cite-backlink"><b><a href="#cite_ref-Binh97_6-0">^</a></b></span> <span class="reference-text">Binh T. and Korn U. (1997) MOBES: A Multiobjective Evolution Strategy for Constrained Optimization Problems. In: Proceedings of the Third International Conference on Genetic Algorithms. Czech Republic. pp. 176-182</span></li>
+<li id="cite_note-Binh99-7"><span class="mw-cite-backlink">^ <a href="#cite_ref-Binh99_7-0"><sup><i><b>a</b></i></sup></a> <a href="#cite_ref-Binh99_7-1"><sup><i><b>b</b></i></sup></a> <a href="#cite_ref-Binh99_7-2"><sup><i><b>c</b></i></sup></a></span> <span class="reference-text">Binh T. (1999) A multiobjective evolutionary algorithm. The study cases. Technical report. Institute for Automation and Communication. Barleben, Germany</span></li>
+<li id="cite_note-Deb_nsga-8"><span class="mw-cite-backlink"><b><a href="#cite_ref-Deb_nsga_8-0">^</a></b></span> <span class="reference-text">Deb K. (2011) Software for multi-objective NSGA-II code in C. Available at URL:<a rel="nofollow" class="external free" href="http://www.iitk.ac.in/kangal/codes.shtml">http://www.iitk.ac.in/kangal/codes.shtml</a>. Revision 1.1.6</span></li>
+<li id="cite_note-9"><span class="mw-cite-backlink"><b><a href="#cite_ref-9">^</a></b></span> <span class="reference-text"><span class="citation web">Ortiz, Gilberto A. <a rel="nofollow" class="external text" href="http://www.mathworks.com/matlabcentral/fileexchange/35824-multi-objective-optimization-using-evolution-strategies-es-as-evolutionary-algorithm-ea">"Multi-objective optimization using ES as Evolutionary Algorithm."</a>. Mathworks<span class="reference-accessdate">. Retrieved 1 November 2012</span>.</span><span title="ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3ATest+functions+for+optimization&amp;rft.aufirst=Gilberto+A.&amp;rft.aulast=Ortiz&amp;rft.au=Ortiz%2C+Gilberto+A.&amp;rft.btitle=Multi-objective+optimization+using+ES+as+Evolutionary+Algorithm.&amp;rft.genre=book&amp;rft_id=http%3A%2F%2Fwww.mathworks.com%2Fmatlabcentral%2Ffileexchange%2F35824-multi-objective-optimization-using-evolution-strategies-es-as-evolutionary-algorithm-ea&amp;rft.pub=Mathworks&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook" class="Z3988"><span style="display:none;">&#160;</span></span></span></li>
+<li id="cite_note-10"><span class="mw-cite-backlink"><b><a href="#cite_ref-10">^</a></b></span> <span class="reference-text"><span class="citation book">Simionescu, P.A. (2014). <i>Computer Aided Graphing and Simulation Tools for AutoCAD users</i> (1st ed.). Boca Raton, FL: CRC Press. <a href="/wiki/International_Standard_Book_Number" title="International Standard Book Number">ISBN</a>&#160;<a href="/wiki/Special:BookSources/9-781-48225290-3" title="Special:BookSources/9-781-48225290-3">9-781-48225290-3</a>.</span><span title="ctx_ver=Z39.88-2004&amp;rfr_id=info%3Asid%2Fen.wikipedia.org%3ATest+functions+for+optimization&amp;rft.aufirst=P.A.&amp;rft.aulast=Simionescu&amp;rft.au=Simionescu%2C+P.A.&amp;rft.btitle=Computer+Aided+Graphing+and+Simulation+Tools+for+AutoCAD+users&amp;rft.date=2014&amp;rft.edition=1st&amp;rft.genre=book&amp;rft.isbn=9-781-48225290-3&amp;rft.place=Boca+Raton%2C+FL&amp;rft.pub=CRC+Press&amp;rft_val_fmt=info%3Aofi%2Ffmt%3Akev%3Amtx%3Abook" class="Z3988"><span style="display:none;">&#160;</span></span></span></li>
+</ol>
+
+
+<!-- 
+NewPP limit report
+Parsed by mw1177
+CPU time usage: 0.668 seconds
+Real time usage: 3.734 seconds
+Preprocessor visited node count: 1570/1000000
+Preprocessor generated node count: 4254/1500000
+Post‐expand include size: 9396/2048000 bytes
+Template argument size: 0/2048000 bytes
+Highest expansion depth: 3/40
+Expensive parser function count: 0/500
+Lua time usage: 0.029/10.000 seconds
+Lua memory usage: 1.52 MB/50 MB
+-->
+
+<!-- Saved in parser cache with key enwiki:pcache:idhash:37526558-0!*!0!!en!4!*!math=0 and timestamp 20141016053017 and revision id 619643514
+ -->
+<noscript><img src="//en.wikipedia.org/wiki/Special:CentralAutoLogin/start?type=1x1" alt="" title="" width="1" height="1" style="border: none; position: absolute;" /></noscript></div>									<div class="printfooter">
+						Retrieved from "<a dir="ltr" href="http://en.wikipedia.org/w/index.php?title=Test_functions_for_optimization&amp;oldid=619643514">http://en.wikipedia.org/w/index.php?title=Test_functions_for_optimization&amp;oldid=619643514</a>"					</div>
+													<div id='catlinks' class='catlinks'><div id="mw-normal-catlinks" class="mw-normal-catlinks"><a href="/wiki/Help:Category" title="Help:Category">Categories</a>: <ul><li><a href="/wiki/Category:Mathematical_optimization" title="Category:Mathematical optimization">Mathematical optimization</a></li><li><a href="/wiki/Category:Constraint_programming" title="Category:Constraint programming">Constraint programming</a></li><li><a href="/wiki/Category:Convex_optimization" title="Category:Convex optimization">Convex optimization</a></li><li><a href="/wiki/Category:Types_of_functions" title="Category:Types of functions">Types of functions</a></li></ul></div></div>												<div class="visualClear"></div>
+							</div>
+		</div>
+		<div id="mw-navigation">
+			<h2>Navigation menu</h2>
+
+			<div id="mw-head">
+									<div id="p-personal" role="navigation" class="" aria-labelledby="p-personal-label">
+						<h3 id="p-personal-label">Personal tools</h3>
+						<ul>
+							<li id="pt-createaccount"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Test+functions+for+optimization&amp;type=signup">Create account</a></li><li id="pt-login"><a href="/w/index.php?title=Special:UserLogin&amp;returnto=Test+functions+for+optimization" title="You're encouraged to log in; however, it's not mandatory. [o]" accesskey="o">Log in</a></li>						</ul>
+					</div>
+									<div id="left-navigation">
+										<div id="p-namespaces" role="navigation" class="vectorTabs" aria-labelledby="p-namespaces-label">
+						<h3 id="p-namespaces-label">Namespaces</h3>
+						<ul>
+															<li  id="ca-nstab-main" class="selected"><span><a href="/wiki/Test_functions_for_optimization"  title="View the content page [c]" accesskey="c">Article</a></span></li>
+															<li  id="ca-talk"><span><a href="/wiki/Talk:Test_functions_for_optimization"  title="Discussion about the content page [t]" accesskey="t">Talk</a></span></li>
+													</ul>
+					</div>
+										<div id="p-variants" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-variants-label">
+												<h3 id="p-variants-label"><span>Variants</span><a href="#"></a></h3>
+
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+									</div>
+				<div id="right-navigation">
+										<div id="p-views" role="navigation" class="vectorTabs" aria-labelledby="p-views-label">
+						<h3 id="p-views-label">Views</h3>
+						<ul>
+															<li id="ca-view" class="selected"><span><a href="/wiki/Test_functions_for_optimization" >Read</a></span></li>
+															<li id="ca-edit"><span><a href="/w/index.php?title=Test_functions_for_optimization&amp;action=edit"  title="You can edit this page. Please use the preview button before saving [e]" accesskey="e">Edit</a></span></li>
+															<li id="ca-history" class="collapsible"><span><a href="/w/index.php?title=Test_functions_for_optimization&amp;action=history"  title="Past versions of this page [h]" accesskey="h">View history</a></span></li>
+													</ul>
+					</div>
+										<div id="p-cactions" role="navigation" class="vectorMenu emptyPortlet" aria-labelledby="p-cactions-label">
+						<h3 id="p-cactions-label"><span>More</span><a href="#"></a></h3>
+
+						<div class="menu">
+							<ul>
+															</ul>
+						</div>
+					</div>
+										<div id="p-search" role="search">
+						<h3>
+							<label for="searchInput">Search</label>
+						</h3>
+
+						<form action="/w/index.php" id="searchform">
+														<div id="simpleSearch">
+															<input type="search" name="search" placeholder="Search" title="Search Wikipedia [f]" accesskey="f" id="searchInput" /><input type="hidden" value="Special:Search" name="title" /><input type="submit" name="fulltext" value="Search" title="Search Wikipedia for this text" id="mw-searchButton" class="searchButton mw-fallbackSearchButton" /><input type="submit" name="go" value="Go" title="Go to a page with this exact name if one exists" id="searchButton" class="searchButton" />								</div>
+						</form>
+					</div>
+									</div>
+			</div>
+			<div id="mw-panel">
+				<div id="p-logo" role="banner"><a class="mw-wiki-logo" href="/wiki/Main_Page"  title="Visit the main page"></a></div>
+						<div class="portal" role="navigation" id='p-navigation' aria-labelledby='p-navigation-label'>
+			<h3 id='p-navigation-label'>Navigation</h3>
+
+			<div class="body">
+									<ul>
+													<li id="n-mainpage-description"><a href="/wiki/Main_Page" title="Visit the main page [z]" accesskey="z">Main page</a></li>
+													<li id="n-contents"><a href="/wiki/Portal:Contents" title="Guides to browsing Wikipedia">Contents</a></li>
+													<li id="n-featuredcontent"><a href="/wiki/Portal:Featured_content" title="Featured content – the best of Wikipedia">Featured content</a></li>
+													<li id="n-currentevents"><a href="/wiki/Portal:Current_events" title="Find background information on current events">Current events</a></li>
+													<li id="n-randompage"><a href="/wiki/Special:Random" title="Load a random article [x]" accesskey="x">Random article</a></li>
+													<li id="n-sitesupport"><a href="https://donate.wikimedia.org/wiki/Special:FundraiserRedirector?utm_source=donate&amp;utm_medium=sidebar&amp;utm_campaign=C13_en.wikipedia.org&amp;uselang=en" title="Support us">Donate to Wikipedia</a></li>
+													<li id="n-shoplink"><a href="//shop.wikimedia.org" title="Visit the Wikimedia Shop">Wikimedia Shop</a></li>
+											</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-interaction' aria-labelledby='p-interaction-label'>
+			<h3 id='p-interaction-label'>Interaction</h3>
+
+			<div class="body">
+									<ul>
+													<li id="n-help"><a href="/wiki/Help:Contents" title="Guidance on how to use and edit Wikipedia">Help</a></li>
+													<li id="n-aboutsite"><a href="/wiki/Wikipedia:About" title="Find out about Wikipedia">About Wikipedia</a></li>
+													<li id="n-portal"><a href="/wiki/Wikipedia:Community_portal" title="About the project, what you can do, where to find things">Community portal</a></li>
+													<li id="n-recentchanges"><a href="/wiki/Special:RecentChanges" title="A list of recent changes in the wiki [r]" accesskey="r">Recent changes</a></li>
+													<li id="n-contactpage"><a href="//en.wikipedia.org/wiki/Wikipedia:Contact_us">Contact page</a></li>
+											</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-tb' aria-labelledby='p-tb-label'>
+			<h3 id='p-tb-label'>Tools</h3>
+
+			<div class="body">
+									<ul>
+													<li id="t-whatlinkshere"><a href="/wiki/Special:WhatLinksHere/Test_functions_for_optimization" title="List of all English Wikipedia pages containing links to this page [j]" accesskey="j">What links here</a></li>
+													<li id="t-recentchangeslinked"><a href="/wiki/Special:RecentChangesLinked/Test_functions_for_optimization" title="Recent changes in pages linked from this page [k]" accesskey="k">Related changes</a></li>
+													<li id="t-upload"><a href="/wiki/Wikipedia:File_Upload_Wizard" title="Upload files [u]" accesskey="u">Upload file</a></li>
+													<li id="t-specialpages"><a href="/wiki/Special:SpecialPages" title="A list of all special pages [q]" accesskey="q">Special pages</a></li>
+													<li id="t-permalink"><a href="/w/index.php?title=Test_functions_for_optimization&amp;oldid=619643514" title="Permanent link to this revision of the page">Permanent link</a></li>
+													<li id="t-info"><a href="/w/index.php?title=Test_functions_for_optimization&amp;action=info">Page information</a></li>
+													<li id="t-wikibase"><a href="//www.wikidata.org/wiki/Q7705773" title="Link to connected data repository item [g]" accesskey="g">Wikidata item</a></li>
+						<li id="t-cite"><a href="/w/index.php?title=Special:Cite&amp;page=Test_functions_for_optimization&amp;id=619643514" title="Information on how to cite this page">Cite this page</a></li>					</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-coll-print_export' aria-labelledby='p-coll-print_export-label'>
+			<h3 id='p-coll-print_export-label'>Print/export</h3>
+
+			<div class="body">
+									<ul>
+													<li id="coll-create_a_book"><a href="/w/index.php?title=Special:Book&amp;bookcmd=book_creator&amp;referer=Test+functions+for+optimization">Create a book</a></li>
+													<li id="coll-download-as-rdf2latex"><a href="/w/index.php?title=Special:Book&amp;bookcmd=render_article&amp;arttitle=Test+functions+for+optimization&amp;oldid=619643514&amp;writer=rdf2latex">Download as PDF</a></li>
+													<li id="t-print"><a href="/w/index.php?title=Test_functions_for_optimization&amp;printable=yes" title="Printable version of this page [p]" accesskey="p">Printable version</a></li>
+											</ul>
+							</div>
+		</div>
+			<div class="portal" role="navigation" id='p-lang' aria-labelledby='p-lang-label'>
+			<h3 id='p-lang-label'>Languages</h3>
+
+			<div class="body">
+									<ul>
+													<li class="interlanguage-link interwiki-it"><a href="//it.wikipedia.org/wiki/Funzione_test_(ottimizzazione)" title="Funzione test (ottimizzazione) – Italian" lang="it" hreflang="it">Italiano</a></li>
+													<li class="uls-p-lang-dummy"><a href="#"></a></li>
+											</ul>
+				<div class='after-portlet after-portlet-lang'><span class="wb-langlinks-edit wb-langlinks-link"><a action="edit" href="//www.wikidata.org/wiki/Q7705773#sitelinks-wikipedia" text="Edit links" title="Edit interlanguage links" class="wbc-editpage">Edit links</a></span></div>			</div>
+		</div>
+				</div>
+		</div>
+		<div id="footer" role="contentinfo">
+							<ul id="footer-info">
+											<li id="footer-info-lastmod"> This page was last modified on 3 August 2014 at 07:36.<br /></li>
+											<li id="footer-info-copyright">Text is available under the <a rel="license" href="//en.wikipedia.org/wiki/Wikipedia:Text_of_Creative_Commons_Attribution-ShareAlike_3.0_Unported_License">Creative Commons Attribution-ShareAlike License</a><a rel="license" href="//creativecommons.org/licenses/by-sa/3.0/" style="display:none;"></a>;
+additional terms may apply.  By using this site, you agree to the <a href="//wikimediafoundation.org/wiki/Terms_of_Use">Terms of Use</a> and <a href="//wikimediafoundation.org/wiki/Privacy_policy">Privacy Policy</a>. Wikipedia® is a registered trademark of the <a href="//www.wikimediafoundation.org/">Wikimedia Foundation, Inc.</a>, a non-profit organization.</li>
+									</ul>
+							<ul id="footer-places">
+											<li id="footer-places-privacy"><a href="//wikimediafoundation.org/wiki/Privacy_policy" title="wikimedia:Privacy policy">Privacy policy</a></li>
+											<li id="footer-places-about"><a href="/wiki/Wikipedia:About" title="Wikipedia:About">About Wikipedia</a></li>
+											<li id="footer-places-disclaimer"><a href="/wiki/Wikipedia:General_disclaimer" title="Wikipedia:General disclaimer">Disclaimers</a></li>
+											<li id="footer-places-contact"><a href="//en.wikipedia.org/wiki/Wikipedia:Contact_us">Contact Wikipedia</a></li>
+											<li id="footer-places-developers"><a href="https://www.mediawiki.org/wiki/Special:MyLanguage/How_to_contribute">Developers</a></li>
+											<li id="footer-places-mobileview"><a href="//en.m.wikipedia.org/w/index.php?title=Test_functions_for_optimization&amp;mobileaction=toggle_view_mobile" class="noprint stopMobileRedirectToggle">Mobile view</a></li>
+									</ul>
+										<ul id="footer-icons" class="noprint">
+											<li id="footer-copyrightico">
+															<a href="//wikimediafoundation.org/"><img src="//bits.wikimedia.org/images/wikimedia-button.png" srcset="//bits.wikimedia.org/images/wikimedia-button-1.5x.png 1.5x, //bits.wikimedia.org/images/wikimedia-button-2x.png 2x" width="88" height="31" alt="Wikimedia Foundation"/></a>
+													</li>
+											<li id="footer-poweredbyico">
+															<a href="//www.mediawiki.org/"><img src="//bits.wikimedia.org/static-1.25wmf3/resources/assets/poweredby_mediawiki_88x31.png" alt="Powered by MediaWiki" width="88" height="31" /></a>
+													</li>
+									</ul>
+						<div style="clear:both"></div>
+		</div>
+		<script>/*<![CDATA[*/window.jQuery && jQuery.ready();/*]]>*/</script><script>if(window.mw){
+mw.loader.state({"ext.globalCssJs.site":"ready","ext.globalCssJs.user":"ready","site":"loading","user":"ready","user.groups":"ready"});
+}</script>
+<script>if(window.mw){
+mw.loader.load(["ext.cite","ext.math.mathjax.enabler","mediawiki.toc","mediawiki.action.view.postEdit","mediawiki.user","mediawiki.hidpi","mediawiki.page.ready","mediawiki.searchSuggest","ext.gadget.teahouse","ext.gadget.ReferenceTooltips","ext.gadget.DRN-wizard","ext.gadget.charinsert","ext.gadget.refToolbar","ext.gadget.featured-articles-links","mmv.bootstrap.autostart","ext.eventLogging.subscriber","ext.navigationTiming","schema.UniversalLanguageSelector","ext.uls.eventlogger","ext.uls.interlanguage"],null,true);
+}</script>
+<script>if(window.mw){
+document.write("\u003Cscript src=\"//bits.wikimedia.org/en.wikipedia.org/load.php?debug=false\u0026amp;lang=en\u0026amp;modules=site\u0026amp;only=scripts\u0026amp;skin=vector\u0026amp;*\"\u003E\u003C/script\u003E");
+}</script>
+<script>if(window.mw){
+mw.config.set({"wgBackendResponseTime":322,"wgHostname":"mw1089"});
+}</script>
+	</body>
+</html>
