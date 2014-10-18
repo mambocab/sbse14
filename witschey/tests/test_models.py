@@ -1,12 +1,13 @@
 from __future__ import division, print_function
 
 from unittest import TestCase
-from nose.tools import assert_equal, assert_in, assert_true
+from nose.tools import assert_equal
 
 from witschey import models
 
+
 class TestSchaffer(TestCase):
-    def setUp(self):
+    def setUp(self):  # noqa
         self.model = models.Schaffer()
 
     def test_different_dependents(self):
@@ -39,7 +40,7 @@ class TestSchaffer(TestCase):
 class TestDTLZ7(TestCase):
     def correct_names(self, m):
         z = zip((f.__name__ for f in m.ys),
-            ('f{}'.format(x) for x in range(1, len(m.ys) + 1)))
+                ('f{}'.format(x) for x in range(1, len(m.ys) + 1)))
         for act, corr in z:
             assert_equal(act, corr)
 

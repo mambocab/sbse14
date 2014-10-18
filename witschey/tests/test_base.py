@@ -3,15 +3,14 @@ import collections
 from witschey import base
 from unittest import TestCase
 
-import types
 from nose.tools import assert_equal, assert_true
 import mock
-import math
+
 
 class TestPairs(TestCase):
 
-    def test_type(self):
-        assert_true(isinstance(base.pairs([1,2]), collections.Iterable))
+    def test_iterable(self):
+        assert_true(isinstance(base.pairs([1, 2]), collections.Iterable))
 
     def test_empty(self):
         assert_equal(list(base.pairs([])), [])
@@ -44,7 +43,7 @@ class TestMemo(TestCase):
     def test_multiple(self):
         v1 = 't'
         v2 = 3
-        m = base.memo(a=v1, b= v2)
+        m = base.memo(a=v1, b=v2)
         assert_equal(m.a, v1)
         assert_equal(m.b, v2)
 
@@ -70,7 +69,7 @@ class TestPrettyInput(TestCase):
 
 class TestMemoizer(TestCase):
 
-    def setUp(self):
+    def setUp(self):  # noqa
         self.mock = mock.MagicMock()
         self.mock.method.__name__ = 'foo'
         self.memo_mock = base.memoize(self.mock.method)
@@ -83,7 +82,6 @@ class TestMemoizer(TestCase):
         # and again! call should hit the dict, not the mock
         self.memo_mock(a)
         self.mock.method.assert_called_once_with(a)
-
 
     def test_called_with_two_values(self):
         a, b = 1, 2
@@ -98,11 +96,7 @@ class TestMemoizer(TestCase):
         assert_equal(self.mock.method.mock_calls,
                      [mock.call(a), mock.call(b)])
 
-
     def test_memo_sqrt(self):
-        """This test doesn't give us much, except the assurance that we're 
-        actually using math.sqrt.
-        """
         assert_equal(base.memo_sqrt(4), 2)
         assert_equal(base.memo_sqrt(9), 3)
         assert_equal(base.memo_sqrt(4), 2)

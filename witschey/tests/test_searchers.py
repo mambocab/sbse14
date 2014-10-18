@@ -3,14 +3,14 @@ from __future__ import division
 import random
 from nose.tools import assert_equals, assert_is_instance, assert_is_none
 from nose.tools import assert_greater_equal, assert_less_equal
-from nose.tools import assert_true
 
 from witschey import searchers
 from unittest import TestCase
 from witschey import models
 
+
 class TestGeneticAlgorithm(TestCase):
-    def setUp(self):
+    def setUp(self):  # noqa
         self.model = searchers.GeneticAlgorithm(models.Schaffer)
 
     def test_crossover_lengths(self):
@@ -32,6 +32,7 @@ class TestGeneticAlgorithm(TestCase):
         for i, x in enumerate(xo):
             print(x, parent1[1], parent2[i])
             assert x == parent1[i] or x == parent2[i]
+
 
 class TestSearcherConfig(TestCase):
 
@@ -75,7 +76,7 @@ class TestSearcherConfig(TestCase):
 
 class TestMaxWalkSat(TestCase):
 
-    def setUp(self):
+    def setUp(self):  # noqa
         self.mws = searchers.MaxWalkSat(models.Schaffer)
 
     def test_init(self):
@@ -96,7 +97,6 @@ class TestMaxWalkSat(TestCase):
                 assert_less_equal(i, x)
 
     def test_doesnt_fall_over(self):
-        """this test doesn't help much, except to make sure there aren't any 
+        """this test doesn't help much, except to make sure there aren't any
         dumb type errors"""
         self.mws = searchers.MaxWalkSat(models.Schaffer, iterations=300)
-
