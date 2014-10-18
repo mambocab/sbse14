@@ -4,7 +4,7 @@ import random
 
 from witschey import base
 from witschey.base import memo
-from witschey.searchers.searcher import Searcher, compute_model_io
+from witschey.searchers.searcher import Searcher
 
 
 class DifferentialEvolution(Searcher):
@@ -14,7 +14,7 @@ class DifferentialEvolution(Searcher):
 
     def run(self, text_report=True):
         n_candiates = self.spec.n_candiates
-        self._frontier = [self.random_search_io()
+        self._frontier = [self.model.random_model_io()
                           for _ in xrange(n_candiates)]
 
         for _ in xrange(self.spec.generations):
@@ -28,7 +28,7 @@ class DifferentialEvolution(Searcher):
     def _update_frontier(self):
         bested, better = [], []
         for x in self._frontier:
-            new = compute_model_io(self.model, self._extrapolate_xs(x))
+            new = self.model(self._extrapolate_xs(x), io=True)
             if new.energy > x.energy:
                 bested.append(x)
                 better.append(new)

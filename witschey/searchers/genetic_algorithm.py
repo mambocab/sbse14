@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from witschey import base
 from witschey.base import memo
-from searcher import Searcher, SearchIO, compute_model_io
+from searcher import Searcher
 from witschey.log import NumberLog
 
 # adapted from Chris Theisen's code
@@ -65,7 +65,7 @@ class GeneticAlgorithm(Searcher):
         energy_by_generation = defaultdict(
             NumberLog if self.spec.log_eras_best_energy else base.NullObject)
 
-        population = tuple(compute_model_io(self.model, xs) for xs in init_xs)
+        population = tuple(self.model.compute_model_io(xs) for xs in init_xs)
 
         best = min(population, key=energy)
 
@@ -74,10 +74,9 @@ class GeneticAlgorithm(Searcher):
             children = []
             for parent1, parent2 in self.select_parents(population, pop_size):
                 xs = self.crossover(parent1.xs, parent2.xs, 2)
-                ys = self.model(xs)
                 if random.random() < self.spec.p_mutation:
                     self.mutate(xs)
-                child = SearchIO(xs, ys, self.model.energy(ys))
+                child = self.model(xs, io=True)
                 children.append(child)
 
             best_in_pop = min(children, key=energy)

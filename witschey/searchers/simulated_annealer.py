@@ -5,7 +5,7 @@ import math
 from collections import defaultdict
 from copy import deepcopy
 
-from searcher import Searcher, SearchIO, compute_model_io
+from searcher import Searcher
 from witschey.base import memo
 from witschey.log import NumberLog
 
@@ -51,10 +51,8 @@ class SimulatedAnnealer(Searcher):
             if text_report:
                 rv.report += s
 
-        init_xs = self.model.random_input_vector()
-        init_ys = self.model(init_xs)
-        best = SearchIO(init_xs, init_ys, self.model.energy(init_ys))
-        current = deepcopy(best)
+        current = self.model.random_model_io()
+        best = deepcopy(current)
 
         report_append('{: .2}'.format(best.energy) + ' ')
         self.lives = 4
@@ -63,13 +61,12 @@ class SimulatedAnnealer(Searcher):
             if self.lives <= 0 and self.spec.terminate_early:
                 break
 
-            neighbor_candidate_xs = self.model.random_input_vector()
             n_gen = (current.xs[i]
                      if random.random() < self.spec.p_mutation else v
-                     for i, v in enumerate(neighbor_candidate_xs))
+                     for i, v in enumerate(self.model.random_input_vector()))
             neighbor_xs = tuple(n_gen)
 
-            neighbor = compute_model_io(self.model, neighbor_xs)
+            neighbor = self.model(neighbor_xs, io=True)
 
             if neighbor.energy < best.energy:
                 best, current = neighbor, neighbor
