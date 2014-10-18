@@ -4,6 +4,10 @@ from __future__ import division, print_function
 # https://github.com/timm/sbse14/blob/master/models.py
 
 from abc import ABCMeta
+from collections import namedtuple
+
+
+ModelIO = namedtuple('ModelIO', ('xs', 'ys', 'energy'))
 
 
 class Model(object):
@@ -33,25 +37,36 @@ class Model(object):
     def random_input_vector(self):
         return tuple(x() for x in self.xs)
 
-    def __call__(self, v, norm=False):
-        energy_vector = tuple(y(v) for y in self.ys)
-        energy_total = sum(energy_vector)
+    def __call__(self, xs, io=False):
+        ys = tuple(y(xs) for y in self.ys)
+        energy = sum(ys)
 
         if self.enforce_energy_constraints:
             energy_errmsg = 'current energy {} not in range [{}, {}]'.format(
-                energy_total, self.energy_min, self.energy_max)
+                energy, self.energy_min, self.energy_max)
 
-        if self.energy_min is None or self.energy_min > energy_total:
+        if self.energy_min is None or self.energy_min > energy:
             if self.enforce_energy_constraints:
                 raise ValueError(energy_errmsg)
-            self.energy_min = energy_total
+            self.energy_min = energy
 
-        if self.energy_max is None or energy_total > self.energy_max:
+        if self.energy_max is None or energy > self.energy_max:
             if self.enforce_energy_constraints:
                 raise ValueError(energy_errmsg)
-            self.energy_max = energy_total
+            self.energy_max = energy
 
-        return energy_vector
+        if io:
+            return ModelIO(xs, ys, energy)
 
-    def energy(self, energy_vector):
-        return sum(energy_vector)
+        return ys
+
+    def energy(self, ys, norm=False):
+        rv = sum(ys)
+        return self.normalize(rv) if norm else rv
+
+    def compute_model_io(self, xs):
+        ys = self(xs)
+        return ModelIO(xs, ys, self.energy(ys))
+
+    def random_model_io(self):
+        return self.compute_model_io(self.random_input_vector())

@@ -1,12 +1,12 @@
 from __future__ import division, unicode_literals
 
-from witschey.base import memo, The
-from witschey.models import Model
-
-from collections import OrderedDict, namedtuple
+from collections import OrderedDict
 from datetime import datetime
 import abc
 from types import NoneType
+
+from witschey.base import memo, The
+from witschey.models import Model
 
 
 class Searcher(object):
@@ -40,9 +40,6 @@ class Searcher(object):
 
     def __init__(self, model, *args, **kw):
         self.model = model()
-
-    def random_search_io(self):
-        return compute_model_io(self.model, self.model.random_input_vector())
 
     def run(*args, **kwargs):
         raise NotImplementedError()
@@ -98,10 +95,3 @@ class SearcherConfig(object):
         kw_string = ', '.join('{0}={1}'.format(k, v)
                               for k, v in self.as_dict().iteritems())
         return '{0}({1})'.format(self.__class__.__name__, kw_string)
-
-SearchIO = namedtuple('SearchIO', ('xs', 'ys', 'energy'))
-
-
-def compute_model_io(model, xs):
-    ys = model(xs)
-    return SearchIO(xs, ys, model.energy(ys))
