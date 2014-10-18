@@ -84,6 +84,7 @@ def memo_sqrt(x):
 def tuple_replace(t, replace_at, value):
     return tuple(value if i == replace_at else v for i, v in enumerate(t))
 
+
 def random_index(x):
     if isinstance(x, dict):
         return random.choice(x.keys)
