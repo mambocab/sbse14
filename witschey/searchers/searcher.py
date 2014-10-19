@@ -87,7 +87,7 @@ class SearcherConfig(object):
         self._kw_dict.update(kwargs)
 
     def as_dict(self):
-        "gives back a dict with the searcher and model first"
+        "returns a OrderedDict with the searcher and model first"
         return OrderedDict(searcher=self._searcher,
                            model=self._model, **self._kw_dict)
 
