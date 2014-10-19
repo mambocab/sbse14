@@ -75,6 +75,8 @@ class NumberLog(Log):
         return basic_stats.xtile(self._cache, *args, **kw)
 
     def better(self, log2):
+        if log2 is None:
+            return ValueError
         if not self._cache or not log2._cache:
             return False
         if self.median() < log2.median():
