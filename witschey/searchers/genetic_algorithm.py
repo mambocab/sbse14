@@ -63,7 +63,7 @@ class GeneticAlgorithm(Searcher):
 
         report = base.StringBuilder() if text_report else base.NullObject()
         energy_by_generation = defaultdict(
-            NumberLog if self.spec.log_eras_best_energy else base.NullObject)
+            NumberLog if self.spec.log_energies else base.NullObject)
 
         population = tuple(self.model.compute_model_io(xs) for xs in init_xs)
 

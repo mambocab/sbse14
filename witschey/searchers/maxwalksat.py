@@ -23,15 +23,12 @@ class MaxWalkSat(Searcher):
     def run(self, text_report=True):
         rv = memo(report='')
 
-        log_objectives = self.spec.log_eras_by_objective
-        log_objectives = log_objectives or self.spec.terminate_early
+        log_objectives = self.spec.terminate_early
         self.lives = 4
 
         if log_objectives:
             rv.era_logs_by_objective = {f.__name__: defaultdict(NumberLog)
                                         for f in self.model.ys}
-        if self.spec.log_eras_best_energy:
-            rv.era_logs_best_energy = defaultdict(NumberLog)
 
         def report(s):
             if text_report:
@@ -39,7 +36,7 @@ class MaxWalkSat(Searcher):
 
         self.terminate = False
 
-        def end_era(evals, era_length, log_value):
+        def _end_era(evals, era_length, log_value):
             report('\n{: .2}'.format(log_value) + ' ')
 
             self.lives -= 1
@@ -63,8 +60,6 @@ class MaxWalkSat(Searcher):
             for f, v in dependents_outputs:
                 if log_objectives:
                     rv.era_logs_by_objective[f.__name__][era] += v
-                if self.spec.log_eras_best_energy:
-                    rv.era_logs_best_energy[era] += rv.best
 
         init = self.model.random_input_vector()
         solution = init
@@ -100,7 +95,7 @@ class MaxWalkSat(Searcher):
                     evals += 1
 
                     if evals % self.spec.era_length == 0:
-                        end_era(evals, self.spec.era_length, rv.best)
+                        _end_era(evals, self.spec.era_length, rv.best)
 
                 else:
                     local = self.model.xs[dimension]
@@ -122,7 +117,7 @@ class MaxWalkSat(Searcher):
 
                         evals += 1
                         if evals % self.spec.era_length == 0:
-                            end_era(evals, self.spec.era_length, rv.best)
+                            _end_era(evals, self.spec.era_length, rv.best)
                 if log_objectives or self.spec.log_eras_energy:
                     log_era(evals, self.spec.era_length,
                             zip(self.model.ys, self.model(solution)))
