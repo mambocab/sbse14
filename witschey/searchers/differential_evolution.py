@@ -63,11 +63,10 @@ class DifferentialEvolution(Searcher):
         '''generate a new individual based on individuals in the frontier'''
         a, b, c = self._sample_frontier_exclude(current, n=3)
         rv_list = [x for x in current.xs]
-        p_crossover = self.spec.p_crossover
 
         # randomly pick at least one x-position to change
         change_indices = [i for i in xrange(len(rv_list))
-                          if random.random() < p_crossover]
+                          if random.random() < self.spec.p_crossover]
         if not change_indices:
             change_indices = [base.random_index(rv_list)]
 
