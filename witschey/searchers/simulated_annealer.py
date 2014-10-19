@@ -2,11 +2,9 @@ from __future__ import division, print_function
 
 import random
 import math
-from collections import defaultdict
-from copy import deepcopy
 
 from searcher import Searcher
-from witschey.base import memo
+from witschey.base import memo, NullObject, StringBuilder
 from witschey.log import NumberLog
 
 
@@ -14,83 +12,60 @@ class SimulatedAnnealer(Searcher):
     def __init__(self, model, *args, **kw):
         super(SimulatedAnnealer, self).__init__(model=model, *args, **kw)
 
+    def _get_neighbor(self, model_io):
+        n_gen = (model_io.xs[i]
+                 if random.random() < self.spec.p_mutation else v
+                 for i, v in enumerate(self.model.random_input_vector()))
+        return self.model(tuple(n_gen), io=True)
+
     def run(self, text_report=True):
-        rv = memo(report='')
-        log_eras_by_objective =\
-            self.spec.log_eras_by_objective or self.spec.terminate_early
-        if log_eras_by_objective:
-            rv.era_logs_by_objective = {
-                f.__name__: defaultdict(NumberLog)
-                for f in self.model.ys
-            }
-        if self.spec.log_eras_best_energy:
-            rv.era_logs_best_energy = defaultdict(NumberLog)
-
-        def report_append(s):
-            if text_report:
-                rv.report += s
-
+        report = StringBuilder() if text_report else NullObject()
         current = self.model.random_model_io()
-        best = deepcopy(current)
-
-        report_append('{: .2}'.format(best.energy) + ' ')
+        best = current  # assumes current is immutable
         self.lives = 4
+        current_era_energies = best_era = None
 
         for k in range(self.spec.iterations):
             if self.lives <= 0 and self.spec.terminate_early:
                 break
+            prev_era_energies = current_era_energies
+            current_era_energies = NumberLog()
 
-            n_gen = (current.xs[i]
-                     if random.random() < self.spec.p_mutation else v
-                     for i, v in enumerate(self.model.random_input_vector()))
-            neighbor_xs = tuple(n_gen)
-
-            neighbor = self.model(neighbor_xs, io=True)
+            neighbor = self._get_neighbor(current)
+            current_era_energies += neighbor.energy
 
             if neighbor.energy < best.energy:
                 best, current = neighbor, neighbor
-                report_append('!')
+                report += '!'
 
             if neighbor.energy < current.energy:
                 current = neighbor
-                report_append('+')
+                report += '+'
             else:
-                good_idea = p(
-                    self.model.normalize(current.energy),
-                    self.model.normalize(neighbor.energy),
-                    k / self.spec.iterations, self.spec.cooling_factor)
-                # if random.random() < good_idea:
-                if good_idea < random.random():
+                cnorm = self.model.normalize(current.energy)
+                nnorm = self.model.normalize(neighbor.energy)
+                temp = k / self.spec.iterations
+                if self._good_idea(cnorm, nnorm, temp) < random.random():
                     current = neighbor
-                    report_append('?')
+                    report += '?'
 
-            report_append('.')
-
-            era = k // self.spec.era_length
-            for f, v in zip(self.model.ys, best.ys):
-                if log_eras_by_objective:
-                    rv.era_logs_by_objective[f.__name__][era] += v
-                if self.spec.log_eras_best_energy:
-                    rv.era_logs_best_energy[era] += best.energy
+            report += '.'
 
             if k % self.spec.era_length == 0 and k != 0:
-                report_append('\n' + '{: .2}'.format(best.energy) + ' ')
-
+                report += ('\n', '{: .2}'.format(best.energy), ' ')
+                if not best_era:
+                    best_era = current_era_energies
                 self.lives -= 1
 
-                if not self.spec.terminate_early:
-                    break
-                for logs in rv.era_logs_by_objective.values():
-                    if era not in logs:
-                        break
-                    if len(logs.keys()) < 2:
-                        break
+                try:
+                    improved = current_era_energies.better(prev_era_energies)
+                except ValueError:
+                    improved = False
+                if improved:
+                    best_era = current_era_energies
+                    self.lives += 1
 
-                    prev_log = logs[logs.keys().index(era) - 1]
-                    if logs[era].better(prev_log):
-                        self.lives += 1
-
-        rv.best = best.energy
+        rv = memo(best=best.energy, best_era=current_era_energies)
         return rv
 
     def _good_idea(self, old, new, temp):
