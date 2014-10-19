@@ -26,6 +26,8 @@ class DifferentialEvolution(Searcher):
         return rv
 
     def _update_frontier(self):
+        '''for each member of the frontier, generate a new individual, have
+        them compete, then keep the best of the two.'''
         bested, better = [], []
         for x in self._frontier:
             new = self.model(self._extrapolate_xs(x), io=True)
@@ -58,6 +60,7 @@ class DifferentialEvolution(Searcher):
         return samp
 
     def _extrapolate_xs(self, current):
+        '''generate a new individual based on individuals in the frontier'''
         a, b, c = self._sample_frontier_exclude(current, n=3)
         rv_list = [x for x in current.xs]
         p_crossover = self.spec.p_crossover
