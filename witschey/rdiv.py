@@ -494,7 +494,7 @@ def rdivDemo(data):
   lo, hi = all[0], all[-1]
   last = None
   rows.append(['rank', 'name', 'med', 'iqr', '',
-    '10%', '30%', '50%', '70%', '90%'])
+              '10%', '30%', '50%', '70%', '90%'])
   for _,__,x in sorted(ranks):
     q1,q2,q3 = x.quartiles()
     xtile_out = xtile(x.all,lo=lo,hi=hi,width=30,show="%5.2f", as_list=True)
