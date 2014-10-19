@@ -129,21 +129,16 @@ class NullObject(object):
     def __init__(self, *args, **kw):
         return None
 
-    def __getattribute__(self, *name, **kw):
+    def _return_self(self, *name, **kw):
         return self
 
-    def __setattr__(self, *args, **kw):
-        return self
-
-    def __iadd__(self, *args, **kw):
-        return self
-
-    def __call__(self, *args, **kw):
-        return self
+    __getattribute__ = _return_self
+    __setattr__ = _return_self
+    __iadd__ = _return_self
+    __call__ = _return_self
 
     def __bool__(self, *args, **kw):
         return False
-
     __nonzero__ = __bool__
 
 The = memo(
