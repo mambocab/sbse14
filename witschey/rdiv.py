@@ -504,6 +504,7 @@ def rdivDemo(data):
       map(lambda x: str(x) + ',', [x.name, q2]) + [q3 - q1] + row_xtile)
     last = x.rank
   table = texttable.Texttable(200)
+  table.set_cols_dtype(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't'])
   table.set_cols_align(['r', 'l', 'r', 'r', 'c', 'r', 'r', 'r', 'r', 'r'])
   table.set_deco(texttable.Texttable.HEADER)
   table.add_rows(rows)
