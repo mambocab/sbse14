@@ -10,27 +10,6 @@ from witschey.base import memo
 from witschey.log import NumberLog
 
 
-def p(old, new, temp, cooling_factor):
-    """
-    sets the threshold we compare to to decide whether to jump
-
-    returns e^-((new-old)/temp)
-    """
-    numerator = new - old
-
-    if not 0 <= numerator <= 1:
-        numerator = old - new
-    try:
-        exponent = numerator / temp
-    except ZeroDivisionError:
-        return 0
-    rv = math.exp(-exponent)
-    if rv > 1:
-        raise ValueError('p returning greater than one',
-                         rv, old, new, temp)
-    return rv * cooling_factor
-
-
 class SimulatedAnnealer(Searcher):
     def __init__(self, model, *args, **kw):
         super(SimulatedAnnealer, self).__init__(model=model, *args, **kw)
@@ -113,3 +92,23 @@ class SimulatedAnnealer(Searcher):
 
         rv.best = best.energy
         return rv
+
+    def _good_idea(self, old, new, temp):
+        """
+        sets the threshold we compare to to decide whether to jump
+
+        returns e^-((new-old)/temp)
+        """
+        numerator = new - old
+
+        if not 0 <= numerator <= 1:
+            numerator = old - new
+        try:
+            exponent = numerator / temp
+        except ZeroDivisionError:
+            return 0
+        rv = math.exp(-exponent)
+        if rv > 1:
+            raise ValueError('p returning greater than one',
+                             rv, old, new, temp)
+        return rv * self.spec.cooling_factor
