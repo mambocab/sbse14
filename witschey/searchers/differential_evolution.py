@@ -29,7 +29,7 @@ class DifferentialEvolution(Searcher):
         bested, better = [], []
         for x in self._frontier:
             new = self.model(self._extrapolate_xs(x), io=True)
-            if new.energy > x.energy:
+            if new.energy < x.energy:
                 bested.append(x)
                 better.append(new)
 
