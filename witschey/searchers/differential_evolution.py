@@ -38,15 +38,24 @@ class DifferentialEvolution(Searcher):
         self._frontier = filter(keep, self._frontier) + list(better)
 
     def _sample_frontier_exclude(self, ex, n=3):
-        flen = len(self._frontier)
-        if flen < n:
-            e = 'cannot sample {} values from frontier of length {}'.format(
-                n, flen)
-            raise ValueError(e)
+        '''Samples n (default 3) items from the current frontier.
+        Returns a shallow copy of the frontier if n is as large or larger
+        than the frontier.
+        '''
+        try:
+            # pigeonhole principle: sample n+1 things; at least n aren't ex
+            samp = random.sample(self._frontier, n+1)
+        except ValueError:
+            # if n is too big, just return the frontier
+            return self._frontier[:]
 
-        sample = self._frontier[:]
-        sample.remove(ex)
-        return random.sample(sample, n)
+        # remove ex if it's there; otherwise remove a random thing
+        try:
+            samp.remove(ex)
+        except ValueError:
+            samp.remove(random.choice(samp))
+
+        return samp
 
     def _extrapolate_xs(self, current):
         a, b, c = self._sample_frontier_exclude(current, n=3)
