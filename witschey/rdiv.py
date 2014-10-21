@@ -479,7 +479,7 @@ def leftRight(parts,epsilon=0.01):
 Driver for the demos:
 
 """
-def rdivDemo(data):
+def rdiv_report(data):
   rows = []
   def z(x):
     return int(100 * (x - lo) / (hi - lo + 0.00001))

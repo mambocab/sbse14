@@ -6,7 +6,7 @@ from collections import namedtuple, defaultdict
 from witschey.models import Model, Schwefel
 from witschey.searchers import Searcher
 
-from witschey.rdiv import rdivDemo
+from witschey.rdiv import rdiv_report
 
 import timeit
 
