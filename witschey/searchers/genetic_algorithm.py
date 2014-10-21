@@ -46,9 +46,8 @@ class GeneticAlgorithm(Searcher):
         """generates all possible parent pairs from population, clipped to
         output_size
         """
-        fore = itertools.combinations(population, 2)
-        back = itertools.combinations(reversed(population), 2)
-        all_parents = set(fore).union(set(back))
+        all_parents = filter(lambda t: t[0] is not t[1],
+                             itertools.product(population, population))
         if len(all_parents) < output_size:
             return all_parents
         return random.sample(all_parents, output_size)
