@@ -15,6 +15,7 @@ import subprocess
 @click.option('--chars-per-line', help='characters per line')
 @click.argument('files', nargs=-1, type=click.Path(exists=True))
 def build_pdf(files, hw, o, p, landscape, to_ps, chars_per_line):
+    click.echo(chars_per_line)
     if not files:
         click.echo('please give file arguments')
         click.exit()
@@ -29,12 +30,12 @@ def build_pdf(files, hw, o, p, landscape, to_ps, chars_per_line):
         '-Av', # allow multiple files per sheet
         '--highlight-level=none', # fixes silly treatment of comments
         # '-q', # you can make the command quiet if you want
-        '-o', ps_name, # set output file
     ]
     if chars_per_line:
         a2ps_cmd.append('-l {}'.format(chars_per_line)) # set characters per line
     if landscape:
         a2ps_cmd.append('--landscape') # set to landscape
+    a2ps_cmd.extend(['-o', ps_name]) # set output file
     a2ps_cmd.extend(files)
     print('about to execute', a2ps_cmd)
     p1 = subprocess.call(a2ps_cmd)
