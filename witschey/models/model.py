@@ -70,3 +70,7 @@ class Model(object):
 
     def random_model_io(self):
         return self.compute_model_io(self.random_input_vector())
+
+
+class ModelInputException(Exception):
+    pass
