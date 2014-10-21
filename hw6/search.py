@@ -36,4 +36,4 @@ def run(n=30, text_report=True):
         print(rdiv_report(rdiv_in), end='\n\n')
 
 if __name__ == '__main__':
-    run(n=2, text_report=True)
+    run(n=20, text_report=True)
