@@ -1,9 +1,9 @@
 from __future__ import division, unicode_literals
 
-from collections import OrderedDict
 from datetime import datetime
 import abc
 from types import NoneType
+from collections import namedtuple, OrderedDict
 
 from witschey.base import memo, The
 from witschey.models import Model
