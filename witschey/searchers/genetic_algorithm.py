@@ -2,7 +2,6 @@ from __future__ import division, print_function
 
 import itertools
 import random
-from collections import defaultdict
 
 from witschey import base
 from searcher import Searcher, SearchReport
@@ -59,17 +58,20 @@ class GeneticAlgorithm(Searcher):
         pop_size = self.spec.population_size
         init_xs = tuple(rand_vect() for _ in xrange(pop_size))
         energy = lambda x: x.energy
+        best_era = None
 
         report = base.StringBuilder() if text_report else base.NullObject()
-        energy_by_generation = defaultdict(
-            NumberLog if self.spec.log_energies else base.NullObject)
 
         population = tuple(self.model.compute_model_io(xs) for xs in init_xs)
 
         best = min(population, key=energy)
 
-        evals = 0
-        for gen in xrange(self.spec.iterations or 1000):
+        evals, lives = 0, 4
+
+        for gen in xrange(self.spec.iterations):
+            if evals > self.spec.iterations or lives <= 0:
+                break
+
             children = []
             for parent1, parent2 in self.select_parents(population, pop_size):
                 xs = self.crossover(parent1.xs, parent2.xs, 2)
@@ -88,16 +90,25 @@ class GeneticAlgorithm(Searcher):
                        for x in children)
             report += '\n'
 
-            energy_by_generation[gen] += best.energy
-
             population = children
             evals += len(population)
 
-            if evals > self.spec.iterations:
-                break
-            # TODO: some "is significantly better" termination logic here
+            energies = NumberLog(inits=(c.energy for c in children))
+            try:
+                improved = energies.better(prev_energies)
+            except NameError:
+                improved = False
+            prev_energies = energies  # noqa: flake8 doesn't catch use above
+
+            if improved:
+                best_era = energies
+            else:
+                lives -= 1
+
+        if best_era is None:
+            best_era = energies
 
         return SearchReport(best=best.energy,
-                            best_era=energy_by_generation,
+                            best_era=energies,
                             evaluations=evals,
                             searcher=self.__class__)
