@@ -314,11 +314,10 @@ def rdiv(data,  # a list of class Nums
   return data
 
 def maybeIgnore((cut,left,right), same,parts):
-  if cut:
-    if same(sum(parts[:cut],Num('upto')),
-            sum(parts[cut:],Num('above'))):    
-      cut = left = right = None
-  return cut,left,right
+    if cut:
+        if same(sum(parts[:cut],Num('upto')), sum(parts[cut:],Num('above'))):
+            cut = left = right = None
+    return cut,left,right
 
 def minMu(parts,all,big,epsilon):
   """Find a cut in the parts that maximizes
