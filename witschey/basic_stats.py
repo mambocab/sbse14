@@ -69,4 +69,9 @@ def xtile(xs, lo=0, hi=0.001,
     out[int(width / 2)] = bar
     out[place(pos(0.5))] = star
 
+    if as_list:
+        rv = ['(' + ''.join(out) + ")"]
+        rv.extend(show % x for x in what)
+        return rv
+
     return ''.join(out) + "," + ','.join([show.format(x) for x in what])
