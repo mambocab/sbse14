@@ -11,13 +11,13 @@ class IndependentVariable(object):
         self.hi = hi
         self.type = type
 
-    def __call__(self):
         if self.type == float:
-            f = random.uniform
+            self._get = random.uniform
         elif self.type == int:
-            f = random.randint
+            self._get = random.randint
 
-        return f(self.lo, self.hi)
+    def __call__(self):
+        return self._get(self.lo, self.hi)
 
     def clip(self, x):
         return max(self.lo, min(self.hi, x))
