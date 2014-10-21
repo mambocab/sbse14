@@ -363,32 +363,32 @@ Driver for the demos:
 
 """
 def rdiv_report(data):
-  rows = []
-  def z(x):
-    return int(100 * (x - lo) / (hi - lo + 0.00001))
-  data = map(lambda lst:Num(lst[0],lst[1:]),
-             data)
-  ranks=[]
-  for x in scottknott(data,useA12=True):
-    ranks += [(x.rank,x.median(),x)]
-  all=[]
-  for _,__,x in sorted(ranks): all += x.all
-  all = sorted(all)
-  lo, hi = all[0], all[-1]
-  last = None
-  rows.append(['rank', 'name', 'med', 'iqr', '',
-              '10%', '30%', '50%', '70%', '90%'])
-  for _,__,x in sorted(ranks):
-    q1,q2,q3 = (round(q, 2) for q in x.quartiles())
-    xtile_out = xtile(x.all,lo=lo,hi=hi,width=30,show="%5.2f", as_list=True)
-    row_xtile = [xtile_out[0]] + map(lambda x: x + ',', xtile_out[1:-1]) +\
-      [xtile_out[-1]]
-    rows.append([x.rank+1] +
-      map(lambda y: str(y) + ',', [x.name, q2]) + [q3 - q1] + row_xtile)
-    last = x.rank
-  table = texttable.Texttable(200)
-  table.set_cols_dtype(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't'])
-  table.set_cols_align(['r', 'l', 'r', 'r', 'c', 'r', 'r', 'r', 'r', 'r'])
-  table.set_deco(texttable.Texttable.HEADER)
-  table.add_rows(rows)
-  return table.draw()
+    rows = []
+    def z(x):
+        return int(100 * (x - lo) / (hi - lo + 0.00001))
+    data = map(lambda lst:Num(lst[0],lst[1:]),
+               data)
+    ranks=[]
+    for x in scottknott(data,useA12=True):
+        ranks += [(x.rank,x.median(),x)]
+    all=[]
+    for _,__,x in sorted(ranks): all += x.all
+    all = sorted(all)
+    lo, hi = all[0], all[-1]
+    last = None
+    rows.append(['rank', 'name', 'med', 'iqr', '',
+                '10%', '30%', '50%', '70%', '90%'])
+    for _,__,x in sorted(ranks):
+        q1,q2,q3 = (round(q, 2) for q in x.quartiles())
+        xtile_out = xtile(x.all,lo=lo,hi=hi,width=30,show="%5.2f", as_list=True)
+        row_xtile = [xtile_out[0]] + map(lambda x: x + ',', xtile_out[1:-1]) +\
+                    [xtile_out[-1]]
+        rows.append([x.rank+1] +
+          map(lambda y: str(y) + ',', [x.name, q2]) + [q3 - q1] + row_xtile)
+        last = x.rank
+    table = texttable.Texttable(200)
+    table.set_cols_dtype(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't'])
+    table.set_cols_align(['r', 'l', 'r', 'r', 'c', 'r', 'r', 'r', 'r', 'r'])
+    table.set_deco(texttable.Texttable.HEADER)
+    table.add_rows(rows)
+    return table.draw()
