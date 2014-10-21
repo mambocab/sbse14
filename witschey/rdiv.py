@@ -166,7 +166,7 @@ def bootstrap(y0,z0,conf=0.01,b=1000):
     for i in range(b):
         if testStatistic(total(sampleWithReplacement(yhat)),
                          total(sampleWithReplacement(zhat))) > tobs:
-        bigger += 1
+            bigger += 1
     return bigger / b < conf
 
 def different(l1,l2):
