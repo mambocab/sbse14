@@ -39,11 +39,9 @@ class Num:
   def __add__(i,j):
     return Num(i.name + j.name,i.all + j.all)
   def quartiles(i):
-    def p(x) : return int(g(xs[x]))
-    i.median()
-    xs = i.all
-    n  = int(len(xs)*0.25)
-    return p(n) , p(2*n) , p(3*n)
+    i.all = sorted(i.all)
+    n  = int(len(i.all)*0.25)
+    return i.all[n] , i.all[n * 2], i.all[n * 3]
   def median(i):
     if not i._median:
       i.all = sorted(i.all)
@@ -397,7 +395,7 @@ def rdiv_report(data):
   rows.append(['rank', 'name', 'med', 'iqr', '',
               '10%', '30%', '50%', '70%', '90%'])
   for _,__,x in sorted(ranks):
-    q1,q2,q3 = x.quartiles()
+    q1,q2,q3 = (round(q, 2) for q in x.quartiles())
     xtile_out = xtile(x.all,lo=lo,hi=hi,width=30,show="%5.2f", as_list=True)
     row_xtile = [xtile_out[0]] + map(lambda x: x + ',', xtile_out[1:-1]) +\
       [xtile_out[-1]]
