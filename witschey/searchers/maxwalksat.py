@@ -15,6 +15,8 @@ class MaxWalkSat(Searcher):
         super(MaxWalkSat, self).__init__(model=model, *args, **kw)
 
     def local_search_inputs(self, bottom, top, n=10):
+        '''divide the space from bottom to top into n partitions, then
+        randomly sample within each partition'''
         chunk_length = (top - bottom) / n
 
         for a in np.arange(bottom, top, chunk_length):
