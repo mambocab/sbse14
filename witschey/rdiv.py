@@ -275,15 +275,13 @@ are called on only a logarithmic number of times. So...
 For examples on using this code, see _rdivDemo_ (below).
 
 """
-def scottknott(data,cohen=0.3,small=3, useA12=False,epsilon=0.01):
+def scottknott(data,cohen=0.3,small=3,epsilon=0.01):
     """Recursively split data, maximizing delta of
     the expected value of the mean before and 
     after the splits. 
     Reject splits with under 3 items"""
     all  = reduce(lambda x,y:x+y,data)
-    same = lambda l,r: abs(l.median() - r.median()) <= all.s()*cohen
-    if useA12: 
-        same = lambda l, r:   not different(l.all,r.all) 
+    same = lambda l, r:   not different(l.all,r.all) 
     big  = lambda    n: n > small    
     return rdiv(data,all,minMu,big,same,epsilon)
 
@@ -369,7 +367,7 @@ def rdiv_report(data):
     data = map(lambda lst:Num(lst[0],lst[1:]),
                data)
     ranks=[]
-    for x in scottknott(data,useA12=True):
+    for x in scottknott(data):
         ranks += [(x.rank,x.median(),x)]
     all=[]
     for _,__,x in sorted(ranks): all += x.all
