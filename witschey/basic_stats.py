@@ -14,7 +14,6 @@ def median(xs, is_sorted=False):
 
 
 def mean(xs):
-    print(xs)
     return sum(xs) / len(xs)
 
 
