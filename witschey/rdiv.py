@@ -426,7 +426,7 @@ def rdiv_report(data):
     row_xtile = [xtile_out[0]] + map(lambda x: x + ',', xtile_out[1:-1]) +\
       [xtile_out[-1]]
     rows.append([x.rank+1] +
-      map(lambda x: str(x) + ',', [x.name, q2]) + [q3 - q1] + row_xtile)
+      map(lambda y: str(y) + ',', [x.name, q2]) + [q3 - q1] + row_xtile)
     last = x.rank
   table = texttable.Texttable(200)
   table.set_cols_dtype(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't'])
