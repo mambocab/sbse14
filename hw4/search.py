@@ -34,15 +34,11 @@ def run(r=20, seed=10, text_report=False, searcher_args={},
 
             for _ in range(r):
                 start_time = time.clock()
-                s = searcher(model(), **searcher_args)
+                s = searcher(model, **searcher_args)
                 out = s.run(text_report=text_report)
-                out.spec = s.spec
                 outs.append(out)
                 times += time.clock() - start_time
                 n += out.best
-            if text_report:
-                print(s.spec.to_str(sep=': '))
-                print(out.report, end='\n\n')
 
             if hasattr(out, 'era_logs') and text_report:
                 for fname, logs in sorted(out.era_logs.iteritems()):
@@ -60,7 +56,7 @@ def run(r=20, seed=10, text_report=False, searcher_args={},
 
             if text_report:
                 print('Best: {: .4f}'.format(n.mean()))
-                print('total time: {:.3f}s'.format(times.total()),
+                print('total time: {:.3f}s'.format(sum(times.contents())),
                     'mean time: {:.3f}s'.format(times.mean()), sep='\t')
 
                 print(n.xtile(width=30), sep='\n')
@@ -69,12 +65,12 @@ def run(r=20, seed=10, text_report=False, searcher_args={},
     return outs
 
 def aggregate_report(outs):
-    logs_by_search = {}
+    logs_by_search = defaultdict(list)
     count = 0
     for o in outs:
-        be = o.era_logs_best_energy
-        i_final = max(o.era_logs_best_energy.keys())
-        logs_by_search[o.spec.searcher + str(count)] = be[i_final].contents()
+        assert o.best_era
+        be = o.best_era
+        logs_by_search[o.spec.searcher].extend(be.contents())
         count += 1
 
     def shorten_name(s):
@@ -106,6 +102,9 @@ def run6(r=20, seed=10, text_report=False):
             (SimulatedAnnealer, {'p_mutation': 1/2}),
             (SimulatedAnnealer, {'p_mutation': 1/3}),
             (SimulatedAnnealer, {'p_mutation': 1/20}),
+            (SimulatedAnnealer, {'p_mutation': 1/3, 'cooling_factor': .2}),
+            (SimulatedAnnealer, {'p_mutation': 1/3, 'cooling_factor': .4}),
+            (SimulatedAnnealer, {'p_mutation': 1/3, 'cooling_factor': .6}),
             (MaxWalkSat, {'p_mutation': 1/2}),
             (MaxWalkSat, {'p_mutation': 1/3}),
             (MaxWalkSat, {'p_mutation': 1/20})):
@@ -114,21 +113,15 @@ def run6(r=20, seed=10, text_report=False):
             n = NumberLog(max_size=None)
             times = NumberLog(max_size=None)
 
-            if text_report: print(searcher.__name__)
-
             for _ in range(r):
                 start_time = time.clock()
-                s = searcher(model(), **config)
-                out = s.run(text_report=text_report)
-                out.spec = s.spec
+                s = searcher(model, **config)
+                out = s.run()
                 outs.append(out)
                 times += time.clock() - start_time
                 n += out.best
-            if text_report:
-                print(s.spec.to_str(sep=': '))
-                print(out.report, end='\n\n')
 
-            if hasattr(out, 'era_logs') and text_report:
+            if hasattr(out, 'era_logs'):
                 for fname, logs in sorted(out.era_logs.iteritems()):
                     if not logs: break
                     print('<', fname)
