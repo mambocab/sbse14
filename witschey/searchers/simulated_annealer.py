@@ -3,8 +3,8 @@ from __future__ import division, print_function
 import random
 import math
 
-from searcher import Searcher
-from witschey.base import memo, NullObject, StringBuilder
+from searcher import Searcher, SearchReport
+from witschey.base import NullObject, StringBuilder
 from witschey.log import NumberLog
 
 
@@ -25,9 +25,11 @@ class SimulatedAnnealer(Searcher):
         self.lives = 4
         current_era_energies = NumberLog(max_size=None)
         best_era = None
+        evals = None
 
         for k in range(self.spec.iterations):
             if self.lives <= 0 and self.spec.terminate_early:
+                evals = k
                 break
             prev_era_energies = current_era_energies
 
@@ -66,8 +68,11 @@ class SimulatedAnnealer(Searcher):
                     self.lives -= 1
                 current_era_energies = NumberLog()
 
-        rv = memo(report=report.as_str(), best=best.energy,
-                  best_era=best_era)
+        if evals is None:
+            evals = self.spec.iterations
+        rv = SearchReport(best=best.energy, evaluations=evals,
+                          best_era=best_era, spec=self.spec,
+                          searcher=self.__class__)
         return rv
 
     def _good_idea(self, old, new, temp):
