@@ -2,6 +2,7 @@ from __future__ import print_function, division
 
 import math
 import random
+import functools
 
 from model import Model
 from independent_variable import IndependentVariable as IV  # noqa
@@ -56,3 +57,9 @@ class Schwefel(Model):
 
         super(Schwefel, self).__init__(
             independents=independents, dependents=(f12,))
+
+    @classmethod
+    def initalizer_with(cls, d):
+        rv = functools.partial(cls, d)
+        rv.__name__ = ''.join(('Schwefel', '(', str(d), ')'))
+        return rv
