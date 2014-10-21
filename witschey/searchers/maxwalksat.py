@@ -75,8 +75,13 @@ class MaxWalkSat(Searcher):
                 # if doing a local search, choose a dimension
                 dimension = base.random_index(self._current.xs)
                 search_iv = self.model.xs[dimension]
+                # make sure local search ends at era end
+                max_search = self.spec.era_length - (self._evals
+                                                     % self.spec.era_length)
+                n = min(10, max_search)
                 # then try points all along the dimension
-                for j in self._local_search_xs(search_iv.lo, search_iv.hi):
+                lo, hi = search_iv.lo, search_iv.hi
+                for j in self._local_search_xs(lo, hi, n):
                     self._update('|', dimension=dimension, value=j)
 
             # end-of-era bookkeeping
