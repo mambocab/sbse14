@@ -2,10 +2,10 @@ from __future__ import division
 
 import random
 import numpy as np
-from collections import defaultdict
 
-from searcher import Searcher
-from witschey.base import memo, tuple_replace
+from searcher import Searcher, SearchReport
+from witschey import base
+from witschey.base import tuple_replace, StringBuilder, NullObject
 from witschey.log import NumberLog
 
 
@@ -14,7 +14,7 @@ class MaxWalkSat(Searcher):
     def __init__(self, model, *args, **kw):
         super(MaxWalkSat, self).__init__(model=model, *args, **kw)
 
-    def local_search_inputs(self, bottom, top, n=10):
+    def _local_search_xs(self, bottom, top, n=10):
         '''divide the space from bottom to top into n partitions, then
         randomly sample within each partition'''
         chunk_length = (top - bottom) / n
@@ -22,107 +22,86 @@ class MaxWalkSat(Searcher):
         for a in np.arange(bottom, top, chunk_length):
             yield random.uniform(a, a + chunk_length)
 
+    def _update(self, improvement_char, dimension=None, value=None):
+        '''calculate the next value from the model and update state as
+        necessary'''
+        # check for invalid input
+        if value is not None and dimension is None:
+            err = 'cannot call _update with specified value but no dimension'
+            raise ValueError(err)
+
+        if dimension is None:
+            dimension = base.random_index(self._current.xs)
+        if value is None:
+            # get random value if no value input
+            value = self.model.xs[dimension]()
+
+        # generate and evaluate input vector
+        new_xs = tuple_replace(self._current.xs, dimension, value)
+        self._current = self.model(new_xs, io=True)
+        self._evals += 1
+
+        # compare to previous best and update as necessary
+        if self._current.energy < self._best.energy:
+            self._best = self._current
+            self._report += improvement_char
+        else:
+            self._report += '.'
+
     def run(self, text_report=True):
-        rv = memo(report='')
+        '''run MaxWalkSat on self.model'''
 
-        log_objectives = self.spec.terminate_early
-        self.lives = 4
+        # current ModelIO to evaluate and mutate
+        self._current = self.model.random_model_io()
+        self._best = self._current
+        # initialize and update log variables to track values by era
+        self._current_era = NumberLog()
+        self._current_era += self._current.energy
+        best_era = None
+        # bookkeeping variables
+        self._evals = 0
+        lives = 4
+        self._report = StringBuilder() if text_report else NullObject()
+        terminate = False
 
-        if log_objectives:
-            rv.era_logs_by_objective = {f.__name__: defaultdict(NumberLog)
-                                        for f in self.model.ys}
+        while self._evals < self.spec.iterations and not terminate:
+            # get the generator for a random independent variable
 
-        def report(s):
-            if text_report:
-                rv.report += s
+            if self.spec.p_mutation > random.random():
+                # if not searching a dimension, mutate randomly
+                self._update('+')
+            else:
+                # if doing a local search, choose a dimension
+                dimension = base.random_index(self._current.xs)
+                search_iv = self.model.xs[dimension]
+                # then try points all along the dimension
+                for j in self._local_search_xs(search_iv.lo, search_iv.hi):
+                    self._update('|', dimension=dimension, value=j)
 
-        self.terminate = False
+            # end-of-era bookkeeping
+            if self._evals % self.spec.era_length == 0:
+                self._report += ('\n{: .2}'.format(self._best.energy), ' ')
 
-        def _end_era(evals, era_length, log_value):
-            report('\n{: .2}'.format(log_value) + ' ')
+                # _prev_era won't exist in era 0, so account for that case
+                try:
+                    improved = self._current_era.better(self._prev_era)
+                except AttributeError:
+                    improved = False
+                self._prev_era = self._current_era
 
-            self.lives -= 1
-            eras = evals // era_length
-
-            for logs in rv.era_logs_by_objective.values():
-                if eras not in logs:
-                    break
-                if len(logs.keys()) < 2:
-                    break
-
-                prev_log = logs[logs.keys().index(eras) - 1]
-                if logs[eras].better(prev_log):
-                    self.lives += 1
-
-            if self.lives <= 0:
-                self.terminate = True
-
-        def log_era(evals, era_length, dependents_outputs):
-            era = evals // era_length
-            for f, v in dependents_outputs:
-                if log_objectives:
-                    rv.era_logs_by_objective[f.__name__][era] += v
-
-        init = self.model.random_input_vector()
-        solution = init
-        state = solution
-        current_energy = self.model.energy(self.model(state))
-        rv.best = current_energy
-        evals = 0
-
-        report('{: .2}'.format(rv.best) + ' ')
-
-        while evals < self.spec.iterations:
-            if self.terminate:
-                break
-
-            for j in range(20):
-                if evals > self.spec.iterations or self.terminate:
-                    break
-
-                dimension = random.randint(0, len(state) - 1)
-                if self.spec.p_mutation > random.random():
-                    state = tuple_replace(state, dimension,
-                                          self.model.xs[dimension]())
-
-                    current_energy = self.model.energy(self.model(state))
-
-                    if current_energy < rv.best:
-                        solution = state
-                        rv.best = current_energy
-                        report('+')
-                    else:
-                        report('.')
-
-                    evals += 1
-
-                    if evals % self.spec.era_length == 0:
-                        _end_era(evals, self.spec.era_length, rv.best)
-
+                # track best_era
+                if improved:
+                    best_era = self._current_era
                 else:
-                    local = self.model.xs[dimension]
-                    for j in self.local_search_inputs(local.lo, local.hi):
-                        if self.terminate:
-                            break
+                    lives -= 1
 
-                        state = tuple_replace(state, dimension,
-                                              self.model.xs[dimension]())
+                if lives <= 0:
+                    terminate = True
 
-                        current_energy = self.model(state)
+        if best_era is None:
+            self._best_era = self._current_era
 
-                        if current_energy < rv.best:
-                            solution = state
-                            rv.best = current_energy
-                            report('|')
-                        else:
-                            report('.')
-
-                        evals += 1
-                        if evals % self.spec.era_length == 0:
-                            _end_era(evals, self.spec.era_length, rv.best)
-                if log_objectives or self.spec.log_eras_energy:
-                    log_era(evals, self.spec.era_length,
-                            zip(self.model.ys, self.model(solution)))
-
-        rv.evaluations = evals
-        return rv
+        return SearchReport(best=self._best.energy,
+                            best_era=self._best_era,
+                            evaluations=self._evals,
+                            searcher=self.__class__)
