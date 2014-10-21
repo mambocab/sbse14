@@ -86,34 +86,7 @@ def a12(lst1,lst2):
   t2   = base.memo(l=lst2,j=0,eq=0,gt=0,n=n2)
   gt,eq= loop(t1, t1, t2)
   return gt/(n1*n2) + eq/2/(n1*n2)
-
-def _a12():
-  def f1(): return a12slow(l1,l2)
-  def f2(): return a12(l1,l2)
-  for n in [100,200,400,800,1600,3200,6400]:
-    l1 = [random.random() for _ in xrange(n)]
-    l2 = [random.random() for _ in xrange(n)]
-    t1 = msecs(f1)
-    t2 = msecs(f2)
-    print n, g(f1()),g(f2()),int((t1/t2))
-
-
-"""Output:
-
-````
-n   a12(fast)       a12(slow)       tfast / tslow
---- --------------- -------------- --------------
-100  0.53           0.53               4
-200  0.48           0.48               6
-400  0.49           0.49              28
-800  0.5            0.5               26
-1600 0.51           0.51              72
-3200 0.49           0.49             109
-6400 0.5            0.5              244
-````
-
-
-## Non-Parametric Hypothesis Testing
+"""## Non-Parametric Hypothesis Testing
 
 The following _bootstrap_ method was introduced in
 1979 by Bradley Efron at Stanford University. It
@@ -195,55 +168,7 @@ def bootstrap(y0,z0,conf=0.01,b=1000):
                      total(sampleWithReplacement(zhat))) > tobs:
       bigger += 1
   return bigger / b < conf
-"""
 
-#### Examples
-
-"""
-def _bootstraped(): 
-  def worker(n=1000,
-             mu1=10,  sigma1=1,
-             mu2=10.2, sigma2=1):
-    def g(mu,sigma) : return random.gauss(mu,sigma)
-    x = [g(mu1,sigma1) for i in range(n)]
-    y = [g(mu2,sigma2) for i in range(n)]
-    return n,mu1,sigma1,mu2,sigma2,\
-        'different' if bootstrap(x,y) else 'same'
-  # very different means, same std
-  print worker(mu1=10, sigma1=10, 
-               mu2=100, sigma2=10)
-  # similar means and std
-  print worker(mu1= 10.1, sigma1=1, 
-               mu2= 10.2, sigma2=1)
-  # slightly different means, same std
-  print worker(mu1= 10.1, sigma1= 1, 
-               mu2= 10.8, sigma2= 1)
-  # different in mu eater by large std
-  print worker(mu1= 10.1, sigma1= 10, 
-               mu2= 10.8, sigma2= 1)
-"""
-
-Output:
-
-````
-_bootstraped()
-
-(1000, 10, 10, 100, 10, 'different')
-(1000, 10.1, 1, 10.2, 1, 'same')
-(1000, 10.1, 1, 10.8, 1, 'different')
-(1000, 10.1, 10, 10.8, 1, 'same')
-````
-
-Warning- the above took 8 seconds to generate since we used 1000 bootstraps.
-As to how many bootstraps are enough, that depends on the data. There are
-results saying 200 to 400 are enough but, since I am  suspicious man, I run it for 1000.
-
-Which means the runtimes associated with bootstrapping is a significant issue.
-To reduce that runtime, I avoid things like an all-pairs comparison of all treatments
-(see below: Scott-knott).  Also, BEFORE I do the boostrap, I first run
-the effect size test (and only go to bootstrapping in effect size passes:
-
-"""
 def different(l1,l2):
   #return bootstrap(l1,l2) and a12(l2,l1)
   return a12(l2,l1) and bootstrap(l1,l2)
