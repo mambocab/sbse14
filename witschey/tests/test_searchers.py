@@ -85,10 +85,10 @@ class TestMaxWalkSat(TestCase):
 
     def test_local_inputs_length(self):
         n = 15
-        assert_equals(n, len(list(self.mws.local_search_inputs(3, 6, n))))
+        assert_equals(n, len(list(self.mws._local_search_xs(3, 6, n))))
 
     def test_local_inputs_contents(self):
-        xs = self.mws.local_search_inputs(0, 20, 20)
+        xs = self.mws._local_search_xs(0, 20, 20)
         random.seed(1)
         # this is stochastic, so run it 100 times & hope any errors are caught
         for _ in xrange(100):
