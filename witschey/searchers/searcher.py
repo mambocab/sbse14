@@ -95,3 +95,7 @@ class SearcherConfig(object):
         kw_string = ', '.join('{0}={1}'.format(k, v)
                               for k, v in self.as_dict().iteritems())
         return '{0}({1})'.format(self.__class__.__name__, kw_string)
+
+
+SearchReport = namedtuple('SearchReport',
+                          ['best', 'best_era', 'evaluations', 'searcher'])

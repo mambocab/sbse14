@@ -5,8 +5,7 @@ import random
 from collections import defaultdict
 
 from witschey import base
-from witschey.base import memo
-from searcher import Searcher
+from searcher import Searcher, SearchReport
 from witschey.log import NumberLog
 
 # adapted from Chris Theisen's code
@@ -98,10 +97,7 @@ class GeneticAlgorithm(Searcher):
                 break
             # TODO: some "is significantly better" termination logic here
 
-        rv = memo(best=best.energy, evals=evals)
-        if report:
-            rv.report = report.as_str()
-        if energy_by_generation:
-            rv.era_logs_best_energy = energy_by_generation
-
-        return rv
+        return SearchReport(best=best.energy,
+                            best_era=energy_by_generation,
+                            evaluations=evals,
+                            searcher=self.__class__)
