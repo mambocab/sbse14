@@ -30,10 +30,10 @@ def run(n=30, text_report=True):
                 if not hasattr(out, 'searcher'):
                     out.searcher = searcher_cls
                 outs.append(out)
-                bests[name].append(out.best)
+                bests[name].extend(out.best_era.contents())
 
         rdiv_in = list([name] + best for name, best in bests.iteritems())
-        print(rdivDemo(rdiv_in), end='\n\n')
+        print(rdiv_report(rdiv_in), end='\n\n')
 
 if __name__ == '__main__':
-    run(n = 2, text_report=False)
+    run(n=2, text_report=True)
