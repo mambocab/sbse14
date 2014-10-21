@@ -2,18 +2,13 @@ from __future__ import division, print_function
 
 import math
 
-import sortedcontainers
-
 import base
 
 
-def basic_stats_sorted(xs):
-    return xs if isinstance(xs, sortedcontainers.SortedList) else sorted(xs)
-
-
-def median(xs):
+def median(xs, is_sorted=False):
     # implementation from http://stackoverflow.com/a/10482734/3408454
-    xs = basic_stats_sorted(xs)
+    if is_sorted:
+        xs = sorted(xs)
     n = len(xs)
     return xs[n // 2] if n % 2 else (xs[n // 2] + xs[n // 2 - 1]) / 2
 
@@ -43,16 +38,15 @@ def xtile(xs, lo=0, hi=0.001,
           chops=[0.1, 0.3, 0.5, 0.7, 0.9],
           marks=["-", " ", " ", "-", " "],
           bar="|", star="*",
-          show=" {: >6.2f}"):
-    """The function _xtile_ takes a list of (possibly)
-    unsorted numbers and presents them as a horizontal
-    xtile chart (in ascii format). The default is a
-    contracted _quintile_ that shows the
-    10,30,50,70,90 breaks in the data (but this can be
-    changed- see the optional flags of the function)
+          show=" {: >6.2f}",
+          as_list=False):
+    """The function _xtile_ takes a list of (possibly) unsorted numbers and
+    presents them as a horizontal xtile ascii chart. The default is a
+    contracted _quintile_ that shows the 10,30,50,70,90 breaks in the data by
+    default. These breaks can be customized with the chops parameter.
     """
 
-    xs = basic_stats_sorted(xs)
+    xs = sorted(xs)
 
     lo = min(lo, xs[0])
     hi = max(hi, xs[-1])
