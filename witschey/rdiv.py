@@ -104,11 +104,9 @@ are different, many times sample with replacement
 from both to generate _(y1,z1), (y2,z2), (y3,z3)_.. etc.
 
 """
-def sampleWithReplacement(lst):
-  "returns a list same size as list"
-  def any(n)  : return random.uniform(0,n)
-  def one(lst): return lst[ int(any(len(lst))) ]
-  return [one(lst) for _ in lst]
+def sampleWithReplacement(xs):
+    "returns a list same size as list"
+    return [random.choice(xs) for _ in xs]
 """
 
 
