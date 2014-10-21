@@ -23,13 +23,13 @@ class SimulatedAnnealer(Searcher):
         current = self.model.random_model_io()
         best = current  # assumes current is immutable
         self.lives = 4
-        current_era_energies = best_era = None
+        current_era_energies = NumberLog(max_size=None)
+        best_era = None
 
         for k in range(self.spec.iterations):
             if self.lives <= 0 and self.spec.terminate_early:
                 break
             prev_era_energies = current_era_energies
-            current_era_energies = NumberLog(max_size=None)
 
             neighbor = self._get_neighbor(current)
             current_era_energies += neighbor.energy
@@ -64,6 +64,7 @@ class SimulatedAnnealer(Searcher):
                     best_era = current_era_energies
                 else:
                     self.lives -= 1
+                current_era_energies = NumberLog()
 
         rv = memo(report=report.as_str(), best=best.energy,
                   best_era=best_era)

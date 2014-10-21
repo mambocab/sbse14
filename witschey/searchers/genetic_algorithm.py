@@ -109,6 +109,6 @@ class GeneticAlgorithm(Searcher):
             best_era = energies
 
         return SearchReport(best=best.energy,
-                            best_era=energies,
+                            best_era=best_era,
                             evaluations=evals,
                             searcher=self.__class__)

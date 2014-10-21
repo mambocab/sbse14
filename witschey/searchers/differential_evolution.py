@@ -5,6 +5,7 @@ import random
 from witschey import base
 from witschey.base import memo
 from witschey.searchers.searcher import Searcher
+from witschey.log import NumberLog
 
 
 class DifferentialEvolution(Searcher):
@@ -22,7 +23,9 @@ class DifferentialEvolution(Searcher):
 
         energy = lambda x: x.energy
 
-        rv = memo(best=min(self._frontier, key=energy).energy)
+        best_era = NumberLog(inits=(x.energy for x in self._frontier))
+        rv = memo(best=min(self._frontier, key=energy).energy,
+                  best_era=best_era)
         return rv
 
     def _update_frontier(self):

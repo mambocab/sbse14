@@ -40,6 +40,7 @@ class MaxWalkSat(Searcher):
         new_xs = tuple_replace(self._current.xs, dimension, value)
         self._current = self.model(new_xs, io=True)
         self._evals += 1
+        self._current_era += self._current.energy
 
         # compare to previous best and update as necessary
         if self._current.energy < self._best.energy:
@@ -90,18 +91,17 @@ class MaxWalkSat(Searcher):
                 self._prev_era = self._current_era
 
                 # track best_era
-                if improved:
+                if improved or best_era is None:
                     best_era = self._current_era
                 else:
                     lives -= 1
 
                 if lives <= 0:
                     terminate = True
-
-        if best_era is None:
-            self._best_era = self._current_era
+                else:
+                    self._current_era = NumberLog()
 
         return SearchReport(best=self._best.energy,
-                            best_era=self._best_era,
+                            best_era=best_era,
                             evaluations=self._evals,
                             searcher=self.__class__)
