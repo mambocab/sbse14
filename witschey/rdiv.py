@@ -9,30 +9,6 @@ from witschey import base
 
 # flake8: noqa
 
-rand = random.random
-seed = random.seed
-exp  = lambda n: math.e**n
-ln   = lambda n: math.log(n,math.e)
-g    = lambda n: round(n,2)
-
-def msecs(f):
-  import time
-  t1 = time.time()
-  f()
-  return (time.time() - t1) * 1000
-
-def pairs(lst):
-  "Return all pairs of items i,i+1 from a list."
-  last=lst[0]
-  for i in lst[1:]:
-    yield last,i
-    last = i
-
-def _tileX() :
-  import random
-  random.seed(1)
-  nums = [random.random()**2 for _ in range(100)]
-  print xtile(nums,lo=0,hi=1.0,width=25,show=" %5.2f")
 """
 
 ### Standard Accumulator for Numbers
@@ -132,8 +108,8 @@ def _a12():
   def f1(): return a12slow(l1,l2)
   def f2(): return a12(l1,l2)
   for n in [100,200,400,800,1600,3200,6400]:
-    l1 = [rand() for _ in xrange(n)]
-    l2 = [rand() for _ in xrange(n)]
+    l1 = [random.random() for _ in xrange(n)]
+    l2 = [random.random() for _ in xrange(n)]
     t1 = msecs(f1)
     t2 = msecs(f2)
     print n, g(f1()),g(f2()),int((t1/t2))
