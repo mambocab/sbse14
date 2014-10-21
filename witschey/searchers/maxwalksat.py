@@ -109,4 +109,5 @@ class MaxWalkSat(Searcher):
         return SearchReport(best=self._best.energy,
                             best_era=best_era,
                             evaluations=self._evals,
-                            searcher=self.__class__)
+                            searcher=self.__class__,
+                            spec=self.spec)

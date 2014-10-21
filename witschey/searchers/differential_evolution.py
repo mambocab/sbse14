@@ -25,7 +25,8 @@ class DifferentialEvolution(Searcher):
 
         best_era = NumberLog(inits=(x.energy for x in self._frontier))
         rv = memo(best=min(self._frontier, key=energy).energy,
-                  best_era=best_era)
+                  best_era=best_era,
+                  spec=self.spec)
         return rv
 
     def _update_frontier(self):
