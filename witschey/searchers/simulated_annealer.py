@@ -29,7 +29,7 @@ class SimulatedAnnealer(Searcher):
             if self.lives <= 0 and self.spec.terminate_early:
                 break
             prev_era_energies = current_era_energies
-            current_era_energies = NumberLog()
+            current_era_energies = NumberLog(max_size=None)
 
             neighbor = self._get_neighbor(current)
             current_era_energies += neighbor.energy
@@ -55,7 +55,6 @@ class SimulatedAnnealer(Searcher):
                 report += ('\n', '{: .2}'.format(best.energy), ' ')
                 if not best_era:
                     best_era = current_era_energies
-                self.lives -= 1
 
                 try:
                     improved = current_era_energies.better(prev_era_energies)
@@ -63,9 +62,11 @@ class SimulatedAnnealer(Searcher):
                     improved = False
                 if improved:
                     best_era = current_era_energies
-                    self.lives += 1
+                else:
+                    self.lives -= 1
 
-        rv = memo(best=best.energy, best_era=current_era_energies)
+        rv = memo(report=report.as_str(), best=best.energy,
+                  best_era=best_era)
         return rv
 
     def _good_idea(self, old, new, temp):
