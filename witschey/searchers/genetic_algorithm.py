@@ -42,28 +42,35 @@ class GeneticAlgorithm(Searcher):
 
         return tuple(itertools.chain(*segments))
 
-    def select_parents(self, population, output_size):
+    def _select_parents(self):
         """generates all possible parent pairs from population, clipped to
-        output_size
+        max population size
         """
-        all_parents = filter(lambda t: t[0] is not t[1],
-                             itertools.product(population, population))
-        if len(all_parents) < output_size:
+        size = self.spec.population_size
+        all_parents = filter(lambda t: t[0] != t[1],
+                             itertools.product(self._population,
+                                               self._population))
+
+        if len(all_parents) < size:
             return all_parents
-        return random.sample(all_parents, output_size)
+
+        elite_parents = sorted(all_parents,
+                               key=lambda x: x[0].energy * x[1].energy)[:size]
+        assert len(elite_parents) == len(self._population) != 0
+        return elite_parents
 
     def run(self, text_report=True):
-        rand_vect = lambda: self.model.random_input_vector()
-        pop_size = self.spec.population_size
-        init_xs = tuple(rand_vect() for _ in xrange(pop_size))
+        init_xs = tuple(self.model.random_input_vector()
+                        for _ in xrange(self.spec.population_size))
         energy = lambda x: x.energy
         best_era = None
 
         report = base.StringBuilder() if text_report else base.NullObject()
 
-        population = tuple(self.model.compute_model_io(xs) for xs in init_xs)
+        self._population = tuple(self.model.compute_model_io(xs)
+                                 for xs in init_xs)
 
-        best = min(population, key=energy)
+        best = min(self._population, key=energy)
 
         evals, lives = 0, 4
 
@@ -72,7 +79,7 @@ class GeneticAlgorithm(Searcher):
                 break
 
             children = []
-            for parent1, parent2 in self.select_parents(population, pop_size):
+            for parent1, parent2 in self._select_parents():
                 xs = self.crossover(parent1.xs, parent2.xs, 2)
                 if random.random() < self.spec.p_mutation:
                     self.mutate(xs)
@@ -89,8 +96,8 @@ class GeneticAlgorithm(Searcher):
                        for x in children)
             report += '\n'
 
-            population = children
-            evals += len(population)
+            self._population = children
+            evals += len(self._population)
 
             energies = NumberLog(inits=(c.energy for c in children))
             try:
