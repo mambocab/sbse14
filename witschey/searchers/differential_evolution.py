@@ -3,8 +3,7 @@ from __future__ import division, print_function
 import random
 
 from witschey import base
-from witschey.base import memo
-from witschey.searchers.searcher import Searcher
+from witschey.searchers.searcher import Searcher, SearchReport
 from witschey.log import NumberLog
 
 
@@ -17,16 +16,17 @@ class DifferentialEvolution(Searcher):
         n_candiates = self.spec.n_candiates
         self._frontier = [self.model.random_model_io()
                           for _ in xrange(n_candiates)]
+        self._evals = 0
 
         for _ in xrange(self.spec.generations):
             self._update_frontier()
 
-        energy = lambda x: x.energy
-
-        best_era = NumberLog(inits=(x.energy for x in self._frontier))
-        rv = memo(best=min(self._frontier, key=energy).energy,
-                  best_era=best_era,
-                  spec=self.spec)
+        rv = SearchReport(
+            best=min(self._frontier, lambda x: x.energy).energy,
+            best_era=NumberLog(inits=(x.energy for x in self._frontier)),
+            evaluations=self.evals,
+            searcher=self.__class__,
+            spec=self.spec)
         return rv
 
     def _update_frontier(self):
@@ -35,6 +35,7 @@ class DifferentialEvolution(Searcher):
         bested, better = [], []
         for x in self._frontier:
             new = self.model(self._extrapolate_xs(x), io=True)
+            self._evals += 1
             if new.energy < x.energy:
                 bested.append(x)
                 better.append(new)
