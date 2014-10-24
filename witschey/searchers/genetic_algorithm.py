@@ -2,6 +2,7 @@ from __future__ import division, print_function
 
 import itertools
 import random
+from collections import Iterable
 
 from witschey import base
 from searcher import Searcher, SearchReport
@@ -23,14 +24,35 @@ def _random_crossover_points(n, length):
 
 
 def _crossover_at(seq1, seq2, xovers):
+    # takes two sequences and a single crossover point or a list of points
+    if not isinstance(xovers, Iterable):
+        xovers = [xovers]
     cycle_seq = itertools.cycle((seq1, seq2))
-    xovers = itertools.chain((0,), xovers, (-1,))
-    parent_point_zip = itertools.izip(cycle_seq, *base.pairs(xovers))
 
-    segments = (itertools.islice(parent, begin, end)
-                for parent, begin, end in parent_point_zip)
+    # iter. of start and stop points for sections
+    xovers = itertools.chain((None,), xovers, (None,))
+    parent_point_zip = itertools.izip(cycle_seq, base.pairs(xovers))
 
-    return tuple(itertools.chain(segments))
+    segments = tuple(itertools.islice(parent, start_stop[0], start_stop[1])
+                     for parent, start_stop in parent_point_zip)
+
+    return tuple(itertools.chain(*segments))
+
+
+def _crossover_at_no_islice(seq1, seq2, xovers):
+    # takes two sequences and a single crossover point or a list of points
+    if not isinstance(xovers, Iterable):
+        xovers = [xovers]
+    cycle_seq = itertools.cycle((seq1, seq2))
+
+    # iter. of start and stop points for sections
+    xovers = itertools.chain((None,), xovers, (None,))
+    parent_point_zip = itertools.izip(cycle_seq, base.pairs(xovers))
+
+    segments = tuple(parent[start_stop[0]:start_stop[1]]
+                     for parent, start_stop in parent_point_zip)
+
+    return tuple(itertools.chain(*segments))
 
 
 class GeneticAlgorithm(Searcher):
@@ -42,19 +64,22 @@ class GeneticAlgorithm(Searcher):
         i = base.random_index(child)
         return base.tuple_replace(child, i, self.model.xs[i]())
 
-    def _crossover(self, parent1, parent2):
+    def _crossover(self, parent1, parent2, xovers=None):
         if len(parent1) != len(parent2):
             raise ValueError('parents must be same length to breed')
         if len(parent1) == 1:
             return random.choice((parent1, parent2))
+        if xovers is None:
+            xovers = self.spec.crossovers
 
-        x_pts = _random_crossover_points(self.spec.crossovers, len(parent1))
+        x_pts = _random_crossover_points(xovers, len(parent1))
 
         return _crossover_at(parent1, parent2, x_pts)
 
     def _select_parents(self):
-        """generates all possible parent pairs from population, clipped to
-        max population size
+        """
+        Return the best n pairs of parents in the population, where quality
+        is measured by minimizing the product of their energies
         """
 
         size = self.spec.population_size
@@ -62,18 +87,15 @@ class GeneticAlgorithm(Searcher):
                              itertools.product(self._population,
                                                self._population))
 
-        elite_parents = sorted(all_parents,
-                               key=lambda x: x[0].energy * x[1].energy)[:size]
-        return elite_parents
+        return sorted(all_parents,
+                      key=lambda x: x[0].energy * x[1].energy)[:size]
 
     def _breed_next_generation(self):
-        print(sum(1 for x in
-                  itertools.product(self._population, self._population)
-                  if x[0] != x[1]))
         children = []
         for parent1, parent2 in self._select_parents():
             xs = self._crossover(parent1.xs, parent2.xs)
             if random.random() < self.spec.p_mutation:
+                self._mutations += 1
                 xs = self._mutate(xs)
             child = self.model(xs, io=True)
             children.append(child)
@@ -93,7 +115,7 @@ class GeneticAlgorithm(Searcher):
 
         best = min(self._population, key=get_energy)
 
-        self._evals, lives = 0, 4
+        self._evals, lives, self._mutations = 0, 4, 0
 
         for gen in xrange(self.spec.iterations):
             if self._evals > self.spec.iterations or lives <= 0:
