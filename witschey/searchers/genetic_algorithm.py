@@ -33,22 +33,6 @@ def _crossover_at(seq1, seq2, xovers):
     xovers = itertools.chain((None,), xovers, (None,))
     parent_point_zip = itertools.izip(cycle_seq, base.pairs(xovers))
 
-    segments = tuple(itertools.islice(parent, start_stop[0], start_stop[1])
-                     for parent, start_stop in parent_point_zip)
-
-    return tuple(itertools.chain(*segments))
-
-
-def _crossover_at_no_islice(seq1, seq2, xovers):
-    # takes two sequences and a single crossover point or a list of points
-    if not isinstance(xovers, Iterable):
-        xovers = [xovers]
-    cycle_seq = itertools.cycle((seq1, seq2))
-
-    # iter. of start and stop points for sections
-    xovers = itertools.chain((None,), xovers, (None,))
-    parent_point_zip = itertools.izip(cycle_seq, base.pairs(xovers))
-
     segments = tuple(parent[start_stop[0]:start_stop[1]]
                      for parent, start_stop in parent_point_zip)
 
