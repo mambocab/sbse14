@@ -19,60 +19,76 @@ class SimulatedAnnealer(Searcher):
         super(SimulatedAnnealer, self).__init__(model=model, *args, **kw)
 
     def _get_neighbor(self, model_io):
-        n_gen = (model_io.xs[i]
-                 if random.random() < self.spec.p_mutation else v
-                 for i, v in enumerate(self.model.random_input_vector()))
-        return self.model(tuple(n_gen), io=True)
+        # generate variant of input by probabilistically replacing some values
+        gen = (model_io.xs[i]
+               if random.random() < self.spec.p_mutation else v
+               for i, v in enumerate(self.model.random_input_vector()))
+        return self.model(tuple(gen), io=True)
+
+    def _end_era(self):
+        self._report += ('\n', '{: .2}'.format(self._best.energy), ' ')
+        if not self._best_era:
+            self._best_era = self._current_era_energies
+
+        try:
+            improved = self._current_era_energies.better(
+                self._prev_era_energies)
+        except AttributeError:
+            improved = False
+        if improved:
+            self._best_era = self._current_era_energies
+        else:
+            self._lives -= 1
+
+        self._prev_era_energies = self._current_era_energies
+        self._current_era_energies = None
+
+    def _update(self, temperature):
+        # update the state of the annealer
+        # generate new neighbor
+        neighbor = self._get_neighbor(self._current)
+        self._current_era_energies += neighbor.energy
+
+        # compare neighbor and update best
+        if neighbor.energy < self._best.energy:
+            self._best, self._current = neighbor, neighbor
+            self._report += '!'
+
+        if neighbor.energy < self._current.energy:
+            self._current = neighbor
+            self._report += '+'
+        else:
+            cnorm = self.model.normalize(self._current.energy)
+            nnorm = self.model.normalize(neighbor.energy)
+            # occasionally jump to neighbor, even if it's a bad idea
+            if self._good_idea(cnorm, nnorm, temperature) < random.random():
+                self._current = neighbor
+                self._report += '?'
+
+        self._report += '.'
 
     def run(self, text_report=True):
-        report = StringBuilder() if text_report else NullObject()
-        current = self.model.random_model_io()
-        best = current  # assumes current is immutable
-        self.lives = 4
-        current_era_energies = NumberLog(max_size=None)
-        best_era = None
+        """
+        Run the SimulatedAnnealer on the model specified at object
+        instantiation time.
+        """
+        self._report = StringBuilder() if text_report else NullObject()
+        self._current = self.model.random_model_io()
+        self._best = self._current  # assumes current is immutable
+        self._lives = 4
+        self._best_era = None
         evals = None
 
         for k in range(self.spec.iterations):
-            if self.lives <= 0 and self.spec.terminate_early:
+            self._current_era_energies = NumberLog(max_size=None)
+            if self._lives <= 0 and self.spec.terminate_early:
                 evals = k
                 break
-            prev_era_energies = current_era_energies
 
-            neighbor = self._get_neighbor(current)
-            current_era_energies += neighbor.energy
-
-            if neighbor.energy < best.energy:
-                best, current = neighbor, neighbor
-                report += '!'
-
-            if neighbor.energy < current.energy:
-                current = neighbor
-                report += '+'
-            else:
-                cnorm = self.model.normalize(current.energy)
-                nnorm = self.model.normalize(neighbor.energy)
-                temp = k / self.spec.iterations
-                if self._good_idea(cnorm, nnorm, temp) < random.random():
-                    current = neighbor
-                    report += '?'
-
-            report += '.'
+            self._update(k / self.spec.iterations)
 
             if k % self.spec.era_length == 0 and k != 0:
-                report += ('\n', '{: .2}'.format(best.energy), ' ')
-                if not best_era:
-                    best_era = current_era_energies
-
-                try:
-                    improved = current_era_energies.better(prev_era_energies)
-                except ValueError:
-                    improved = False
-                if improved:
-                    best_era = current_era_energies
-                else:
-                    self.lives -= 1
-                current_era_energies = NumberLog()
+                self._end_era()
 
         if evals is None:
             evals = self.spec.iterations
