@@ -21,6 +21,16 @@ def _random_crossover_points(n, length):
     xovers = sorted(random.sample(xrange(1, length - 1), n))
     return itertools.chain((0,), xovers, (None,))
 
+def _crossover_at(seq1, seq2, xovers):
+    cycle_seq = itertools.cycle((seq1, seq2))
+    xovers = itertools.chain((0,), xovers, (-1,))
+    parent_point_zip = itertools.izip(cycle_seq, *base.pairs(xovers))
+
+    segments = (itertools.islice(parent, begin, end)
+                for parent, begin, end in parent_point_zip)
+
+    return tuple(itertools.chain(segments))
+
 
 class GeneticAlgorithm(Searcher):
 
@@ -39,13 +49,7 @@ class GeneticAlgorithm(Searcher):
 
         x_pts = _random_crossover_points(self.spec.crossovers, len(parent1))
 
-        cycle_parents = itertools.cycle((parent1, parent2))
-        parent_point_zip = itertools.izip(cycle_parents, base.pairs(x_pts))
-
-        segments = (itertools.islice(parent, p[0], p[1])
-                    for parent, p in parent_point_zip)
-
-        return tuple(itertools.chain(segments))
+        return _crossover_at(parent1, parent2, x_pts)
 
     def _select_parents(self):
         """generates all possible parent pairs from population, clipped to
