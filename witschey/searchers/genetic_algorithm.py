@@ -18,11 +18,11 @@ class GeneticAlgorithm(Searcher):
     def __init__(self, model, *args, **kw):
         super(GeneticAlgorithm, self).__init__(model=model, *args, **kw)
 
-    def mutate(self, child):
+    def _mutate(self, child):
         i = base.random_index(child)
         return base.tuple_replace(child, i, self.model.xs[i]())
 
-    def crossover(self, parent1, parent2, xovers=1):
+    def _crossover(self, parent1, parent2, xovers=1):
         if len(parent1) != len(parent2):
             raise ValueError('parents must be same length to breed')
         if len(parent1) == 1:
@@ -46,23 +46,34 @@ class GeneticAlgorithm(Searcher):
         """generates all possible parent pairs from population, clipped to
         max population size
         """
+
         size = self.spec.population_size
         all_parents = filter(lambda t: t[0] != t[1],
                              itertools.product(self._population,
                                                self._population))
 
-        if len(all_parents) < size:
-            return all_parents
-
         elite_parents = sorted(all_parents,
                                key=lambda x: x[0].energy * x[1].energy)[:size]
-        assert len(elite_parents) == len(self._population) != 0
         return elite_parents
+
+    def _breed_next_generation(self):
+        print(sum(1 for x in
+                  itertools.product(self._population, self._population)
+                  if x[0] != x[1]))
+        children = []
+        for parent1, parent2 in self._select_parents():
+            xs = self._crossover(parent1.xs, parent2.xs, 2)
+            if random.random() < self.spec.p_mutation:
+                xs = self._mutate(xs)
+            child = self.model(xs, io=True)
+            children.append(child)
+        self._evals += len(children)
+        return tuple(children)
 
     def run(self, text_report=True):
         init_xs = tuple(self.model.random_input_vector()
                         for _ in xrange(self.spec.population_size))
-        energy = lambda x: x.energy
+        get_energy = lambda x: x.energy
         best_era = None
 
         report = base.StringBuilder() if text_report else base.NullObject()
@@ -70,36 +81,27 @@ class GeneticAlgorithm(Searcher):
         self._population = tuple(self.model.compute_model_io(xs)
                                  for xs in init_xs)
 
-        best = min(self._population, key=energy)
+        best = min(self._population, key=get_energy)
 
-        evals, lives = 0, 4
+        self._evals, lives = 0, 4
 
         for gen in xrange(self.spec.iterations):
-            if evals > self.spec.iterations or lives <= 0:
+            if self._evals > self.spec.iterations or lives <= 0:
                 break
 
-            children = []
-            for parent1, parent2 in self._select_parents():
-                xs = self.crossover(parent1.xs, parent2.xs, 2)
-                if random.random() < self.spec.p_mutation:
-                    self.mutate(xs)
-                child = self.model(xs, io=True)
-                children.append(child)
-
-            best_in_pop = min(children, key=energy)
-
             prev_best_energy = best.energy
-            best = min(best, best_in_pop, key=energy)
+
+            self._population = self._breed_next_generation()
+
+            best_in_generation = min(self._population, key=get_energy)
+            best = min(best, best_in_generation, key=get_energy)
 
             report += str(best.energy)
             report += ('+' if x.energy < prev_best_energy else '.'
-                       for x in children)
+                       for x in self._population)
             report += '\n'
 
-            self._population = children
-            evals += len(self._population)
-
-            energies = NumberLog(inits=(c.energy for c in children))
+            energies = NumberLog(inits=(c.energy for c in self._population))
             try:
                 improved = energies.better(prev_energies)
             except NameError:
