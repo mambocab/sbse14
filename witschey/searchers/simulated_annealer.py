@@ -9,6 +9,12 @@ from witschey.log import NumberLog
 
 
 class SimulatedAnnealer(Searcher):
+    """
+    A searcher that works by mostly-dumb stochastic search that starts with
+    lots of random jumps, then makes fewer random jumps, simulating a cooling
+    process. See http://en.wikipedia.org/wiki/Simulated_annealing and
+    https://github.com/timm/sbse14/wiki/sa for more information.
+    """
     def __init__(self, model, *args, **kw):
         super(SimulatedAnnealer, self).__init__(model=model, *args, **kw)
 
