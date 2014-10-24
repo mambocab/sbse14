@@ -6,6 +6,7 @@ import math
 from searcher import Searcher, SearchReport
 from witschey.base import NullObject, StringBuilder
 from witschey.log import NumberLog
+from witschey.model import ModelInputException
 
 
 class SimulatedAnnealer(Searcher):
@@ -18,12 +19,20 @@ class SimulatedAnnealer(Searcher):
     def __init__(self, model, *args, **kw):
         super(SimulatedAnnealer, self).__init__(model=model, *args, **kw)
 
+    def _mutate(self, xs):
+        return tuple(xs[i] if random.random() < self.spec.p_mutation else v
+                     for i, v in enumerate(self.model.random_input_vector()))
+
     def _get_neighbor(self, model_io):
-        # generate variant of input by probabilistically replacing some values
-        gen = (model_io.xs[i]
-               if random.random() < self.spec.p_mutation else v
-               for i, v in enumerate(self.model.random_input_vector()))
-        return self.model(tuple(gen), io=True)
+        neighbor = None
+        while neighbor is None:
+            gen = self._mutate(model_io.xs)
+            try:
+                neighbor = self.model(tuple(gen), io=True)
+            except ModelInputException:
+                pass
+
+        return neighbor
 
     def _end_era(self):
         self._report += ('\n', '{: .2}'.format(self._best.energy), ' ')
