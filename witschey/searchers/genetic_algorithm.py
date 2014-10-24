@@ -13,6 +13,15 @@ from witschey.log import NumberLog
 # www.cleveralgorithms.com/nature-inspired/evolution/genetic_algorithm.html
 
 
+def _random_crossover_points(n, length):
+    # get n random valid crossover points for a sequence of len length
+    r = [xrange(1, length - 1)]
+    if len(r) <= length:
+        return r
+    xovers = sorted(random.sample(xrange(1, length - 1), n))
+    return itertools.chain((0,), xovers, (None,))
+
+
 class GeneticAlgorithm(Searcher):
 
     def __init__(self, model, *args, **kw):
@@ -22,25 +31,21 @@ class GeneticAlgorithm(Searcher):
         i = base.random_index(child)
         return base.tuple_replace(child, i, self.model.xs[i]())
 
-    def _crossover(self, parent1, parent2, xovers=1):
+    def _crossover(self, parent1, parent2):
         if len(parent1) != len(parent2):
             raise ValueError('parents must be same length to breed')
         if len(parent1) == 1:
             return random.choice((parent1, parent2))
 
-        if xovers < 1:
-            raise ValueError('cannot have fewer than 1 crossover')
-        xovers = min(len(parent1) - 2, xovers)
-        xovers = sorted(random.sample(xrange(1, len(parent1) - 1), xovers))
-        x_pts = itertools.chain((0,), xovers, (None,))
+        x_pts = _random_crossover_points(self.spec.crossovers, len(parent1))
 
         cycle_parents = itertools.cycle((parent1, parent2))
         parent_point_zip = itertools.izip(cycle_parents, base.pairs(x_pts))
 
-        segments = [itertools.islice(parent, p[0], p[1])
-                    for parent, p in parent_point_zip]
+        segments = (itertools.islice(parent, p[0], p[1])
+                    for parent, p in parent_point_zip)
 
-        return tuple(itertools.chain(*segments))
+        return tuple(itertools.chain(segments))
 
     def _select_parents(self):
         """generates all possible parent pairs from population, clipped to
@@ -62,7 +67,7 @@ class GeneticAlgorithm(Searcher):
                   if x[0] != x[1]))
         children = []
         for parent1, parent2 in self._select_parents():
-            xs = self._crossover(parent1.xs, parent2.xs, 2)
+            xs = self._crossover(parent1.xs, parent2.xs)
             if random.random() < self.spec.p_mutation:
                 xs = self._mutate(xs)
             child = self.model(xs, io=True)
