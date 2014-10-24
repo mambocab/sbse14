@@ -118,7 +118,7 @@ class GeneticAlgorithm(Searcher):
 
         return SearchReport(best=best.energy,
                             best_era=best_era,
-                            evaluations=evals,
+                            evaluations=self._evals,
                             searcher=self.__class__,
                             spec=self.spec,
                             report=None)
