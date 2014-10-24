@@ -118,4 +118,5 @@ class GeneticAlgorithm(Searcher):
                             best_era=best_era,
                             evaluations=evals,
                             searcher=self.__class__,
-                            spec=self.spec)
+                            spec=self.spec,
+                            report=None)

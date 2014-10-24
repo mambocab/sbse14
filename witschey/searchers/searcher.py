@@ -100,4 +100,4 @@ class SearcherConfig(object):
 
 SearchReport = namedtuple('SearchReport',
                           ['best', 'best_era', 'evaluations', 'searcher',
-                           'spec'])
+                           'spec', 'report'])

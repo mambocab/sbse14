@@ -70,10 +70,10 @@ class SimulatedAnnealer(Searcher):
 
         if evals is None:
             evals = self.spec.iterations
-        rv = SearchReport(best=best.energy, evaluations=evals,
-                          best_era=best_era, spec=self.spec,
-                          searcher=self.__class__)
-        return rv
+
+        return SearchReport(best=self._best.energy, evaluations=evals,
+                            best_era=self._best_era, spec=self.spec,
+                            searcher=self.__class__, report=self._report)
 
     def _good_idea(self, old, new, temp):
         """

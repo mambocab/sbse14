@@ -21,13 +21,13 @@ class DifferentialEvolution(Searcher):
         for _ in xrange(self.spec.generations):
             self._update_frontier()
 
-        rv = SearchReport(
-            best=min(self._frontier, lambda x: x.energy).energy,
+        return SearchReport(
+            best=min(self._frontier, key=lambda x: x.energy).energy,
             best_era=NumberLog(inits=(x.energy for x in self._frontier)),
-            evaluations=self.evals,
+            evaluations=self._evals,
             searcher=self.__class__,
-            spec=self.spec)
-        return rv
+            spec=self.spec,
+            report=None)
 
     def _update_frontier(self):
         '''for each member of the frontier, generate a new individual, have
