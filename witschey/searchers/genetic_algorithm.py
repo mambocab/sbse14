@@ -15,11 +15,12 @@ from witschey.log import NumberLog
 
 def _random_crossover_points(n, length):
     # get n random valid crossover points for a sequence of len length
-    r = [xrange(1, length - 1)]
+    r = list(xrange(1, length - 1))
     if len(r) <= length:
         return r
     xovers = sorted(random.sample(xrange(1, length - 1), n))
-    return itertools.chain((0,), xovers, (None,))
+    return xovers
+
 
 def _crossover_at(seq1, seq2, xovers):
     cycle_seq = itertools.cycle((seq1, seq2))
