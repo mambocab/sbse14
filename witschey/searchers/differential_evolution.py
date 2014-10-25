@@ -5,6 +5,7 @@ import random
 from witschey import base
 from witschey.searchers import Searcher, SearchReport
 from witschey.log import NumberLog
+from witschey.models import ModelInputException
 
 
 class DifferentialEvolution(Searcher):
@@ -34,7 +35,14 @@ class DifferentialEvolution(Searcher):
         them compete, then keep the best of the two.'''
         bested, better = [], []
         for x in self._frontier:
-            new = self.model(self._extrapolate_xs(x), io=True)
+            new = None
+            while new is None:
+                extrapolated = self._extrapolate_xs(x)
+                try:
+                    new = self.model(extrapolated, io=True)
+                except ModelInputException:
+                    pass
+
             self._evals += 1
             if new.energy < x.energy:
                 bested.append(x)

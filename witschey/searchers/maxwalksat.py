@@ -7,6 +7,7 @@ from searcher import Searcher, SearchReport
 from witschey import base
 from witschey.base import tuple_replace, StringBuilder, NullObject
 from witschey.log import NumberLog
+from witschey.models import ModelInputException
 
 
 class MaxWalkSat(Searcher):
@@ -32,13 +33,20 @@ class MaxWalkSat(Searcher):
 
         if dimension is None:
             dimension = base.random_index(self._current.xs)
+
         if value is None:
             # get random value if no value input
             value = self.model.xs[dimension]()
 
-        # generate and evaluate input vector
-        new_xs = tuple_replace(self._current.xs, dimension, value)
-        self._current = self.model(new_xs, io=True)
+        updated = False
+        while not updated:
+            new_xs = tuple_replace(self._current.xs, dimension, value)
+            try:
+                self._current = self.model(new_xs, io=True)
+                updated = True
+            except ModelInputException:
+                value = self.model.xs[dimension]()
+
         self._evals += 1
         self._current_era += self._current.energy
 

@@ -6,7 +6,7 @@ import math
 from searcher import Searcher, SearchReport
 from witschey.base import NullObject, StringBuilder
 from witschey.log import NumberLog
-from witschey.model import ModelInputException
+from witschey.models import ModelInputException
 
 
 class SimulatedAnnealer(Searcher):

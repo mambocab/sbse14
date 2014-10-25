@@ -7,6 +7,7 @@ from collections import Iterable
 from witschey import base
 from searcher import Searcher, SearchReport
 from witschey.log import NumberLog
+from witschey.models import ModelInputException
 
 # adapted from Chris Theisen's code
 #     his code provided the shell that I worked in and styled to my liking
@@ -85,10 +86,18 @@ class GeneticAlgorithm(Searcher):
     def _breed_next_generation(self):
         children = []
         for parent1, parent2 in self._select_parents():
-            xs = self._crossover(parent1.xs, parent2.xs)
-            if random.random() < self.spec.p_mutation:
-                xs = self._mutate(xs)
-            child = self.model(xs, io=True)
+            failures = 0
+            child = None
+            while child is None:
+                xs = self._crossover(parent1.xs, parent2.xs)
+                if random.random() < self.spec.p_mutation or failures > 0:
+                    # mutate more if the parents don't work well together
+                    for _ in range(max(failures + 1, len(xs))):
+                        xs = self._mutate(xs)
+                try:
+                    child = self.model(xs, io=True)
+                except ModelInputException:
+                    pass
             children.append(child)
         self._evals += len(children)
         return tuple(children)
