@@ -1,6 +1,7 @@
 from __future__ import division, print_function
 
 import math
+import numpy as np
 
 import base
 
@@ -55,11 +56,11 @@ def xtile(xs, lo=0, hi=0.001, width=50,
 
     out = [' '] * width
 
-    pos = lambda p: xs[int(len(xs) * p)]
-    place = lambda x: min(width-1, int(len(out) * norm(x, lo, hi)))
+    out_index_for_value = lambda x: min(width-1,
+                                        int(len(out) * norm(x, lo, hi)))
 
-    what = [pos(p) for p in chops]
-    where = [place(n) for n in what]
+    values_at_chops = tuple(xs[int(len(xs) * p)] for p in chops)
+    where = [out_index_for_value(n) for n in values_at_chops]
 
     for one, two in base.pairs(where):
         for i in range(one, two):
@@ -67,11 +68,12 @@ def xtile(xs, lo=0, hi=0.001, width=50,
         marks = marks[1:]
 
     out[int(width / 2)] = bar
-    out[place(pos(0.5))] = star
+    out[out_index_for_value(xs[int(len(xs) * 0.5)])] = star
 
     if as_list:
         rv = ['(' + ''.join(out) + ")"]
-        rv.extend(show % x for x in what)
+        rv.extend(show % x for x in values_at_chops)
         return rv
 
-    return ''.join(out) + "," + ','.join([show.format(x) for x in what])
+    return ''.join(out) + "," + ','.join([show.format(x)
+                                         for x in values_at_chops])
