@@ -26,10 +26,10 @@ def iqr(xs):
     return xs[int(n * .75)] - xs[int(n * .25)]
 
 
-def standard_deviation(xs, mean=None):
-    if mean is None:
-        mean = mean(xs)
-    return math.sqrt((sum(x - mean) for x in xs) ** 2)
+def standard_deviation(xs, mean_val=None):
+    if mean_val is None:
+        mean_val = mean(xs)
+    return math.sqrt((sum(x - mean_val) for x in xs) ** 2)
 
 
 def norm(x, lo, hi):
