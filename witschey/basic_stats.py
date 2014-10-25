@@ -37,23 +37,19 @@ def norm(x, lo, hi):
     return (x - lo) / (hi - lo)
 
 
-def xtile(xs, lo=0, hi=0.001,
-          width=50,
-          chops=[0.1, 0.3, 0.5, 0.7, 0.9],
-          marks=["-", " ", " ", "-", " "],
-          bar="|", star="*",
-          show=" {: >6.2f}",
+def xtile(xs, lo=0, hi=0.001, width=50,
+          chops=[0.1, 0.3, 0.5, 0.7, 0.9], marks=["-", " ", " ", "-", " "],
+          bar="|", star="*", show=" {: >6.2f}",
           as_list=False):
-    """The function _xtile_ takes a list of (possibly) unsorted numbers and
-    presents them as a horizontal xtile ascii chart. The default is a
-    contracted _quintile_ that shows the 10,30,50,70,90 breaks in the data by
-    default. These breaks can be customized with the chops parameter.
+    """Take an iterable of numbers and present them as a horizontal xtile
+    ascii chart. The default is a contracted quintile showing the 10th, 30th,
+    50th, 70th, and 90th percentiles. These breaks can be customized with the
+    chops parameter.
     """
 
     xs = sorted(xs)
 
-    lo = min(lo, xs[0])
-    hi = max(hi, xs[-1])
+    lo, hi = min(lo, xs[0]), max(hi, xs[-1])
     if hi == lo:
         hi += .001  # ugh
 
