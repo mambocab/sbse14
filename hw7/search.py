@@ -3,7 +3,8 @@ from __future__ import print_function, division
 import itertools, random
 from collections import namedtuple, defaultdict
 
-from witschey.models import Model, Schwefel
+from witschey.models import Model
+from witschey import models
 from witschey.searchers import Searcher
 
 from witschey.rdiv import rdiv_report
@@ -12,8 +13,8 @@ import timeit
 
 def run(n=30, text_report=True):
     ms = Model.__subclasses__()
-    ms.remove(Schwefel)
-    ms.extend(Schwefel.initalizer_with(d=d) for d in (10, 20, 40))
+    ms.remove(models.Schwefel)
+    ms.extend(models.Schwefel.initalizer_with(d=d) for d in (10, 20, 40))
     ss = Searcher.__subclasses__()
     random.seed(1)
     outs = []
