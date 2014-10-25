@@ -6,6 +6,7 @@ import functools
 
 from model import Model
 from independent_variable import IndependentVariable as IV  # noqa
+from witschey import base
 
 
 def _randint_matrix(x, lo=-100, hi=100):
@@ -44,7 +45,7 @@ class Schwefel(Model):
             return f
 
         # generate 1D matrix of functions b_i
-        b = [b_sum(i) for i in xrange(d)]
+        b = [base.memoize(b_sum(i)) for i in xrange(d)]
 
         # and finally, here's the function to minimize
         def f12(xs):
