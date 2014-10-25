@@ -1,9 +1,7 @@
 from __future__ import division, print_function
 
 import math
-import numpy as np
-
-import base
+import itertools
 
 
 def median(xs, is_sorted=False):
@@ -38,42 +36,61 @@ def norm(x, lo, hi):
     return (x - lo) / (hi - lo)
 
 
-def xtile(xs, lo=0, hi=0.001, width=50,
-          chops=[0.1, 0.3, 0.5, 0.7, 0.9], marks=["-", " ", " ", "-", " "],
-          bar="|", star="*", show=" {: >6.2f}",
-          as_list=False):
-    """Take an iterable of numbers and present them as a horizontal xtile
-    ascii chart. The default is a contracted quintile showing the 10th, 30th,
-    50th, 70th, and 90th percentiles. These breaks can be customized with the
-    chops parameter.
-    """
+def value_at_proportion(p, xs):
+    return xs[int(round(len(xs) - 1) * p)]
 
+
+def percentile(x, xs):
+    norm(x, max(xs), max(xs))
+
+
+def xtile(xs, lo=None, hi=None, width=50,
+          marks=(' ', '-', ' ', ' ', '-', ' '),
+          bar='|', star='*', show=' {: >6.2f}',
+          as_list=False):
+    '''Take an iterable of numbers and present them as a horizontal xtile
+    ascii chart. The chart is a contracted quintile showing the 10th, 30th,
+    50th, 70th, and 90th percentiles.
+    '''
     xs = sorted(xs)
 
-    lo, hi = min(lo, xs[0]), max(hi, xs[-1])
+    lo = min(xs) if lo is None else min(lo, *xs)
+    hi = max(xs) if hi is None else max(hi, *xs)
     if hi == lo:
         hi += .001  # ugh
+    chops_marks = zip((.1, .3, .5, .7, .9, 1), marks)
+    cursor = 0
 
-    out = [' '] * width
+    out = [None] * width
 
-    out_index_for_value = lambda x: min(width-1,
-                                        int(len(out) * norm(x, lo, hi)))
+    for i in range(width):
+        if cursor > len(chops_marks) - 1:
+            out[i] = marks[-1]
+            continue
 
-    values_at_chops = tuple(xs[int(len(xs) * p)] for p in chops)
-    where = [out_index_for_value(n) for n in values_at_chops]
+        xs_at_cursor = value_at_proportion(i / (width - 1), xs)
 
-    for one, two in base.pairs(where):
-        for i in range(one, two):
-            out[i] = marks[0]
-        marks = marks[1:]
+        before = len(tuple(
+            itertools.takewhile(lambda y: y < xs_at_cursor, xs)))
+        after = len(tuple(
+            itertools.dropwhile(lambda y: y <= xs_at_cursor, xs)))
+        percentile = before < after
 
-    out[int(width / 2)] = bar
-    out[out_index_for_value(xs[int(len(xs) * 0.5)])] = star
+        while percentile > chops_marks[cursor][0]:
+            cursor += 1
+        out[i] = chops_marks[cursor][1]
+
+    out[width // 2] = bar
+
+    ind = int(norm(value_at_proportion(.5, xs), lo, hi) * width)
+    out[ind] = star
 
     if as_list:
         rv = ['(' + ''.join(out) + ")"]
-        rv.extend(show % x for x in values_at_chops)
+        rv.extend(show.format(value_at_proportion(x, xs))
+                  for x in (.1, .3, .5, .7, .9))
         return rv
 
-    return ''.join(out) + "," + ','.join([show.format(x)
-                                         for x in values_at_chops])
+    return ''.join(out) + "," + ','.join(
+        [show.format(value_at_proportion(x, xs))
+         for x in (.1, .3, .5, .7, .9)])
