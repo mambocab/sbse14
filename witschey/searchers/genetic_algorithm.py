@@ -1,6 +1,6 @@
 from __future__ import division, print_function
 
-import itertools
+from itertools import chain, combinations, cycle, izip, tee
 import random
 from collections import Iterable
 
@@ -28,16 +28,16 @@ def _crossover_at(seq1, seq2, xovers):
     # takes two sequences and a single crossover point or a list of points
     if not isinstance(xovers, Iterable):
         xovers = [xovers]
-    cycle_seq = itertools.cycle((seq1, seq2))
+    cycle_seq = cycle((seq1, seq2))
 
     # iter. of start and stop points for sections
-    xovers = itertools.chain((None,), xovers, (None,))
-    parent_point_zip = itertools.izip(cycle_seq, base.pairs(xovers))
+    xovers = chain((None,), xovers, (None,))
+    parent_point_zip = izip(cycle_seq, base.pairs(xovers))
 
     segments = tuple(parent[start_stop[0]:start_stop[1]]
                      for parent, start_stop in parent_point_zip)
 
-    return tuple(itertools.chain(*segments))
+    return tuple(chain(*segments))
 
 
 class GeneticAlgorithm(Searcher):
@@ -74,8 +74,7 @@ class GeneticAlgorithm(Searcher):
         Return an iterator with 2 copies of each pair of parents in the
         population
         """
-        return itertools.chain(
-            *itertools.tee(itertools.combinations(self._population, 2)))
+        return chain(*tee(combinations(self._population, 2)))
 
     def _breed_next_generation(self):
         children = []
