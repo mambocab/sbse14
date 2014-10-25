@@ -2,6 +2,7 @@ from __future__ import division, print_function
 
 from unittest import TestCase
 from nose.tools import assert_true, assert_false, assert_equals  # noqa
+from nose.tools import assert_is_instance
 
 from witschey import basic_stats
 
@@ -40,12 +41,10 @@ class TestMath(TestCase):
 class TestXtile(TestCase):
 
     def test_string(self):
-        s = '                         |         -     *   ---- , ' +\
-            '312.00, 316.00, 361.00, 398.00, 436.00'
-        assert_equals(basic_stats.xtile([398, 312, 361, 436, 316]), s)
+        s = '                        *|                        ,   ' +\
+            '4.00,  14.00,  24.00,  34.00,  44.00'
+        assert_equals(basic_stats.xtile(list(xrange(50))), s)
 
-    def test_width(self):
-        s = '          |     * - , 312.00, 316.00, 361.00, 398.00, 436.00'
-        n = 20
-        x = basic_stats.xtile([398, 312, 361, 436, 316], width=n)
-        assert_equals(s, x)
+    def test_as_list(self):
+        assert_is_instance(
+            basic_stats.xtile(list(xrange(100)), as_list=True), list)
