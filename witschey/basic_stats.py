@@ -32,7 +32,8 @@ def standard_deviation(xs, mean_val=None):
     return math.sqrt((sum(x - mean_val) for x in xs) ** 2)
 
 
-def norm(x, lo, hi):
+def norm(x, a, b):
+    lo, hi = min(a, b), max(a, b)
     return (x - lo) / (hi - lo)
 
 
