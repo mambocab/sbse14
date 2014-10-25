@@ -1,4 +1,4 @@
-from searcher import Searcher, SearcherConfig
+from searcher import Searcher, SearcherConfig, SearchReport
 from simulated_annealer import SimulatedAnnealer
 from maxwalksat import MaxWalkSat
 from genetic_algorithm import GeneticAlgorithm
@@ -14,6 +14,6 @@ SEARCHER_SHORTNAMES = {
 for searcher_cls, shortname in SEARCHER_SHORTNAMES.iteritems():
     searcher_cls.shortname = shortname
 
-__all__ = [Searcher, SearcherConfig,
+__all__ = [Searcher, SearcherConfig, SearchReport,
            SimulatedAnnealer, MaxWalkSat,
            GeneticAlgorithm, DifferentialEvolution]

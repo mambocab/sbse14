@@ -3,7 +3,7 @@ from __future__ import division, print_function
 import random
 
 from witschey import base
-from witschey.searchers.searcher import Searcher, SearchReport
+from witschey.searchers import Searcher, SearchReport
 from witschey.log import NumberLog
 
 
