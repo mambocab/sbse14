@@ -7,7 +7,7 @@ import base
 
 def median(xs, is_sorted=False):
     # implementation from http://stackoverflow.com/a/10482734/3408454
-    if is_sorted:
+    if not is_sorted:
         xs = sorted(xs)
     n = len(xs)
     return xs[n // 2] if n % 2 else (xs[n // 2] + xs[n // 2 - 1]) / 2
