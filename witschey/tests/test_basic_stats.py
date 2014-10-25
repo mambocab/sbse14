@@ -40,11 +40,12 @@ class TestMath(TestCase):
 class TestXtile(TestCase):
 
     def test_string(self):
-        s = '                         |         -     *   ---- ,' +\
-            ' 312.00, 316.00, 361.00, 398.00, 436.00'
+        s = '                         |         -     *   ---- , ' +\
+            '312.00, 316.00, 361.00, 398.00, 436.00'
         assert_equals(basic_stats.xtile([398, 312, 361, 436, 316]), s)
 
     def test_width(self):
+        s = '          |     * - , 312.00, 316.00, 361.00, 398.00, 436.00'
         n = 20
-        s = basic_stats.xtile([398, 312, 361, 436, 316])
-        assert_equals(len(s), width=n)
+        x = basic_stats.xtile([398, 312, 361, 436, 316], width=n)
+        assert_equals(s, x)
