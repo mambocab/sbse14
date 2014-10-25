@@ -79,7 +79,6 @@ class GeneticAlgorithm(Searcher):
         for parent1, parent2 in self._select_parents():
             xs = self._crossover(parent1.xs, parent2.xs)
             if random.random() < self.spec.p_mutation:
-                self._mutations += 1
                 xs = self._mutate(xs)
             child = self.model(xs, io=True)
             children.append(child)
@@ -99,7 +98,7 @@ class GeneticAlgorithm(Searcher):
 
         best = min(self._population, key=get_energy)
 
-        self._evals, lives, self._mutations = 0, 4, 0
+        self._evals, lives = 0, 4
 
         for gen in xrange(self.spec.iterations):
             if self._evals > self.spec.iterations or lives <= 0:
