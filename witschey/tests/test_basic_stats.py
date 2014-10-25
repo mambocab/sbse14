@@ -2,6 +2,7 @@ from __future__ import division, print_function
 
 from unittest import TestCase
 from nose.tools import assert_true, assert_false, assert_equals  # noqa
+from nose.tools import assert_greater
 from nose.tools import assert_is_instance
 
 from witschey import basic_stats
@@ -36,6 +37,12 @@ class TestMath(TestCase):
         copy = xs[:]
         basic_stats.median(xs)
         assert_equals(xs, copy)
+
+    def test_standard_deviation(self):
+        xs = list(range(20)) + list(range(40, 60))
+        ys = list(range(-40, -20)) + list(range(40, 60))
+        assert_greater(basic_stats.standard_deviation(ys),
+                       basic_stats.standard_deviation(xs))
 
 
 class TestXtile(TestCase):
