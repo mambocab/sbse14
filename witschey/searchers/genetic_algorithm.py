@@ -40,6 +40,14 @@ def _crossover_at(seq1, seq2, xovers):
 
 
 class GeneticAlgorithm(Searcher):
+    """
+    A searcher that searches the input space by modeling a population of
+    organisms that 'breed', are selected for their good qualities, and
+    mutate slightly from generation to generation.
+
+    For more information, see https://github.com/timm/sbse14/wiki/Ga and
+    http://en.wikipedia.org/wiki/Genetic_algorithm.
+    """
 
     def __init__(self, model, *args, **kw):
         super(GeneticAlgorithm, self).__init__(model=model, *args, **kw)
