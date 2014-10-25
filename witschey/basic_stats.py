@@ -93,5 +93,5 @@ def xtile(xs, lo=None, hi=None, width=50,
         return rv
 
     return ''.join(out) + "," + ','.join(
-        [show.format(value_at_proportion(x, xs))
+        [show % value_at_proportion(x, xs)
          for x in (.1, .3, .5, .7, .9)])
