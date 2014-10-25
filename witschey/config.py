@@ -8,7 +8,7 @@ CONFIG = memo(
                   iterations=1000, p_mutation=1/3, epsilon=.01),
     SimulatedAnnealer=memo(cooling_factor=.8),
     MaxWalkSat=memo(),
-    GeneticAlgorithm=memo(population_size=50, p_mutation=.6,
+    GeneticAlgorithm=memo(population_size=50, p_mutation=.001,
                           crossovers=2),
     DifferentialEvolution=memo(generations=100, n_candiates=100,
                                f=.75, p_crossover=.3))
