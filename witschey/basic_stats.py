@@ -1,7 +1,7 @@
 from __future__ import division, print_function
 
-import math
 import itertools
+import base
 
 
 def median(xs, is_sorted=False):
@@ -29,7 +29,7 @@ def iqr(xs):
 def standard_deviation(xs, mean_val=None):
     if mean_val is None:
         mean_val = mean(xs)
-    return math.sqrt((sum(x - mean_val) for x in xs) ** 2)
+    return base.memo_sqrt(sum((x - mean_val) ** 2 for x in xs))
 
 
 def norm(x, a, b):
