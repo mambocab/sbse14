@@ -6,6 +6,10 @@ import base
 
 
 def median(xs, is_sorted=False):
+    """
+    Return the median of the integer-indexed object passed in. To save sorting
+    time, the client can pass in is_sorted=True to skip the sorting step.
+    """
     # implementation from http://stackoverflow.com/a/10482734/3408454
     if not is_sorted:
         xs = sorted(xs)
