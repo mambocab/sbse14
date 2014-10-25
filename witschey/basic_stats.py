@@ -50,7 +50,7 @@ def percentile(x, xs, is_sorted=False):
 
 def xtile(xs, lo=None, hi=None, width=50,
           marks=(' ', '-', ' ', ' ', '-', ' '),
-          bar='|', star='*', show=' {: >6.2f}',
+          bar='|', star='*', show=' {:6.2f}',
           as_list=False):
     '''Take an iterable of numbers and present them as a horizontal xtile
     ascii chart. The chart is a contracted quintile showing the 10th, 30th,
@@ -91,10 +91,10 @@ def xtile(xs, lo=None, hi=None, width=50,
 
     if as_list:
         rv = ['(' + ''.join(out) + ")"]
-        rv.extend(show.format(value_at_proportion(x, xs))
-                  for x in (.1, .3, .5, .7, .9))
+        rv.extend((show.format(value_at_proportion(x, xs))
+                  for x in (.1, .3, .5, .7, .9)))
         return rv
 
     return ''.join(out) + "," + ','.join(
-        [show % value_at_proportion(x, xs)
+        [show.format(value_at_proportion(x, xs))
          for x in (.1, .3, .5, .7, .9)])
