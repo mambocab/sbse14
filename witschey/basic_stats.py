@@ -41,8 +41,11 @@ def value_at_proportion(p, xs):
     return xs[int(round(len(xs) - 1) * p)]
 
 
-def percentile(x, xs):
-    norm(x, max(xs), max(xs))
+def percentile(x, xs, is_sorted=False):
+    if not is_sorted:
+        xs = sorted(xs)
+    before = len(tuple(itertools.ifilter(lambda y: y < x, xs)))
+    return before / len(xs)
 
 
 def xtile(xs, lo=None, hi=None, width=50,
