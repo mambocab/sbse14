@@ -41,7 +41,7 @@ class TestMath(TestCase):
 class TestXtile(TestCase):
 
     def test_string(self):
-        s = '                        *|                        ,   ' +\
+        s = '      -----------       *|          ----------    ,   ' +\
             '4.00,  14.00,  24.00,  34.00,  44.00'
         assert_equals(basic_stats.xtile(list(xrange(50))), s)
 
