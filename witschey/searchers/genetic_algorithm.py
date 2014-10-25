@@ -71,17 +71,11 @@ class GeneticAlgorithm(Searcher):
 
     def _select_parents(self):
         """
-        Return the best n pairs of parents in the population, where quality
-        is measured by minimizing the product of their energies
+        Return an iterator with 2 copies of each pair of parents in the
+        population
         """
-
-        size = self.spec.population_size
-        all_parents = filter(lambda t: t[0] != t[1],
-                             itertools.product(self._population,
-                                               self._population))
-
-        return sorted(all_parents,
-                      key=lambda x: x[0].energy * x[1].energy)[:size]
+        return itertools.chain(
+            *itertools.tee(itertools.combinations(self._population, 2)))
 
     def _breed_next_generation(self):
         children = []
@@ -100,7 +94,7 @@ class GeneticAlgorithm(Searcher):
                     pass
             children.append(child)
         self._evals += len(children)
-        return tuple(children)
+        return tuple(children[:self.spec.population_size])
 
     def run(self, text_report=True):
         init_xs = tuple(self.model.random_input_vector()
