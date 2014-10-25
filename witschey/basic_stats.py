@@ -18,6 +18,7 @@ def median(xs, is_sorted=False):
 
 
 def mean(xs):
+    "Returns the mean of the iterable argument."
     return sum(xs) / len(xs)
 
 
