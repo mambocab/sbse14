@@ -57,6 +57,31 @@ class MaxWalkSat(Searcher):
         else:
             self._report += '.'
 
+        # end-of-era bookkeeping
+        if self._evals % self.spec.era_length == 0:
+            self._end_era()
+
+    def _end_era(self):
+        self._report += ('\n{: .2}'.format(self._best.energy), ' ')
+
+        # _prev_era won't exist in era 0, so account for that case
+        try:
+            improved = self._current_era.better(self._prev_era)
+        except AttributeError:
+            improved = False
+        self._prev_era = self._current_era
+
+        # track best_era
+        if improved or self._best_era is None:
+            self._best_era = self._current_era
+        else:
+            self._lives -= 1
+
+        if self._lives <= 0:
+            self._terminate = True
+        else:
+            self._current_era = NumberLog()
+
     def run(self, text_report=True):
         '''run MaxWalkSat on self.model'''
 
@@ -66,14 +91,14 @@ class MaxWalkSat(Searcher):
         # initialize and update log variables to track values by era
         self._current_era = NumberLog()
         self._current_era += self._current.energy
-        best_era = None
+        self._best_era = None
         # bookkeeping variables
         self._evals = 0
-        lives = 4
+        self._lives = 4
         self._report = StringBuilder() if text_report else NullObject()
-        terminate = False
+        self._terminate = False
 
-        while self._evals < self.spec.iterations and not terminate:
+        while self._evals < self.spec.iterations and not self._terminate:
             # get the generator for a random independent variable
 
             if self.spec.p_mutation > random.random():
@@ -83,39 +108,13 @@ class MaxWalkSat(Searcher):
                 # if doing a local search, choose a dimension
                 dimension = base.random_index(self._current.xs)
                 search_iv = self.model.xs[dimension]
-                # make sure local search ends at era end
-                max_search = self.spec.era_length - (self._evals
-                                                     % self.spec.era_length)
-                n = min(10, max_search)
                 # then try points all along the dimension
                 lo, hi = search_iv.lo, search_iv.hi
-                for j in self._local_search_xs(lo, hi, n):
+                for j in self._local_search_xs(lo, hi, 10):
                     self._update('|', dimension=dimension, value=j)
 
-            # end-of-era bookkeeping
-            if self._evals % self.spec.era_length == 0:
-                self._report += ('\n{: .2}'.format(self._best.energy), ' ')
-
-                # _prev_era won't exist in era 0, so account for that case
-                try:
-                    improved = self._current_era.better(self._prev_era)
-                except AttributeError:
-                    improved = False
-                self._prev_era = self._current_era
-
-                # track best_era
-                if improved or best_era is None:
-                    best_era = self._current_era
-                else:
-                    lives -= 1
-
-                if lives <= 0:
-                    terminate = True
-                else:
-                    self._current_era = NumberLog()
-
         return SearchReport(best=self._best.energy,
-                            best_era=best_era,
+                            best_era=self._best_era,
                             evaluations=self._evals,
                             searcher=self.__class__,
                             spec=self.spec,
