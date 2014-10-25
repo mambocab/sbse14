@@ -68,19 +68,12 @@ def xtile(xs, lo=None, hi=None, width=50,
     out = [None] * width
 
     for i in range(width):
-        if cursor > len(chops_marks) - 1:
-            out[i] = marks[-1]
-            continue
 
         xs_at_cursor = value_at_proportion(i / (width - 1), xs)
 
-        before = len(tuple(
-            itertools.takewhile(lambda y: y < xs_at_cursor, xs)))
-        after = len(tuple(
-            itertools.dropwhile(lambda y: y <= xs_at_cursor, xs)))
-        percentile = before < after
+        rank = percentile(xs_at_cursor, xs, is_sorted=True)
 
-        while percentile > chops_marks[cursor][0]:
+        while rank > chops_marks[cursor][0]:
             cursor += 1
         out[i] = chops_marks[cursor][1]
 
