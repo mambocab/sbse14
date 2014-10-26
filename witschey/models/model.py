@@ -47,12 +47,12 @@ class Model(object):
 
         if self.energy_min is None or self.energy_min > energy:
             if self.enforce_energy_constraints:
-                raise ValueError(energy_errmsg)
+                raise ModelInputException(energy_errmsg)
             self.energy_min = energy
 
         if self.energy_max is None or energy > self.energy_max:
             if self.enforce_energy_constraints:
-                raise ValueError(energy_errmsg)
+                raise ModelInputException(energy_errmsg)
             self.energy_max = energy
 
         if io:
