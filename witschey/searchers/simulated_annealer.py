@@ -87,10 +87,10 @@ class SimulatedAnnealer(Searcher):
         evals = None
 
         for k in range(self.spec.iterations):
-            self._current_era_energies = NumberLog(max_size=None)
             if self._lives <= 0 and self.spec.terminate_early:
                 evals = k
                 break
+            self._current_era_energies = NumberLog(max_size=None)
 
             self._update(k / self.spec.iterations)
 
