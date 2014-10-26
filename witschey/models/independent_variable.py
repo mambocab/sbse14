@@ -60,3 +60,11 @@ class IndependentVariable(object):
         Write-only.
         """
         return self._hi
+
+    @property
+    def type(self):
+        """
+        Return the type of this independent variable.
+        Write-only.
+        """
+        return self._type
