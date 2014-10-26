@@ -90,9 +90,9 @@ def random_index(x):
     Given a dict, list, tuple, or a subclass of one of these, return a random
     valid key for it.
     '''
-    if isinstance(x, dict) or issubclass(x, dict):
+    if isinstance(x, dict) or issubclass(x.__class__, dict):
         return random.choice(x.keys)
-    if isinstance(x, (list, tuple)) or issubclass(x, (list, tuple)):
+    if isinstance(x, (list, tuple)) or issubclass(x.__class__, (list, tuple)):
         return random.randint(0, len(x) - 1)
     raise ValueError('{} is not a dict, list, or tuple'.format(x))
 
