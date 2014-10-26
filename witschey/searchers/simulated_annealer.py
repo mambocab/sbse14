@@ -17,6 +17,39 @@ class SimulatedAnnealer(Searcher):
     https://github.com/timm/sbse14/wiki/sa for more information.
     """
 
+    def __init__(self, *args, **kwargs):
+        super(SimulatedAnnealer, self).__init__(*args, **kwargs)
+        self._current = self.model.random_model_io()
+        self._best = self._current  # assumes current is immutable
+        self._lives = 4
+        self._best_era = None
+
+    def run(self, text_report=True):
+        """
+        Run the SimulatedAnnealer on the model specified at object
+        instantiation time.
+        """
+        self._report = StringBuilder() if text_report else NullObject()
+        evals = None
+
+        for k in range(self.spec.iterations):
+            if self._lives <= 0 and self.spec.terminate_early:
+                evals = k
+                break
+            self._current_era_energies = NumberLog(max_size=None)
+
+            self._update(k / self.spec.iterations)
+
+            if k % self.spec.era_length == 0 and k != 0:
+                self._end_era()
+
+        if evals is None:
+            evals = self.spec.iterations
+
+        return SearchReport(best=self._best.energy, evaluations=evals,
+                            best_era=self._best_era, spec=self.spec,
+                            searcher=self.__class__, report=self._report)
+
     def _mutate(self, xs):
         return tuple(xs[i] if random.random() < self.spec.p_mutation else v
                      for i, v in enumerate(self.model.random_input_vector()))
@@ -73,36 +106,6 @@ class SimulatedAnnealer(Searcher):
                 self._report += '?'
 
         self._report += '.'
-
-    def run(self, text_report=True):
-        """
-        Run the SimulatedAnnealer on the model specified at object
-        instantiation time.
-        """
-        self._report = StringBuilder() if text_report else NullObject()
-        self._current = self.model.random_model_io()
-        self._best = self._current  # assumes current is immutable
-        self._lives = 4
-        self._best_era = None
-        evals = None
-
-        for k in range(self.spec.iterations):
-            if self._lives <= 0 and self.spec.terminate_early:
-                evals = k
-                break
-            self._current_era_energies = NumberLog(max_size=None)
-
-            self._update(k / self.spec.iterations)
-
-            if k % self.spec.era_length == 0 and k != 0:
-                self._end_era()
-
-        if evals is None:
-            evals = self.spec.iterations
-
-        return SearchReport(best=self._best.energy, evaluations=evals,
-                            best_era=self._best_era, spec=self.spec,
-                            searcher=self.__class__, report=self._report)
 
     def _good_idea(self, old, new, temp):
         """
