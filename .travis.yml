@@ -2,7 +2,7 @@ language: python
 python:
   - "2.7"
 install:
-  - pip install -r reqirements.txt
+  - pip install -r requirements.txt
   - pip install coveralls
 before_script:  flake8 witschey/
 script:         nosetests --with-doctest --with-coverage --cover-package witschey witschey
