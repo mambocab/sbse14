@@ -25,10 +25,15 @@ class IndependentVariable(object):
     @property
     def lo(self):
         """
-        Return the lower bound on values for this independent variable. Write-only.
+        Return the lower bound on values for this independent variable.
+        Write-only.
         """
         return self._lo
 
     @property
     def hi(self):
+        """
+        Return the upper bound on values for this independent variable.
+        Write-only.
+        """
         return self._hi
