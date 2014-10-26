@@ -19,7 +19,7 @@ class IndependentVariable(object):
     >>> random.seed(1); iv(), iv(), iv()
     (1.3436424411240122, 8.474337369372327, 7.6377461897661405)
 
-    Provices a `clip` method to return a variable clipped within the bounds
+    Provides a `clip` method to return a variable clipped within the bounds
     of the variable:
 
     >>> iv.clip(10.5), iv.clip(-100), iv.clip(4.2)
