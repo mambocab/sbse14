@@ -303,7 +303,7 @@ def rdiv_report(data):
                 '10%', '30%', '50%', '70%', '90%'])
     for _,__,x in sorted(ranks):
         q1,q2,q3 = (round(q, 2) for q in x.quartiles())
-        xtile_out = xtile(x.all,lo=lo,hi=hi,width=30,show="%5.2f", as_list=True)
+        xtile_out = xtile(x.all, lo=lo, hi=hi, width=30, as_list=True)
         row_xtile = [xtile_out[0]] + map(lambda x: x + ',', xtile_out[1:-1]) +\
                     [xtile_out[-1]]
         rows.append([x.rank+1] +
