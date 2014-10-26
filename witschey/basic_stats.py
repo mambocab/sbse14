@@ -34,7 +34,10 @@ def standard_deviation(xs, mean_val=None):
 
 def norm(x, a, b):
     lo, hi = min(a, b), max(a, b)
-    return (x - lo) / (hi - lo)
+    try:
+        return (x - lo) / (hi - lo)
+    except ZeroDivisionError:
+        return .5
 
 
 def value_at_proportion(p, xs):
