@@ -16,8 +16,7 @@ class Model(object):
     __metaclass__ = ABCMeta
 
     def __init__(self, independents=None, dependents=None,
-                 energy_min=None, energy_max=None,
-                 enforce_energy_constraints=False):
+                 energy_min=None, energy_max=None):
         if independents is None or dependents is None:
             raise ValueError
 
@@ -25,7 +24,6 @@ class Model(object):
         self.ys = dependents
         self.energy_max = energy_max
         self.energy_min = energy_min
-        self.enforce_energy_constraints = enforce_energy_constraints
 
     def normalize(self, x):
         n = x - self.energy_min
@@ -46,18 +44,10 @@ class Model(object):
         ys = tuple(y(xs) for y in self.ys)
         energy = sum(ys)
 
-        if self.enforce_energy_constraints:
-            energy_errmsg = 'current energy {} not in range [{}, {}]'.format(
-                energy, self.energy_min, self.energy_max)
-
         if self.energy_min is None or self.energy_min > energy:
-            if self.enforce_energy_constraints:
-                raise ModelInputException(energy_errmsg)
             self.energy_min = energy
 
         if self.energy_max is None or energy > self.energy_max:
-            if self.enforce_energy_constraints:
-                raise ModelInputException(energy_errmsg)
             self.energy_max = energy
 
         if io:
