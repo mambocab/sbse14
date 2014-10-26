@@ -49,7 +49,7 @@ class IndependentVariable(object):
     def lo(self):
         """
         Return the lower bound on values for this independent variable.
-        Write-only.
+        Read-only.
         """
         return self._lo
 
@@ -57,7 +57,7 @@ class IndependentVariable(object):
     def hi(self):
         """
         Return the upper bound on values for this independent variable.
-        Write-only.
+        Read-only.
         """
         return self._hi
 
@@ -65,6 +65,6 @@ class IndependentVariable(object):
     def type(self):
         """
         Return the type of this independent variable.
-        Write-only.
+        Read-only.
         """
         return self._type
