@@ -24,6 +24,14 @@ class IndependentVariable(object):
 
     >>> iv.clip(10.5), iv.clip(-100), iv.clip(4.2)
     (10, 0, 4.2)
+
+    The optional third argument to __init__ specifies the type of the
+    IndependentVariable. Valid values are `float` and `int`, and the default
+    is `float`.
+
+    >>> iv = IndependentVariable(0, 10, int)
+    >>> iv(), iv(), iv()
+    (2, 5, 4)
     """
 
     def __init__(self, lo, hi, type=float):
