@@ -112,6 +112,9 @@ class Log(object):
         s = '_prepare_data() not implemented for ' + self.__class__.__name__
         raise NotImplementedError(s)
 
+    def __iter__(self):
+        return iter(self._cache)
+
     def contents(self):
         return self._cache.as_list()
 
