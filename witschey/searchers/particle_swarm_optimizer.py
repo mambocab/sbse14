@@ -39,27 +39,26 @@ class ParticleSwarmOptimizer(Searcher):
 
     def _update(self):
         self._prev_flock_energies = self._current_flock_energies
-        self._flock = tuple(p._update(self._best) for p in self._flock)
-        self._evals += len(self._flock)
 
+        for p in self._flock:
+            p._update(self._best)
+        self._evals += len(self._flock)
         self._current_flock_energies = NumberLog(p.energy
                                                  for p in self._flock)
 
-        self._best = min(self._best, *self._current_flock_energies,
-                         key=lambda x: x.energy)
+        self._best = min(self._best, *self._flock, key=lambda x: x.energy)
         if self._current_flock_energies.better(self._prev_flock_energies):
             self._best_flock = self._flock
         else:
             self._lives -= 1
 
     def run(self, text_report=False):
-        for _ in range(self.spec.generations):
+        for i in range(self.spec.generations):
             self._update()
-            if self._lives <= 0:
+            if self._lives <= 0 or self._evals >= self.spec.iterations:
                 break
 
         best_flock_energies = NumberLog(p.energy for p in self._best_flock)
-
         return SearchReport(best=self._best,
                             best_era=best_flock_energies,
                             evaluations=self._evals,
@@ -77,7 +76,7 @@ class Particle(object):
         self._model = model
         self._current = model.random_model_io()
         self._best = self._current
-        self._phi1, self._phi1 = phi1, phi2
+        self._phi1, self._phi2 = phi1, phi2
 
         # calculate constriction factor
         phi = phi1 + phi2
@@ -93,7 +92,7 @@ class Particle(object):
 
     def _compute_new_velocity(self, local_best):
         to_local = tuple(a - b
-                             for a, b in izip(local_best, self._current.xs))
+                             for a, b in izip(local_best.xs, self._current.xs))
         to_personal = tuple(a - b
                             for a, b in izip(self._best.xs, self._current.xs))
         v = tuple((self._k * (v + self._phi1 * loc + self._phi2 * pers)
@@ -113,8 +112,9 @@ class Particle(object):
         updated = False
         while not updated:
             try:
-                self._current = self.model.compute_model_io(candidate_xs)
+                self._current = self._model.compute_model_io(candidate_xs)
+                updated = True
             except ModelInputException:
-                candidate_xs = self.model.random_replace(candidate_xs)
+                candidate_xs = self._model.random_replace(candidate_xs)
 
         self._velocity = self._compute_new_velocity(self._best)
