@@ -11,4 +11,6 @@ CONFIG = memo(
     GeneticAlgorithm=memo(population_size=50, p_mutation=.001,
                           crossovers=2),
     DifferentialEvolution=memo(generations=100, n_candiates=100,
-                               f=.75, p_crossover=.3))
+                               f=.75, p_crossover=.3),
+    ParticleSwarmOptimizer=memo(population_size=30, phi1=2.8, phi2=1.3,
+                                generations=100))
