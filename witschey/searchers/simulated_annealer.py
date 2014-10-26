@@ -16,8 +16,6 @@ class SimulatedAnnealer(Searcher):
     process. See http://en.wikipedia.org/wiki/Simulated_annealing and
     https://github.com/timm/sbse14/wiki/sa for more information.
     """
-    def __init__(self, model, *args, **kw):
-        super(SimulatedAnnealer, self).__init__(model=model, *args, **kw)
 
     def _mutate(self, xs):
         return tuple(xs[i] if random.random() < self.spec.p_mutation else v

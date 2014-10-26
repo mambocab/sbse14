@@ -12,9 +12,6 @@ from witschey.models import ModelInputException
 
 class MaxWalkSat(Searcher):
 
-    def __init__(self, model, *args, **kw):
-        super(MaxWalkSat, self).__init__(model=model, *args, **kw)
-
     def _local_search_xs(self, bottom, top, n=10):
         '''divide the space from bottom to top into n partitions, then
         randomly sample within each partition'''

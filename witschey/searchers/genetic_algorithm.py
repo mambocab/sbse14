@@ -50,9 +50,6 @@ class GeneticAlgorithm(Searcher):
     http://en.wikipedia.org/wiki/Genetic_algorithm.
     """
 
-    def __init__(self, model, *args, **kw):
-        super(GeneticAlgorithm, self).__init__(model=model, *args, **kw)
-
     def _mutate(self, child):
         i = base.random_index(child)
         return base.tuple_replace(child, i, self.model.xs[i]())

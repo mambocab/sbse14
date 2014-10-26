@@ -10,9 +10,6 @@ from witschey.models import ModelInputException
 
 class DifferentialEvolution(Searcher):
 
-    def __init__(self, model, *args, **kw):
-        super(DifferentialEvolution, self).__init__(model=model, *args, **kw)
-
     def run(self, text_report=True):
         n_candiates = self.spec.n_candiates
         self._frontier = [self.model.random_model_io()
