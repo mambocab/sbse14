@@ -1,7 +1,6 @@
 from __future__ import division
 
 import random
-import numpy as np
 
 from searcher import Searcher, SearchReport
 from witschey import base
@@ -17,8 +16,9 @@ class MaxWalkSat(Searcher):
         randomly sample within each partition'''
         chunk_length = (top - bottom) / n
 
-        for a in np.arange(bottom, top, chunk_length):
-            yield random.uniform(a, a + chunk_length)
+        for i in range(n):
+            i = (i * chunk_length) + bottom
+            yield random.uniform(i, i + chunk_length)
 
     def _update(self, improvement_char, dimension=None, value=None):
         '''calculate the next value from the model and update state as
