@@ -34,10 +34,10 @@ class IndependentVariable(object):
     (2, 5, 4)
     """
 
-    def __init__(self, lo, hi, type=float):
+    def __init__(self, lo, hi, gen_type=float):
         self._lo = lo
         self._hi = hi
-        self._type = type
+        self._type = gen_type
 
         if self._type == float:
             self._get = random.uniform
