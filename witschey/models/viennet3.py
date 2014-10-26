@@ -13,11 +13,8 @@ class Viennet3(Model):
     def __init__(self):
 
         def f1(xs):
-            x_1sq = xs[0] ** 2
-            x_2sq = xs[1] ** 2
-            a = 0.5 * x_1sq
-            b = math.sin(x_1sq + x_2sq)
-            return a + x_2sq + b
+            xs_2_sum = xs[0] ** 2 + xs[1] ** 2
+            return (0.5 * xs_2_sum) + math.sin(xs_2_sum)
 
         def f2(xs):
             x_1 = xs[0]
