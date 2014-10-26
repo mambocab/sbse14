@@ -23,6 +23,7 @@ class SimulatedAnnealer(Searcher):
         self._best = self._current  # assumes current is immutable
         self._lives = 4
         self._best_era = None
+        self._current_era_energies = NumberLog(max_size=None)
 
     def run(self, text_report=True):
         """
@@ -36,7 +37,6 @@ class SimulatedAnnealer(Searcher):
             if self._lives <= 0 and self.spec.terminate_early:
                 evals = k
                 break
-            self._current_era_energies = NumberLog(max_size=None)
 
             self._update(k / self.spec.iterations)
 
@@ -81,7 +81,7 @@ class SimulatedAnnealer(Searcher):
             self._lives -= 1
 
         self._prev_era_energies = self._current_era_energies
-        self._current_era_energies = None
+        self._current_era_energies = NumberLog(max_size=None)
 
     def _update(self, temperature):
         # update the state of the annealer
