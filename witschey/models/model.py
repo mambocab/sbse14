@@ -7,6 +7,7 @@ from abc import ABCMeta
 from collections import namedtuple
 from random import sample
 
+from witschey import basic_stats
 
 ModelIO = namedtuple('ModelIO', ('xs', 'ys', 'energy'))
 
@@ -26,12 +27,7 @@ class Model(object):
         self.energy_min = energy_min
 
     def normalize(self, x):
-        n = x - self.energy_min
-        d = self.energy_max - self.energy_min
-        try:
-            return n / d
-        except ZeroDivisionError:
-            return 0.5
+        return basic_stats.norm(x, self.energy_max, self.energy_min)
 
     def random_input_vector(self):
         return tuple(x() for x in self.xs)
