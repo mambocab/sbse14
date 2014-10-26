@@ -37,15 +37,12 @@ class SimulatedAnnealer(Searcher):
             if self._lives <= 0 and self.spec.terminate_early:
                 evals = k
                 break
-
             self._update(k / self.spec.iterations)
-
             if k % self.spec.era_length == 0 and k != 0:
                 self._end_era()
 
         if evals is None:
             evals = self.spec.iterations
-
         return SearchReport(best=self._best.energy, evaluations=evals,
                             best_era=self._best_era, spec=self.spec,
                             searcher=self.__class__, report=self._report)
@@ -84,7 +81,7 @@ class SimulatedAnnealer(Searcher):
         self._current_era_energies = NumberLog(max_size=None)
 
     def _update(self, temperature):
-        # update the state of the annealer
+        """update the state of the annealer"""
         # generate new neighbor
         neighbor = self._get_neighbor(self._current)
         self._current_era_energies += neighbor.energy
@@ -98,6 +95,7 @@ class SimulatedAnnealer(Searcher):
             self._current = neighbor
             self._report += '+'
         else:
+            # if neighbor is worse than current, we still jump there sometimes
             cnorm = self.model.normalize(self._current.energy)
             nnorm = self.model.normalize(neighbor.energy)
             # occasionally jump to neighbor, even if it's a bad idea
