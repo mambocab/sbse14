@@ -69,7 +69,11 @@ class Model(object):
         return ModelIO(xs, ys, self.energy(ys))
 
     def random_model_io(self):
-        return self.compute_model_io(self.random_input_vector())
+        while True:
+            try:
+                return self.compute_model_io(self.random_input_vector())
+            except ModelInputException:
+                pass
 
 
 class ModelInputException(Exception):
