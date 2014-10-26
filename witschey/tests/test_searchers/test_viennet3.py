@@ -2,8 +2,8 @@ from __future__ import division, print_function
 
 import math
 import random
-from nose.tools import assert_equal
-from unittest import TestCase
+from nose.tools import assert_equal, assert_true
+from unittest import TestCase, skip
 
 from witschey.models import Viennet3
 
@@ -43,6 +43,7 @@ class TestViennet3(TestCase):
                         math.sin(x1 ** 2 + x2 ** 2))
             assert_equal(f1(xs), expected)
 
+    @skip
     def test_f2(self):
         random.seed(1)
         f2 = next(y for y in self.m.ys if y.__name__ == 'f2')
@@ -55,3 +56,7 @@ class TestViennet3(TestCase):
             expected = a + b + 15
 
             assert_equal(f2(xs), expected)
+
+    @skip
+    def test_f3(self):
+        assert_true(False)
