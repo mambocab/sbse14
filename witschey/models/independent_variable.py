@@ -6,7 +6,7 @@ import random
 
 
 class IndependentVariable(object):
-    def __init__(self, lo=None, hi=None, type=float):
+    def __init__(self, lo, hi, type=float):
         self._lo = lo
         self._hi = hi
         self._type = type
