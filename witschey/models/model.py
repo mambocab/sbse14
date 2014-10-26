@@ -65,10 +65,21 @@ class Model(object):
         return self.normalize(rv) if norm else rv
 
     def compute_model_io(self, xs):
+        """
+        Return a ModelIO namedtuple containing the input provided as the
+        argument, the output values for each function, and the energy of that
+        output.
+
+        Since this evaluates the model on its input, this method may raise a
+        ModelInputException.
+        """
         ys = self(xs)
         return ModelIO(xs, ys, self.energy(ys))
 
     def random_model_io(self):
+        """
+        Generate a random input for this model, then run the model
+        """
         while True:
             try:
                 return self.compute_model_io(self.random_input_vector())
