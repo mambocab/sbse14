@@ -39,6 +39,10 @@ class Model(object):
         return tuple(x() for x in self.xs)
 
     def __call__(self, xs, io=False):
+        for i, x in enumerate(xs):
+            if not self.xs[i].lo <= x <= self.xs[i].hi:
+                raise ModelInputException
+
         ys = tuple(y(xs) for y in self.ys)
         energy = sum(ys)
 
