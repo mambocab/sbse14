@@ -7,13 +7,13 @@ import random
 
 class IndependentVariable(object):
     def __init__(self, lo=None, hi=None, type=float):
-        self.type = type
         self._lo = lo
         self._hi = hi
+        self._type = type
 
-        if self.type == float:
+        if self._type == float:
             self._get = random.uniform
-        elif self.type == int:
+        elif self._type == int:
             self._get = random.randint
 
     def __call__(self):
