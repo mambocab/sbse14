@@ -7,9 +7,9 @@ import random
 
 class IndependentVariable(object):
     def __init__(self, lo=None, hi=None, type=float):
-        self.lo = lo
-        self.hi = hi
         self.type = type
+        self._lo = lo
+        self._hi = hi
 
         if self.type == float:
             self._get = random.uniform
@@ -21,3 +21,14 @@ class IndependentVariable(object):
 
     def clip(self, x):
         return max(self.lo, min(self.hi, x))
+
+    @property
+    def lo(self):
+        """
+        Return the lower bound on values for this independent variable. Write-only.
+        """
+        return self._lo
+
+    @property
+    def hi(self):
+        return self._hi
