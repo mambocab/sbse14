@@ -206,14 +206,12 @@ def scottknott(data,cohen=0.3,max_rank_size=3,epsilon=0.01):
     after the splits. 
     Reject splits with under 3 items"""
     all  = reduce(lambda x,y:x+y,data)
-    same = lambda l, r:   not different(l.all,r.all) 
-    return rdiv(data,all,minMu,max_rank_size,same,epsilon)
+    return rdiv(data,all,minMu,max_rank_size,epsilon)
 
 def rdiv(data,  # a list of class Nums
          all,   # all the data combined into one num
          div,   # function: find the best split
          max_rank_size,   
-         same, # function: rejects similar splits
          epsilon): # small enough to split two parts
     """Looks for ways to split sorted data, 
     Recurses into each split. Assigns a 'rank' number
@@ -221,8 +219,7 @@ def rdiv(data,  # a list of class Nums
     """
     def recurse(parts,all,rank=0):
         "Split, then recurse on each part."
-        cut,left,right = maybeIgnore(div(parts,all,max_rank_size,epsilon),
-                                     same,parts)
+        cut,left,right = maybeIgnore(div(parts,all,max_rank_size,epsilon),parts)
         if cut: 
             # if cut, rank "right" higher than "left"
             rank = recurse(parts[:cut],left,rank) + 1
@@ -235,9 +232,9 @@ def rdiv(data,  # a list of class Nums
     recurse(sorted(data),all)
     return data
 
-def maybeIgnore((cut,left,right), same,parts):
+def maybeIgnore((cut,left,right),parts):
     if cut:
-        if same(sum(parts[:cut],Num('upto')), sum(parts[cut:],Num('above'))):
+        if not different(sum(parts[:cut],Num('upto')).all, sum(parts[cut:],Num('above')).all):
             cut = left = right = None
     return cut,left,right
 
