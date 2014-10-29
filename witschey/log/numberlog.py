@@ -74,6 +74,9 @@ class NumberLog(Log):
     def xtile(self, *args, **kw):
         return basic_stats.xtile(self._cache, *args, **kw)
 
+    def value_at_proportion(self, p):
+        return basic_stats.value_at_proportion(p, self._cache)
+
     def better(self, log2):
         if log2 is None:
             return ValueError
