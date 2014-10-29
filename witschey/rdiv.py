@@ -3,63 +3,12 @@ import sys
 import random
 import math
 
+from log import NumberLog
 import texttable
 from basic_stats import xtile, median
 from witschey import base
 
 # flake8: noqa
-
-"""
-
-### Standard Accumulator for Numbers
-
-Note the _lt_ method: this accumulator can be sorted by median values.
-
-Warning: this accumulator keeps _all_ numbers. Might be better to use
-a bounded cache.
-
-"""
-class Num:
-  "An Accumulator for numbers"
-  def __init__(i,name,inits=[]): 
-    i.n = i.m2 = i.mu = 0.0
-    i.all=[]
-    i._median=None
-    i.name = name
-    i.rank = 0
-    for x in inits: i.add(x)
-  def s(i)       : return (i.m2/(i.n - 1))**0.5
-  def add(i,x):
-    i._median=None
-    i.n   += 1   
-    i.all += [x]
-    delta  = x - i.mu
-    i.mu  += delta*1.0/i.n
-    i.m2  += delta*(x - i.mu)
-  def __add__(i,j):
-    return Num(i.name + j.name,i.all + j.all)
-  def quartiles(i):
-    i.all = sorted(i.all)
-    n  = int(len(i.all)*0.25)
-    return i.all[n] , i.all[n * 2], i.all[n * 3]
-  def median(i):
-    if not i._median:
-      i.all = sorted(i.all)
-      i._median=median(i.all)
-    return i._median
-  def __lt__(i,j):
-    return i.median() < j.median() 
-  def spread(i):
-    i.all=sorted(i.all)
-    n1=i.n*0.25
-    n2=i.n*0.75
-    if len(i.all) <= 1:
-      return 0
-    if len(i.all) == 2:
-      return i.all[1] - i.all[0]
-    else:
-      return i.all[int(n2)] - i.all[int(n1)]
-
 
 def a12(lst1,lst2):
     "how often is x in lst1 more than y in lst2?"
@@ -103,13 +52,6 @@ To check if two populations _(y0,z0)_
 are different, many times sample with replacement
 from both to generate _(y1,z1), (y2,z2), (y3,z3)_.. etc.
 
-"""
-def sampleWithReplacement(xs):
-    "returns a list same size as list"
-    return [random.choice(xs) for _ in xs]
-"""
-
-
 Then, for all those samples,
  check if some *testStatistic* in the original pair
 hold for all the other pairs. If it does more than (say) 99%
@@ -124,14 +66,11 @@ joint standard deviation of the populations.
 def testStatistic(y,z): 
     """Checks if two means are different, tempered
      by the sample size of 'y' and 'z'"""
-    tmp1 = tmp2 = 0
-    for y1 in y.all: tmp1 += (y1 - y.mu)**2 
-    for z1 in z.all: tmp2 += (z1 - z.mu)**2
-    s1    = (float(tmp1)/(y.n - 1))**0.5
-    s2    = (float(tmp2)/(z.n - 1))**0.5
-    delta = z.mu - y.mu
+    s1 = y.standard_deviation()
+    s2 = z.standard_deviation()
+    delta = z.mean() - y.mean()
     if s1+s2:
-      delta =  delta/((s1/y.n + s2/z.n)**0.5)
+      delta =  delta/((s1/len(y) + s2/len(z))**0.5)
     return delta
 """
 
@@ -148,24 +87,19 @@ def bootstrap(y0,z0,conf=0.01,b=1000):
     """The bootstrap hypothesis test from
        p220 to 223 of Efron's book 'An
       introduction to the boostrap."""
-    class total():
-        "quick and dirty data collector"
-        def __init__(i,some=[]):
-            i.sum = i.n = i.mu = 0 ; i.all=[]
-            for one in some: i.put(one)
-        def put(i,x):
-            i.all.append(x);
-            i.sum +=x; i.n += 1; i.mu = float(i.sum)/i.n
-        def __add__(i1,i2): return total(i1.all + i2.all)
-    y, z   = total(y0), total(z0)
-    x      = y + z
+    y, z   = NumberLog(y0), NumberLog(z0)
+    x      = NumberLog(inits=(y, z))
     tobs   = testStatistic(y,z)
-    yhat   = [y1 - y.mu + x.mu for y1 in y.all]
-    zhat   = [z1 - z.mu + x.mu for z1 in z.all]
-    bigger = 0.0
+    yhat   = [y1 - y.mean() + x.mean() for y1 in y.contents()]
+    zhat   = [z1 - z.mean() + x.mean() for z1 in z.contents()]
+    bigger = 0
     for i in range(b):
-        if testStatistic(total(sampleWithReplacement(yhat)),
-                         total(sampleWithReplacement(zhat))) > tobs:
+        samp_with_replacement_yhat = (random.choice(yhat) for _ in yhat)
+        samp_with_replacement_zhat = (random.choice(zhat) for _ in zhat)
+        different_means = testStatistic(
+            NumberLog(samp_with_replacement_yhat, max_size=None),
+            NumberLog(samp_with_replacement_zhat, max_size=None))
+        if different_means > tobs:
             bigger += 1
     return bigger / b < conf
 
@@ -234,7 +168,9 @@ def rdiv(data,  # a list of class Nums
 
 def maybeIgnore((cut,left,right),parts):
     if cut:
-        if not different(sum(parts[:cut],Num('upto')).all, sum(parts[cut:],Num('above')).all):
+        pre = NumberLog(inits=(f for p in parts[:cut] for f in p.contents()), max_size=None)
+        post = NumberLog(inits=(f for p in parts[cut:] for f in p.contents()), max_size=None)
+        if not different(pre.contents(), post.contents()):
             cut = left = right = None
     return cut,left,right
 
@@ -246,11 +182,11 @@ def minMu(parts,all,max_rank_size,epsilon):
     different or that generate very small subsets.
     """
     cut,left,right = None,None,None
-    before, mu     =  0, all.mu
+    before, mu     =  0, all.mean()
     for i,l,r in leftRight(parts,epsilon):
-        if l.n > max_rank_size and r.n > max_rank_size:
-            n   = all.n * 1.0
-            now = l.n/n*(mu- l.mu)**2 + r.n/n*(mu- r.mu)**2  
+        if len(l) > max_rank_size and len(r) > max_rank_size:
+            n   = len(all) * 1.0
+            now = len(l)/n*(mu- l.mean())**2 + len(r)/n*(mu- r.mean())**2  
             if now > before:
                 before,cut,left,right = now,i,l,r
     return cut,left,right
@@ -265,13 +201,14 @@ def leftRight(parts,epsilon=0.01):
     rights = {}
     n = j = len(parts) - 1
     while j > 0:
-        rights[j] = parts[j]
-        if j < n: rights[j] += rights[j+1]
+        rights[j] = NumberLog(parts[j])
+        if j < n:
+            rights[j] += rights[j+1]
         j -=1
-    left = parts[0]
+    left = NumberLog(parts[0])
     for i,one in enumerate(parts):
         if i> 0: 
-            if parts[i]._median - parts[i-1]._median > epsilon:
+            if parts[i].median() - parts[i-1].median() > epsilon:
                 yield i,left,rights[i]
             left += one
 """
@@ -285,28 +222,31 @@ def rdiv_report(data):
     rows = []
     def z(x):
         return int(100 * (x - lo) / (hi - lo + 0.00001))
-    data = map(lambda lst:Num(lst[0],lst[1:]),
+    data = map(lambda lst:NumberLog(label=lst[0], inits=lst[1:], max_size=None),
                data)
     ranks=[]
     for x in scottknott(data):
         ranks += [(x.rank,x.median(),x)]
     all=[]
-    for _,__,x in sorted(ranks): all += x.all
+    for _,__,x in sorted(ranks): all += x.contents()
     all = sorted(all)
     lo, hi = all[0], all[-1]
     last = None
     rows.append(['rank', 'name', 'med', 'iqr', '',
                 '10%', '30%', '50%', '70%', '90%'])
     for _,__,x in sorted(ranks):
-        q1,q2,q3 = (round(q, 2) for q in x.quartiles())
-        xtile_out = xtile(x.all, lo=lo, hi=hi, width=30, as_list=True)
+        q1 = x.value_at_proportion(.25)
+        q2 = x.value_at_proportion(.50)
+        q3 = x.value_at_proportion(.75)
+        xtile_out = xtile(x.contents(), lo=lo, hi=hi, width=30, as_list=True)
         row_xtile = [xtile_out[0]] + map(lambda x: x + ',', xtile_out[1:-1]) +\
                     [xtile_out[-1]]
         rows.append([x.rank+1] +
-          map(lambda y: str(y) + ',', [x.name, q2]) + [q3 - q1] + row_xtile)
+          map(lambda y: str(y) + ',', [x.label, q2]) + [q3 - q1] + row_xtile)
         last = x.rank
     table = texttable.Texttable(200)
-    table.set_cols_dtype(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't'])
+    table.set_precision(2)
+    table.set_cols_dtype(['t', 't', 'f', 'f', 't', 't', 't', 't', 't', 't'])
     table.set_cols_align(['r', 'l', 'r', 'r', 'c', 'r', 'r', 'r', 'r', 'r'])
     table.set_deco(texttable.Texttable.HEADER)
     table.add_rows(rows)
