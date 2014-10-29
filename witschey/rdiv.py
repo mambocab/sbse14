@@ -200,20 +200,19 @@ are called on only a logarithmic number of times. So...
 For examples on using this code, see _rdivDemo_ (below).
 
 """
-def scottknott(data,cohen=0.3,small=3,epsilon=0.01):
+def scottknott(data,cohen=0.3,max_rank_size=3,epsilon=0.01):
     """Recursively split data, maximizing delta of
     the expected value of the mean before and 
     after the splits. 
     Reject splits with under 3 items"""
     all  = reduce(lambda x,y:x+y,data)
     same = lambda l, r:   not different(l.all,r.all) 
-    big  = lambda    n: n > small    
-    return rdiv(data,all,minMu,big,same,epsilon)
+    return rdiv(data,all,minMu,max_rank_size,same,epsilon)
 
 def rdiv(data,  # a list of class Nums
          all,   # all the data combined into one num
          div,   # function: find the best split
-         big,   # function: rejects small splits
+         max_rank_size,   
          same, # function: rejects similar splits
          epsilon): # small enough to split two parts
     """Looks for ways to split sorted data, 
@@ -222,7 +221,7 @@ def rdiv(data,  # a list of class Nums
     """
     def recurse(parts,all,rank=0):
         "Split, then recurse on each part."
-        cut,left,right = maybeIgnore(div(parts,all,big,epsilon),
+        cut,left,right = maybeIgnore(div(parts,all,max_rank_size,epsilon),
                                      same,parts)
         if cut: 
             # if cut, rank "right" higher than "left"
@@ -242,7 +241,7 @@ def maybeIgnore((cut,left,right), same,parts):
             cut = left = right = None
     return cut,left,right
 
-def minMu(parts,all,big,epsilon):
+def minMu(parts,all,max_rank_size,epsilon):
     """Find a cut in the parts that maximizes
     the expected value of the difference in
     the mean before and after the cut.
@@ -252,7 +251,7 @@ def minMu(parts,all,big,epsilon):
     cut,left,right = None,None,None
     before, mu     =  0, all.mu
     for i,l,r in leftRight(parts,epsilon):
-        if big(l.n) and big(r.n):
+        if l.n > max_rank_size and r.n > max_rank_size:
             n   = all.n * 1.0
             now = l.n/n*(mu- l.mu)**2 + r.n/n*(mu- r.mu)**2  
             if now > before:
