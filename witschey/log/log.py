@@ -50,8 +50,9 @@ class Log(object):
 
         self._n += 1
 
-        if isinstance(x, Log):
+        if issubclass(x.__class__, Log):
             map(self.__iadd__, x._cache)
+            return self
 
         changed = False
 
