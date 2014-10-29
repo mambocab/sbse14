@@ -26,10 +26,13 @@ def iqr(xs):
     return xs[int(n * .75)] - xs[int(n * .25)]
 
 
-def standard_deviation(xs, mean_val=None):
-    if mean_val is None:
-        mean_val = mean(xs)
-    return base.memo_sqrt(sum((x - mean_val) ** 2 for x in xs))
+_mean = mean  # `mean` alias for use by standard_deviation, which shadows it
+
+
+def standard_deviation(xs, mean=None):
+    if mean is None:
+        mean = _mean(xs)
+    return base.memo_sqrt(sum((x - mean) ** 2 for x in xs))
 
 
 def norm(x, a, b):
@@ -71,7 +74,6 @@ def xtile(xs, lo=None, hi=None, width=50,
     out = [None] * width
 
     for i in range(width):
-
         xs_at_cursor = value_at_proportion(i / (width - 1), xs)
 
         rank = percentile(xs_at_cursor, xs, is_sorted=True)
