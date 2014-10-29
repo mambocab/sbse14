@@ -14,10 +14,18 @@ class DifferentialEvolution(Searcher):
         n_candiates = self.spec.n_candiates
         self._frontier = [self.model.random_model_io()
                           for _ in xrange(n_candiates)]
-        self._evals = 0
+        self._evals, lives = 0, 4
 
         for _ in xrange(self.spec.generations):
+            if lives <= 0:
+                break
+            old_frontier_energies = NumberLog(x.energy
+                                              for x in self._frontier)
             self._update_frontier()
+            new_frontier_energies = NumberLog(x.energy
+                                              for x in self._frontier)
+            if not new_frontier_energies.better(old_frontier_energies):
+                lives -= 1
 
         return SearchReport(
             best=min(self._frontier, key=lambda x: x.energy).energy,
