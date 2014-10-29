@@ -1,0 +1,876 @@
+%!PS-Adobe-3.0
+%%Title: searchout.txt
+%%For: Jim Witschey
+%%Creator: a2ps version 4.14
+%%CreationDate: Wed Oct 29 16:02:08 2014
+%%BoundingBox: 24 24 588 768
+%%DocumentData: Clean7Bit
+%%Orientation: Landscape
+%%Pages: 3
+%%PageOrder: Ascend
+%%DocumentMedia: Letter 612 792 0 () ()
+%%DocumentNeededResources: font Courier
+%%+ font Courier-Bold
+%%+ font Courier-BoldOblique
+%%+ font Courier-Oblique
+%%+ font Helvetica
+%%+ font Helvetica-Bold
+%%+ font Symbol
+%%+ font Times-Bold
+%%+ font Times-Roman
+%%DocumentProcessColors: Black 
+%%DocumentSuppliedResources: procset a2ps-a2ps-hdr
+%%+ procset a2ps-black+white-Prolog
+%%+ encoding ISO-8859-1Encoding
+%%EndComments
+/a2psdict 200 dict def
+a2psdict begin
+%%BeginProlog
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Check PostScript language level.
+/languagelevel where {
+  pop /gs_languagelevel languagelevel def
+} {
+  /gs_languagelevel 1 def
+} ifelse
+
+% EPSF import as in the Red Book
+/BeginInclude {
+  /b4_Inc_state save def    		% Save state for cleanup
+  /dict_count countdictstack def	% Count objects on dict stack
+  /op_count count 1 sub def		% Count objects on operand stack 
+  userdict begin
+    0 setgray 0 setlinecap
+    1 setlinewidth 0 setlinejoin
+    10 setmiterlimit [ ] 0 setdash newpath
+    gs_languagelevel 1 ne {
+      false setstrokeadjust false setoverprint 
+    } if
+} bind def
+
+/EndInclude {
+  count op_count sub { pos } repeat	% Clean up stacks
+  countdictstack dict_count sub { end } repeat
+  b4_Inc_state restore
+} bind def
+
+/BeginEPSF {
+  BeginInclude
+  /showpage { } def
+} bind def
+
+/EndEPSF {
+  EndInclude
+} bind def
+
+% Page prefeed
+/page_prefeed {         % bool -> -
+  statusdict /prefeed known {
+    statusdict exch /prefeed exch put
+  } {
+    pop
+  } ifelse
+} bind def
+
+/deffont {
+  findfont exch scalefont def
+} bind def
+
+/reencode_font {
+  findfont reencode 2 copy definefont pop def
+} bind def
+
+% Function c-show (str => -)
+% centers text only according to x axis.
+/c-show { 
+  dup stringwidth pop
+  2 div neg 0 rmoveto
+  show
+} bind def
+
+% Function l-show (str => -)
+% prints texts so that it ends at currentpoint
+/l-show {
+  dup stringwidth pop neg 
+  0 
+  rmoveto show
+} bind def
+
+% center-fit show (str w => -)
+% show centered, and scale currentfont so that the width is less than w
+/cfshow {
+  exch dup stringwidth pop
+  % If the title is too big, try to make it smaller
+  3 2 roll 2 copy
+  gt
+  { % if, i.e. too big
+    exch div
+    currentfont exch scalefont setfont
+  } { % ifelse
+    pop pop 
+  }
+  ifelse
+  c-show			% center title
+} bind def
+
+% Return the y size of the current font
+% - => fontsize
+/currentfontsize {
+  currentfont /FontMatrix get 3 get 1000 mul
+} bind def
+
+% reencode the font
+% <encoding-vector> <fontdict> -> <newfontdict>
+/reencode { %def
+  dup length 5 add dict begin
+    { %forall
+      % <vector> <key> <val>
+      1 index /FID ne 
+      { def }{ pop pop } ifelse
+    } forall
+    /Encoding exch def % -
+
+    % Use the font's bounding box to determine the ascent, descent,
+    % and overall height; don't forget that these values have to be
+    % transformed using the font's matrix.
+    % We use `load' because sometimes BBox is executable, sometimes not.
+    % Since we need 4 numbers an not an array avoid BBox from being executed
+    /FontBBox load aload pop
+    FontMatrix transform /Ascent exch def pop
+    FontMatrix transform /Descent exch def pop
+    /FontHeight Ascent Descent sub def
+
+    % Get the underline position and thickness if they're defined.
+    % Use 1 if they are not defined.
+    currentdict /FontInfo 2 copy known
+    { get
+      /UnderlinePosition 2 copy % <FontInfo> /UP <FontInfo> /UP
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+
+      /UnderlineThickness 2 copy % <FontInfo> /UT <FontInfo> /UT
+      2 copy known
+      { get }{ pop pop 1 } ifelse
+      0 exch FontMatrix transform exch pop
+      def % <FontInfo>
+      pop % -
+    }{ pop pop
+    } ifelse
+
+    currentdict
+  end 
+} bind def
+
+% Function print line number (<string> # -)
+/# {
+  gsave
+    sx cw mul neg 2 div 0 rmoveto
+    f# setfont
+    c-show
+  grestore
+} bind def
+
+% -------- Some routines to enlight plain b/w printings ---------
+
+% Underline
+% width --
+/dounderline {
+  currentpoint
+  gsave
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    0 rlineto
+    stroke
+  grestore
+} bind def
+
+% Underline a string
+% string --
+/dounderlinestring {
+  stringwidth pop
+  dounderline
+} bind def
+
+/UL {
+  /ul exch store
+} bind def
+
+% Draw a box of WIDTH wrt current font
+% width --
+/dobox {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    stroke
+  grestore
+} bind def
+
+/BX {
+  /bx exch store
+} bind def
+
+% Box a string
+% string --
+/doboxstring {
+  stringwidth pop
+  dobox
+} bind def
+
+%
+% ------------- Color routines ---------------
+%
+/FG /setrgbcolor load def
+
+% Draw the background
+% width --
+/dobackground {
+  currentpoint
+  gsave
+    newpath
+    moveto
+    0 currentfont /Descent get currentfontsize mul rmoveto
+    dup 0 rlineto
+    0 currentfont /FontHeight get currentfontsize mul rlineto
+    neg 0 rlineto
+    closepath
+    bgcolor aload pop setrgbcolor
+    fill
+  grestore
+} bind def
+
+% Draw bg for a string
+% string --
+/dobackgroundstring {
+  stringwidth pop
+  dobackground
+} bind def
+
+
+/BG {
+  dup /bg exch store
+  { mark 4 1 roll ] /bgcolor exch store } if
+} bind def
+
+
+/Show {
+  bg { dup dobackgroundstring } if
+  ul { dup dounderlinestring } if
+  bx { dup doboxstring } if
+  show
+} bind def
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T {
+  cw mul x0 add
+  bg { dup currentpoint pop sub dobackground } if
+  ul { dup currentpoint pop sub dounderline } if
+  bx { dup currentpoint pop sub dobox } if
+  y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n {
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+/S {
+  Show
+} bind def
+
+%%BeginResource: procset a2ps-a2ps-hdr 2.0 2
+%%Copyright: (c) 1988, 89, 90, 91, 92, 93 Miguel Santana
+%%Copyright: (c) 1995, 96, 97, 98 Akim Demaille, Miguel Santana
+% Function title: prints page header.
+% <ct> <rt> <lt> are passed as argument
+/title { 
+  % 1. Draw the background
+  x v get y v get moveto
+  gsave
+    0 th 2 div neg rmoveto 
+    th setlinewidth
+    0.95 setgray
+    pw 0 rlineto stroke
+  grestore
+  % 2. Border it
+  gsave
+    0.7 setlinewidth
+    pw 0 rlineto
+    0 th neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+  % stk: ct rt lt
+  x v get y v get th sub 1 add moveto
+%%IncludeResource: font Helvetica
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  % 3. The left title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    fnfs 0.8 mul hm rmoveto
+    show			% left title
+  grestore
+  exch
+  % stk: ct ltw rt
+  % 4. the right title
+  gsave
+    dup stringwidth pop fnfs 0.8 mul add exch % leave space took on stack
+    dup
+    pw exch stringwidth pop fnfs 0.8 mul add sub
+    hm
+    rmoveto
+    show			% right title
+  grestore
+  % stk: ct ltw rtw
+  % 5. the center title
+  gsave
+    pw 3 1 roll
+    % stk: ct pw ltw rtw
+    3 copy 
+    % Move to the center of the left room
+    sub add 2 div hm rmoveto
+    % What is the available space in here?
+    add sub fnfs 0.8 mul sub fnfs 0.8 mul sub
+    % stk: ct space_left
+%%IncludeResource: font Helvetica-Bold
+  fHelvetica-Bold fnfs scalefont setfont
+    cfshow
+  grestore
+} bind def
+
+% Function border: prints virtual page border
+/border { %def
+  gsave				% print four sides
+    0 setgray
+    x v get y v get moveto
+    0.7 setlinewidth		% of the square
+    pw 0 rlineto
+    0 ph neg rlineto
+    pw neg 0 rlineto
+    closepath stroke
+  grestore
+} bind def
+
+% Function water: prints a water mark in background
+/water { %def
+  gsave
+    scx scy moveto rotate
+%%IncludeResource: font Times-Bold
+  fTimes-Bold 100 scalefont setfont
+    .97 setgray
+    dup stringwidth pop 2 div neg -50 rmoveto
+    show
+  grestore
+} bind def
+
+% Function rhead: prints the right header
+/rhead {  %def
+  lx ly moveto
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  l-show
+} bind def
+
+% Function footer (cf rf lf -> -)
+/footer {
+  fHelvetica fnfs 0.8 mul scalefont setfont
+  dx dy moveto
+  show
+
+  snx sny moveto
+  l-show
+  
+  fnx fny moveto
+  c-show
+} bind def
+%%EndResource
+%%BeginResource: procset a2ps-black+white-Prolog 2.0 1
+
+% Function T(ab), jumps to the n-th tabulation in the current line
+/T { 
+  cw mul x0 add y0 moveto
+} bind def
+
+% Function n: move to the next line
+/n { %def
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+} bind def
+
+% Function N: show and move to the next line
+/N {
+  Show
+  /y0 y0 bfs sub store
+  x0 y0 moveto
+}  bind def
+
+/S {
+  Show
+} bind def
+
+/p {
+  false UL
+  false BX
+  fCourier bfs scalefont setfont
+  Show
+} bind def
+
+/sy {
+  false UL
+  false BX
+  fSymbol bfs scalefont setfont
+  Show
+} bind def
+
+/k {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/K {
+  false UL
+  false BX
+  fCourier-Bold bfs scalefont setfont
+  Show
+} bind def
+
+/c {
+  false UL
+  false BX
+  fCourier-Oblique bfs scalefont setfont
+  Show
+} bind def
+
+/C {
+  false UL
+  false BX
+  fCourier-BoldOblique bfs scalefont setfont
+  Show 
+} bind def
+
+/l {
+  false UL
+  false BX
+  fHelvetica bfs scalefont setfont
+  Show
+} bind def
+
+/L {
+  false UL
+  false BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show 
+} bind def
+
+/str{
+  false UL
+  false BX
+  fTimes-Roman bfs scalefont setfont
+  Show
+} bind def
+
+/e{
+  false UL
+  true BX
+  fHelvetica-Bold bfs scalefont setfont
+  Show
+} bind def
+
+%%EndResource
+%%EndProlog
+%%BeginSetup
+%%IncludeResource: font Courier
+%%IncludeResource: font Courier-Oblique
+%%IncludeResource: font Courier-Bold
+%%IncludeResource: font Times-Roman
+%%IncludeResource: font Symbol
+%%IncludeResource: font Courier-BoldOblique
+%%BeginResource: encoding ISO-8859-1Encoding
+/ISO-8859-1Encoding [
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclam /quotedbl /numbersign /dollar /percent /ampersand /quoteright 
+/parenleft /parenright /asterisk /plus /comma /minus /period /slash 
+/zero /one /two /three /four /five /six /seven 
+/eight /nine /colon /semicolon /less /equal /greater /question 
+/at /A /B /C /D /E /F /G 
+/H /I /J /K /L /M /N /O 
+/P /Q /R /S /T /U /V /W 
+/X /Y /Z /bracketleft /backslash /bracketright /asciicircum /underscore 
+/quoteleft /a /b /c /d /e /f /g 
+/h /i /j /k /l /m /n /o 
+/p /q /r /s /t /u /v /w 
+/x /y /z /braceleft /bar /braceright /asciitilde /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef /.notdef 
+/space /exclamdown /cent /sterling /currency /yen /brokenbar /section 
+/dieresis /copyright /ordfeminine /guillemotleft /logicalnot /hyphen /registered /macron 
+/degree /plusminus /twosuperior /threesuperior /acute /mu /paragraph /bullet 
+/cedilla /onesuperior /ordmasculine /guillemotright /onequarter /onehalf /threequarters /questiondown 
+/Agrave /Aacute /Acircumflex /Atilde /Adieresis /Aring /AE /Ccedilla 
+/Egrave /Eacute /Ecircumflex /Edieresis /Igrave /Iacute /Icircumflex /Idieresis 
+/Eth /Ntilde /Ograve /Oacute /Ocircumflex /Otilde /Odieresis /multiply 
+/Oslash /Ugrave /Uacute /Ucircumflex /Udieresis /Yacute /Thorn /germandbls 
+/agrave /aacute /acircumflex /atilde /adieresis /aring /ae /ccedilla 
+/egrave /eacute /ecircumflex /edieresis /igrave /iacute /icircumflex /idieresis 
+/eth /ntilde /ograve /oacute /ocircumflex /otilde /odieresis /divide 
+/oslash /ugrave /uacute /ucircumflex /udieresis /yacute /thorn /ydieresis 
+] def
+%%EndResource
+% Initialize page description variables.
+/sh 612 def
+/sw 792 def
+/llx 24 def
+/urx 768 def
+/ury 588 def
+/lly 24 def
+/#copies 1 def
+/th 20.000000 def
+/fnfs 15 def
+/bfs 5.730129 def
+/cw 3.438078 def
+
+% Dictionary for ISO-8859-1 support
+/iso1dict 8 dict begin
+  /fCourier ISO-8859-1Encoding /Courier reencode_font
+  /fCourier-Bold ISO-8859-1Encoding /Courier-Bold reencode_font
+  /fCourier-BoldOblique ISO-8859-1Encoding /Courier-BoldOblique reencode_font
+  /fCourier-Oblique ISO-8859-1Encoding /Courier-Oblique reencode_font
+  /fHelvetica ISO-8859-1Encoding /Helvetica reencode_font
+  /fHelvetica-Bold ISO-8859-1Encoding /Helvetica-Bold reencode_font
+  /fTimes-Bold ISO-8859-1Encoding /Times-Bold reencode_font
+  /fTimes-Roman ISO-8859-1Encoding /Times-Roman reencode_font
+currentdict end def
+/bgcolor [ 0 0 0 ] def
+/bg false def
+/ul false def
+/bx false def
+% The font for line numbering
+/f# /Helvetica findfont bfs .6 mul scalefont def
+/fSymbol /Symbol findfont def
+/hm fnfs 0.25 mul def
+/pw
+   cw 216.400000 mul
+def
+/ph
+   519.722722 th add
+def
+/pmw 0 def
+/pmh 0 def
+/v 0 def
+/x [
+  0
+] def
+/y [
+  pmh ph add 0 mul ph add
+] def
+/scx sw 2 div def
+/scy sh 2 div def
+/snx urx def
+/sny lly 2 add def
+/dx llx def
+/dy sny def
+/fnx scx def
+/fny dy def
+/lx snx def
+/ly ury fnfs 0.8 mul sub def
+/sx 5 def
+/tab 8 def
+/x0 0 def
+/y0 0 def
+%%EndSetup
+
+%%Page: (1) 1
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.406654 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (# Schaffer:) p n
+0 T (## results:) N
+0 T (rank   name        med              iqr                                                10%               30%               50%               70%               90%       ) N
+0 T (========================================================================================================================================================================) N
+(5) # (   1   DE,              2.0,             0.0   \(*      --------|------------- \)            2.00,             2.00,             2.00,             2.00,              2.00 ) N
+0 T (   2   SA,    2536529013.51,   7736131539.05   \(   *-----      |     ------   \)     83276659.18,     736363677.96,    2536529013.51,    6916774740.95,    14097713606.56 ) N
+0 T (   3   PSO,   3894752077.86,   9770513192.21   \(   --*---      |     ------   \)    179101059.02,    1486087452.43,    3894752077.86,    9160797124.40,    15544804947.59 ) N
+0 T (   3   GA,    4510846365.86,   8862794488.16   \(   ---*---     |     ------   \)    264212561.41,    2097545392.86,    4510846365.86,    8986147785.37,    14974208322.68 ) N
+0 T (   3   MWS,   4609844664.85,   9332443483.95   \(   ---*--      |     ------   \)    169605280.09,    1856387739.33,    4609844664.85,    9594131351.01,    16171331950.90 ) N
+(10) # () N
+0 T (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+0 T (   1   SA,    0.01,    0.0   \(*    ------    |       ------ \)      0.01,      0.01,      0.01,      0.01,      0.02 ) N
+(15) # (   1   MWS,   0.02,   0.01   \(*    ------    |       ------ \)      0.01,      0.02,      0.02,      0.02,      0.02 ) N
+0 T (   1   PSO,   0.02,   0.02   \( *   ------    |       ------ \)      0.01,      0.02,      0.02,      0.03,      0.03 ) N
+0 T (   2   GA,    0.03,   0.01   \(  *  ------    |       ------ \)      0.03,      0.03,      0.04,      0.04,      0.05 ) N
+0 T (   3   DE,    0.32,   0.06   \(     ------    |       -*---- \)      0.30,      0.31,      0.33,      0.36,      0.37 ) N
+0 T () N
+(20) # (# Kursawe:) N
+0 T (## results:) N
+0 T (rank   name     med     iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (=====================================================================================================================) N
+0 T (   1   DE,    -13.73,    0.0   \(*              |        ---   \)    -13.73,    -13.73,    -13.73,    -13.73,    -13.73 ) N
+(25) # (   2   MWS,     -2.8,   4.34   \(   ------   *  |     ------   \)     -7.88,     -4.96,     -2.80,     -1.38,      1.66 ) N
+0 T (   3   SA,      -2.6,   5.76   \(   ------   *  |     ------   \)     -8.58,     -4.89,     -2.60,     -0.23,      4.18 ) N
+0 T (   4   PSO,    -1.27,   7.29   \(   ------    * |     ------   \)     -8.16,     -3.86,     -1.27,      1.90,      5.90 ) N
+0 T (   4   GA,     -0.84,   7.14   \(     ----     *|     ------   \)     -6.26,     -2.72,     -0.84,      2.00,      4.59 ) N
+0 T () N
+(30) # (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+0 T (   1   MWS,   0.02,   0.01   \(*    ------    |       ------ \)      0.01,      0.02,      0.02,      0.02,      0.02 ) N
+0 T (   1   SA,    0.02,    0.0   \(*    ------    |       ------ \)      0.01,      0.02,      0.02,      0.02,      0.03 ) N
+(35) # (   1   PSO,   0.01,   0.02   \( *   ------    |       ------ \)      0.01,      0.01,      0.03,      0.03,      0.03 ) N
+0 T (   2   GA,    0.07,   0.01   \(    *------    |       ------ \)      0.07,      0.07,      0.08,      0.08,      0.09 ) N
+0 T (   3   DE,    0.45,   0.02   \(     ------    |       --*--- \)      0.43,      0.44,      0.45,      0.46,      0.49 ) N
+0 T () N
+0 T (# Fonseca:) N
+(40) # (## results:) N
+0 T (rank   name   med    iqr                                        10%        30%        50%        70%        90%   ) N
+0 T (=================================================================================================================) N
+0 T (   1   DE,    1.0,   0.0   \(*  ------      |     ------   \)      1.00,      1.00,      1.00,      1.00,      1.01 ) N
+0 T (   2   SA,    2.0,   0.0   \(   ------      |     ------  *\)      1.91,      2.00,      2.00,      2.00,      2.00 ) N
+(45) # (   2   GA,    2.0,   0.0   \(   ------      |     ------  *\)      1.96,      2.00,      2.00,      2.00,      2.00 ) N
+0 T (   2   PSO,   2.0,   0.0   \(   ------      |     ------  *\)      1.96,      2.00,      2.00,      2.00,      2.00 ) N
+0 T (   2   MWS,   2.0,   0.0   \(   ------      |     ------  *\)      2.00,      2.00,      2.00,      2.00,      2.00 ) N
+0 T () N
+0 T (## time:) N
+(50) # (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+0 T (   1   PSO,   0.02,   0.02   \(*    ------    |       ------ \)      0.01,      0.01,      0.02,      0.03,      0.04 ) N
+0 T (   1   MWS,   0.03,    0.0   \(*    ------    |       ------ \)      0.03,      0.03,      0.03,      0.03,      0.03 ) N
+0 T (   1   SA,    0.03,   0.01   \( *   ------    |       ------ \)      0.02,      0.03,      0.03,      0.04,      0.05 ) N
+(55) # (   2   GA,    0.09,    0.0   \(   * ------    |       ------ \)      0.09,      0.09,      0.09,      0.09,      0.11 ) N
+0 T (   3   DE,    0.46,   0.03   \(     ------    |     * ------ \)      0.36,      0.45,      0.46,      0.47,      0.52 ) N
+0 T () N
+0 T (# ZDT1:) N
+0 T (## results:) N
+(60) # (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+0 T (   1   DE,    1.81,   0.03   \(*  ------      |     ------   \)      1.79,      1.80,      1.81,      1.83,      1.85 ) N
+0 T (   2   SA,    9.68,   1.07   \(   ------      | *   ------   \)      8.62,      9.32,      9.68,     10.14,     10.87 ) N
+0 T (   2   GA,    9.69,   1.17   \(   ------      | *   ------   \)      8.63,      9.31,      9.69,     10.20,     10.79 ) N
+(65) # (   3   PSO,   9.88,   1.17   \(   ------      |  *  ------   \)      8.66,      9.47,      9.88,     10.39,     11.04 ) N
+0 T (   4   MWS,   13.5,   1.18   \(   ------      |     -----*   \)     12.49,     13.04,     13.50,     13.98,     14.55 ) N
+0 T () N
+0 T (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+(70) # (===================================================================================================================) N
+0 T (   1   MWS,   0.03,   0.01   \(*    ------    |       ------ \)      0.02,      0.03,      0.03,      0.04,      0.05 ) N
+0 T (   2   SA,    0.05,   0.01   \(*    ------    |       ------ \)      0.03,      0.04,      0.05,      0.05,      0.08 ) N
+0 T (   2   PSO,   0.06,   0.03   \( *   ------    |       ------ \)      0.04,      0.05,      0.06,      0.08,      0.10 ) N
+0 T (   3   GA,    0.39,   0.03   \(     ------ *  |       ------ \)      0.37,      0.39,      0.39,      0.41,      0.47 ) N
+(75) # (   4   DE,    0.86,   0.04   \(     ------    |       -----* \)      0.82,      0.85,      0.86,      0.88,      0.89 ) N
+0 T () N
+0 T (# ZDT3:) N
+0 T (## results:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+(80) # (===================================================================================================================) N
+0 T (   1   DE,    0.69,   0.01   \(*  ------      |     ------   \)      0.69,      0.69,      0.69,      0.70,      0.70 ) N
+0 T (   2   SA,    5.17,   3.93   \(   ------*     |     ------   \)      2.26,      3.98,      5.17,      7.15,      9.17 ) N
+0 T (   3   MWS,    5.8,   2.62   \(   ------ *    |     ------   \)      3.88,      4.92,      5.80,      7.42,      9.13 ) N
+0 T (   3   PSO,   6.08,   3.91   \(   ------  *   |     ------   \)      2.91,      4.47,      6.08,      7.65,      9.33 ) N
+(85) # (   4   GA,    7.16,    5.0   \(   ------    * |     ------   \)      2.46,      4.60,      7.16,      8.77,     10.15 ) N
+0 T () N
+0 T (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+(90) # (   1   MWS,   0.03,   0.02   \(*    ------    |       ------ \)      0.02,      0.02,      0.03,      0.04,      0.04 ) N
+("csc710sbse: hw7: Witschey") (Page 1/3) (Oct 29, 14 14:21) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw7/searchout.txt) (1/3) (Wednesday October 29, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (2) 2
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.406654 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (   2   SA,    0.05,   0.02   \( *   ------    |       ------ \)      0.04,      0.05,      0.05,      0.06,      0.09 ) p n
+0 T (   3   PSO,   0.07,   0.02   \(  *  ------    |       ------ \)      0.05,      0.07,      0.09,      0.09,      0.11 ) N
+0 T (   4   GA,     0.4,   0.03   \(     ------ *  |       ------ \)      0.37,      0.39,      0.41,      0.41,      0.43 ) N
+0 T (   5   DE,     0.9,   0.05   \(     ------    |       -----* \)      0.86,      0.88,      0.90,      0.92,      0.94 ) N
+(95) # () N
+0 T (# Viennet3:) N
+0 T (## results:) N
+0 T (rank   name    med      iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (=====================================================================================================================) N
+(100) # (   1   DE,    15.94,     0.0   \(*  ------      |     ------   \)     15.94,     15.94,     15.94,     15.94,     15.94 ) N
+0 T (   2   SA,    20.56,    7.48   \(  *------      |     ------   \)     16.89,     17.78,     20.56,     23.58,     33.25 ) N
+0 T (   3   PSO,   21.34,    9.33   \(   *-----      |     ------   \)     17.11,     18.77,     21.34,     25.56,     37.41 ) N
+0 T (   4   MWS,   23.57,    9.82   \(   -*----      |     ------   \)     17.58,     20.94,     23.57,     28.82,     37.89 ) N
+0 T (   4   GA,    23.99,   11.15   \(   -*-----     |     ------   \)     17.46,     21.87,     23.99,     29.70,     33.88 ) N
+(105) # () N
+0 T (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+0 T (   1   PSO,   0.01,   0.02   \(*    ------    |       ------ \)      0.01,      0.01,      0.01,      0.03,      0.03 ) N
+(110) # (   1   MWS,   0.01,    0.0   \(*    ------    |       ------ \)      0.01,      0.01,      0.01,      0.01,      0.02 ) N
+0 T (   1   SA,    0.01,   0.01   \(*    ------    |       ------ \)      0.01,      0.01,      0.01,      0.02,      0.02 ) N
+0 T (   2   GA,    0.07,   0.01   \(    *------    |       ------ \)      0.07,      0.07,      0.07,      0.08,      0.08 ) N
+0 T (   3   DE,    0.43,   0.04   \(     ------    |       ----*- \)      0.42,      0.42,      0.45,      0.46,      0.47 ) N
+0 T () N
+(115) # (# DTLZ7:) N
+0 T (## results:) N
+0 T (rank   name     med        iqr                                           10%         30%         50%         70%          90%    ) N
+0 T (================================================================================================================================) N
+0 T (   1   DE,     235.77,     10.01   \(*  ------      |     ------   \)     228.24,     232.26,     235.75,      240.11,      246.77 ) N
+(120) # (   2   SA,    3956.46,   3455.47   \(*  ------      |     ------   \)    2806.34,    3229.15,    3956.46,     5704.36,    14966.24 ) N
+0 T (   2   MWS,   4540.32,   1064.63   \(*  ------      |     ------   \)    3941.47,    4334.97,    4540.32,     5232.53,     7936.42 ) N
+0 T (   3   GA,    4790.22,   7307.39   \(*  ------      |     ------   \)    3257.57,    3895.40,    4790.22,    10148.14,    17333.47 ) N
+0 T (   3   PSO,   5588.53,    6336.3   \(*  ------      |     ------   \)    3117.73,    4025.53,    5588.53,     8649.48,    26409.02 ) N
+0 T () N
+(125) # (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+0 T (   1   MWS,   0.04,   0.03   \(*    ------    |       ------ \)      0.03,      0.03,      0.04,      0.06,      0.07 ) N
+0 T (   1   SA,    0.06,   0.02   \(*    ------    |       ------ \)      0.03,      0.04,      0.06,      0.06,      0.08 ) N
+(130) # (   2   PSO,   0.12,   0.08   \(  *  ------    |       ------ \)      0.05,      0.07,      0.14,      0.15,      0.16 ) N
+0 T (   3   GA,    0.47,   0.07   \(     -----*    |       ------ \)      0.46,      0.47,      0.50,      0.53,      0.55 ) N
+0 T (   4   DE,    1.19,   0.05   \(     ------    |       ---*-- \)      1.15,      1.18,      1.19,      1.21,      1.24 ) N
+0 T () N
+0 T (# Osyczka:) N
+(135) # (## results:) N
+0 T (rank   name     med       iqr                                          10%         30%         50%         70%        90%    ) N
+0 T (============================================================================================================================) N
+0 T (   1   DE,    -201.28,   18.62   \( * ------      |     ------   \)    -210.66,    -206.27,    -201.34,    -192.84,    -168.92 ) N
+0 T (   2   GA,      28.67,   50.81   \(   ------      |     *-----   \)      -8.08,      14.27,      28.67,      49.74,      85.82 ) N
+(140) # (   2   SA,      29.05,   45.65   \(   ------      |     *-----   \)     -23.63,      13.16,      29.05,      48.03,      78.71 ) N
+0 T (   2   PSO,     36.84,    57.2   \(   ------      |     -*----   \)     -27.92,      16.19,      36.84,      58.93,      84.98 ) N
+0 T (   2   MWS,     46.57,   72.64   \(   ------      |     -*----   \)     -54.47,      15.90,      46.57,      70.04,      88.63 ) N
+0 T () N
+0 T (## time:) N
+(145) # (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+0 T (   1   SA,    0.31,   0.11   \(*    ------    |       ------ \)      0.18,      0.26,      0.31,      0.36,      0.51 ) N
+0 T (   1   MWS,   0.32,    0.2   \(*    ------    |       ------ \)      0.22,      0.26,      0.37,      0.45,      0.51 ) N
+0 T (   1   PSO,   0.34,   0.15   \(*    ------    |       ------ \)      0.24,      0.31,      0.39,      0.44,      0.57 ) N
+(150) # (   2   DE,    1.06,   0.21   \(  *  ------    |       ------ \)      0.92,      1.01,      1.11,      1.22,      1.26 ) N
+0 T (   3   GA,    7.56,    2.3   \(     ------    |     * ------ \)      6.45,      6.92,      7.91,      9.09,      9.56 ) N
+0 T () N
+0 T (# Schwefel\(10\):) N
+0 T (## results:) N
+(155) # (rank   name      med          iqr                                             10%           30%           50%           70%           90%     ) N
+0 T (=============================================================================================================================================) N
+0 T (   1   DE,     17794.85,    50103.65   \(*  ------      |     ------   \)      3660.60,      8729.78,     17779.74,     54935.50,      65718.98 ) N
+0 T (   2   MWS,   545916.85,   380762.97   \(   ----*-      |     ------   \)    204282.74,    411391.69,    545916.85,    703013.36,     967908.82 ) N
+0 T (   3   SA,    585787.26,   376665.25   \(   ----*-      |     ------   \)    310498.02,    454455.50,    585787.26,    730983.54,     995949.35 ) N
+(160) # (   3   PSO,   602773.54,   316064.34   \(   ----*-      |     ------   \)    324607.19,    470918.70,    602773.54,    719313.42,     966696.14 ) N
+0 T (   4   GA,    668708.77,    423033.2   \(   -----*      |     ------   \)    333021.22,    473581.66,    668708.77,    811759.92,    1107517.17 ) N
+0 T () N
+0 T (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+(165) # (===================================================================================================================) N
+0 T (   1   MWS,   0.04,   0.01   \(*    ------    |       ------ \)      0.03,      0.04,      0.04,      0.05,      0.05 ) N
+0 T (   2   SA,    0.06,   0.02   \( *   ------    |       ------ \)      0.04,      0.05,      0.06,      0.07,      0.09 ) N
+0 T (   3   PSO,   0.16,    0.1   \(    *------    |       ------ \)      0.05,      0.07,      0.16,      0.16,      0.18 ) N
+0 T (   4   GA,    0.23,   0.01   \(     -*----    |       ------ \)      0.21,      0.22,      0.23,      0.23,      0.24 ) N
+(170) # (   5   DE,    0.86,   0.06   \(     ------    |       ----*- \)      0.82,      0.84,      0.86,      0.88,      0.90 ) N
+0 T () N
+0 T (# Schwefel\(20\):) N
+0 T (## results:) N
+0 T (rank   name       med          iqr                                              10%            30%            50%            70%            90%     ) N
+(175) # (===================================================================================================================================================) N
+0 T (   1   DE,     368499.87,    218813.25   \( * ------      |     ------   \)     220947.11,     289216.66,     368382.43,     454938.31,     636706.87 ) N
+0 T (   2   MWS,   2371127.66,    850722.66   \(   ------ *    |     ------   \)    1490057.23,    2050705.02,    2371127.66,    2795167.66,    3730172.19 ) N
+0 T (   2   PSO,   2457751.05,   1228047.16   \(   ------ *    |     ------   \)    1549371.53,    1974895.03,    2457751.05,    2977902.57,    3724942.57 ) N
+0 T (   2   SA,    2460939.78,     876080.8   \(   ------ *    |     ------   \)    1740340.36,    2137883.26,    2460939.78,    2836530.20,    3357942.92 ) N
+(180) # (   3   GA,    2682491.94,    842073.81   \(   ------  *   |     ------   \)    1895398.37,    2342527.72,    2682491.94,    3016053.45,    3618758.42 ) N
+("csc710sbse: hw7: Witschey") (Page 2/3) (Oct 29, 14 14:21) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw7/searchout.txt) (2/3) (Wednesday October 29, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 3
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.406654 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T () p n
+0 T (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+(185) # (   1   MWS,   0.05,   0.01   \(*    ------    |       ------ \)      0.03,      0.05,      0.05,      0.06,      0.07 ) N
+0 T (   2   SA,    0.16,   0.05   \(  *  ------    |       ------ \)      0.13,      0.15,      0.18,      0.20,      0.25 ) N
+0 T (   3   PSO,   0.24,   0.28   \(     --*---    |       ------ \)      0.15,      0.22,      0.47,      0.48,      0.51 ) N
+0 T (   4   GA,    0.51,   0.03   \(     ---*--    |       ------ \)      0.49,      0.50,      0.51,      0.53,      0.57 ) N
+0 T (   5   DE,    1.64,   0.12   \(     ------    |       -----* \)      1.51,      1.60,      1.64,      1.66,      1.71 ) N
+(190) # () N
+0 T (# Schwefel\(40\):) N
+0 T (## results:) N
+0 T (rank   name       med           iqr                                              10%             30%             50%             70%            90%      ) N
+0 T (========================================================================================================================================================) N
+(195) # (   1   DE,     2593045.38,     960093.6   \(  *------      |     ------   \)    1806253.88,     2235227.06,     2591206.11,     2962429.74,     3635187.19 ) N
+0 T (   2   SA,     9684692.81,   2597677.17   \(   ------      *     ------   \)    7434354.45,     8683963.15,     9684692.81,    10778171.88,    12366844.48 ) N
+0 T (   3   MWS,     9894110.0,   2340668.61   \(   ------      *     ------   \)    8550076.08,     9225886.01,     9894110.00,    11222864.59,    12684042.10 ) N
+0 T (   3   PSO,   10325824.22,   3059202.75   \(   ------      |*    ------   \)    7699229.63,     9034923.53,    10325824.22,    11537527.30,    13399528.10 ) N
+0 T (   4   GA,    11200305.34,   2856857.07   \(   ------      |  *  ------   \)    8755944.62,    10060810.41,    11200305.34,    12295146.84,    13799659.02 ) N
+(200) # () N
+0 T (## time:) N
+0 T (rank   name    med    iqr                                         10%        30%        50%        70%        90%   ) N
+0 T (===================================================================================================================) N
+0 T (   1   MWS,   0.09,   0.02   \(*    ------    |       ------ \)      0.08,      0.09,      0.10,      0.11,      0.11 ) N
+(205) # (   2   SA,    0.56,   0.25   \(    *------    |       ------ \)      0.44,      0.54,      0.66,      0.76,      0.95 ) N
+0 T (   3   GA,    1.43,   0.03   \(     ----*-    |       ------ \)      1.38,      1.42,      1.43,      1.44,      1.51 ) N
+0 T (   3   PSO,   1.63,   0.93   \(     -----*    |       ------ \)      0.63,      0.79,      1.66,      1.70,      1.73 ) N
+0 T (   4   DE,    4.06,   0.41   \(     ------    |       ----*- \)      3.75,      3.98,      4.14,      4.20,      4.41 ) N
+0 T () N
+("csc710sbse: hw7: Witschey") (Page 3/3) (Oct 29, 14 14:21) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(hw7/searchout.txt) (3/3) (Wednesday October 29, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+
+%%Trailer
+end
+%%EOF

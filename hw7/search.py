@@ -2,6 +2,7 @@ from __future__ import print_function, division
 
 import itertools, random
 from collections import namedtuple, defaultdict
+import time
 
 from witschey.models import Model
 from witschey import models
@@ -23,10 +24,12 @@ def run(n=30, text_report=False):
     last_logs = defaultdict(list)
     for model_cls in ms:
         random.seed(1)
-        print("#### {}:\n\t".format(model_cls.__name__), end='')
+        print("# {}:\n".format(model_cls.__name__), end='')
         bests = defaultdict(list)
+        times = defaultdict(list)
         for searcher_cls in ss:
             for _ in xrange(n):
+                start = time.clock()
                 Output = namedtuple('Output', ('name', 'best'))
                 name = shortnames[searcher_cls]
                 searcher = searcher_cls(model_cls)
@@ -35,9 +38,15 @@ def run(n=30, text_report=False):
                     out.searcher = searcher_cls
                 outs.append(out)
                 bests[name].extend(out.best_era.contents())
+                times[name].append(time.clock() - start)
 
+        print('## results:')
         rdiv_in = list([name] + best for name, best in bests.iteritems())
         print(rdiv_report(rdiv_in), end='\n\n')
 
+        print('## time:')
+        time_rdiv_in = list([name] + t for name, t in times.iteritems())
+        print(rdiv_report(time_rdiv_in), end='\n\n')
+
 if __name__ == '__main__':
-    run(n=1, text_report=False)
+    run(n=15, text_report=False)
