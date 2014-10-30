@@ -135,10 +135,11 @@ For examples on using this code, see _rdivDemo_ (below).
 
 """
 def scottknott(data,cohen=0.3,max_rank_size=3,epsilon=0.01):
-    """Recursively split data, maximizing delta of
-    the expected value of the mean before and 
-    after the splits. 
-    Reject splits with under 3 items"""
+    """
+    Recursively split data, maximizing delta of the expected value of the
+    mean before and after the splits. Reject splits with under max_rank_size
+    items.
+    """
     all_data = NumberLog(inits=data)
     return rdiv(data, all_data, minMu, max_rank_size, epsilon)
 
