@@ -221,8 +221,6 @@ Driver for the demos:
 """
 def rdiv_report(data):
     rows = []
-    def z(x):
-        return int(100 * (x - lo) / (hi - lo + 0.00001))
     data = map(lambda lst:NumberLog(label=lst[0], inits=lst[1:], max_size=None),
                data)
     ranks=[]
