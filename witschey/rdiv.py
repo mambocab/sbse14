@@ -120,15 +120,15 @@ def minMu(parts, data_mean, data_size, max_rank_size, epsilon):
     insignificantly different or that generate very small subsets.
     """
     cut = None
-    biggest_delta = 0
-    for i, t in enumerate(leftRight(parts, epsilon)):
-        # import pdb; pdb.set_trace()
-        if len(parts[:i]) >= max_rank_size and len(parts[i:]) >= max_rank_size:
-            current_delta = len(t[0]) / data_size * (data_mean - t[0].mean()) ** 2
-            current_delta += len(t[1]) / data_size * (data_mean - t[1].mean()) ** 2
+    max_delta = 0
+    mrs = max_rank_size
+    for i, left, right in leftRight(parts, epsilon):
+        if len(parts[:i]) >= mrs and len(parts[i:]) >= mrs:
+            delta = len(left) / data_size * (data_mean - left.mean()) ** 2
+            delta += len(right) / data_size * (data_mean - right.mean()) ** 2
 
-            if current_delta > biggest_delta and different(t[0], t[1]):
-                biggest_delta, cut = current_delta, i
+            if abs(delta) > max_delta and different(parts[i-1], parts[i]):
+                max_delta, cut = abs(delta), i
     return cut
 
 
