@@ -133,11 +133,8 @@ def minMu(parts, data_mean, data_size, max_rank_size, epsilon):
 
 
 def leftRight(parts,epsilon=0.01):
-    """Iterator. For all items in 'parts',
-    return everything to the left and everything
-    from here to the end. For reasons of
-    efficiency, take a first pass over the data
-    to pre-compute and cache right-hand-sides
+    """For each item in 'parts', yield the splitting index, everything to the
+    beginning (including the item) and everything to the end.
     """
     for i in range(1, len(parts)):
         if parts[i].median() - parts[i - 1].median() > epsilon:
