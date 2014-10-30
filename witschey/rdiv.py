@@ -235,18 +235,24 @@ def rdiv_report(data):
     rows.append(['rank', 'name', 'med', 'iqr', '',
                 '10%', '30%', '50%', '70%', '90%'])
     for _,__,x in sorted(ranks):
-        q1 = x.value_at_proportion(.25)
-        q2 = x.value_at_proportion(.50)
-        q3 = x.value_at_proportion(.75)
+        next_row = [x.rank + 1]
+        next_row.extend(map(lambda y: y + ',', [x.label, '{0:0.2}'.format(x.median())]))
+        next_row.append('{0:0.2}'.format(x.iqr()))
+
         xtile_out = xtile(x.contents(), lo=lo, hi=hi, width=30, as_list=True)
-        row_xtile = [xtile_out[0]] + map(lambda x: x + ',', xtile_out[1:-1]) +\
-                    [xtile_out[-1]]
-        rows.append([x.rank+1] +
-          map(lambda y: str(y) + ',', [x.label, q2]) + [q3 - q1] + row_xtile)
+        # xtile is displayed as the whisker plot, then comma-separated values
+        row_xtile = [xtile_out[0]]
+        # don't use `join`, since we want each to be its own list element
+        row_xtile.extend(map(lambda x: x + ',', xtile_out[1:-1]))
+        row_xtile.append(xtile_out[-1])
+
+        next_row.extend(row_xtile)
+        rows.append(next_row)
+
         last = x.rank
     table = texttable.Texttable(200)
     table.set_precision(2)
-    table.set_cols_dtype(['t', 't', 'f', 'f', 't', 't', 't', 't', 't', 't'])
+    table.set_cols_dtype(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't'])
     table.set_cols_align(['r', 'l', 'r', 'r', 'c', 'r', 'r', 'r', 'r', 'r'])
     table.set_deco(texttable.Texttable.HEADER)
     table.add_rows(rows)
