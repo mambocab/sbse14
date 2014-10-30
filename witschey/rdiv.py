@@ -154,7 +154,8 @@ def rdiv_report(data):
 
     # sort by rank & median within each rank
     # sorting is stable, so sort by median first, then rank
-    ranked = sorted((x for x in scottknott(data, max_rank_size=1)), key=lambda y: y.median())
+    ranked = sorted((x for x in scottknott(data, max_rank_size=1)),
+                     key=lambda y: y.median())
     ranked = tuple(sorted(ranked, key=lambda y: y.rank))
 
     # get high and low values for entire dataset
