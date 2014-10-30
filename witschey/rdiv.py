@@ -2,11 +2,12 @@ from __future__ import division
 import sys
 import random
 import math
+from itertools import chain
 
 from log import NumberLog
 import texttable
 from basic_stats import xtile, median
-from witschey import base
+from witschey import base, basic_stats
 from witschey.base import memo_sqrt
 
 # flake8: noqa
@@ -86,62 +87,50 @@ def different(l1,l2):
     return a12(l2,l1) and bootstrap(l1,l2)
 
 
-def scottknott(data,cohen=0.3,max_rank_size=3,epsilon=0.01):
+def scottknott(data, max_rank_size=3, epsilon=0.01):
     """
     Recursively split data, maximizing delta of the expected value of the
     mean before and after the splits. Reject splits with under max_rank_size
     items.
     """
-    all_data = NumberLog(inits=data)
-    return rdiv(data, all_data, max_rank_size, epsilon)
+    flat_data = [x for log in data for x in log.contents()]
+    data_mean = basic_stats.mean(flat_data)
 
-def rdiv(data,  # a list of NumberLogs
-         all,   # all the data combined into one num
-         max_rank_size,   
-         epsilon): # small enough to split two parts
-    """Looks for ways to split sorted data, 
-    Recurses into each split. Assigns a 'rank' number
-    to all the leaf splits found in this way. 
-    """
-    def recurse(parts,all,rank=0):
+    def recurse(parts, rank=0):
         "Split, then recurse on each part."
-        cut,left,right = maybeIgnore(minMu(parts,all,max_rank_size,epsilon),parts)
-        if cut: 
+
+        cut = minMu(parts, data_mean, len(flat_data), max_rank_size, epsilon)
+        if cut:
             # if cut, rank "right" higher than "left"
-            rank = recurse(parts[:cut],left,rank) + 1
-            rank = recurse(parts[cut:],right,rank)
+            rank = recurse(parts[:cut], rank) + 1
+            rank = recurse(parts[cut:], rank)
         else: 
             # if no cut, then all get same rank
-            for part in parts: 
+            for part in parts:
                 part.rank = rank
         return rank
-    recurse(sorted(data),all)
+
+
+    recurse(sorted(data, key=lambda x: x.median()))
     return data
 
-def maybeIgnore((cut,left,right),parts):
-    if cut:
-        pre = NumberLog(inits=(f for p in parts[:cut] for f in p.contents()), max_size=None)
-        post = NumberLog(inits=(f for p in parts[cut:] for f in p.contents()), max_size=None)
-        if not different(pre.contents(), post.contents()):
-            cut = left = right = None
-    return cut,left,right
-
-def minMu(parts,all,max_rank_size,epsilon):
-    """Find a cut in the parts that maximizes
-    the expected value of the difference in
-    the mean before and after the cut.
-    Reject splits that are insignificantly
-    different or that generate very small subsets.
+def minMu(parts, data_mean, data_size, max_rank_size, epsilon):
+    """Find a cut in the parts that maximizes the expected value of the
+    difference in the mean before and after the cut. Reject splits that are
+    insignificantly different or that generate very small subsets.
     """
-    cut, left, right = None,None,None
-    before, mu =  0, all.mean()
-    for i,l,r in leftRight(parts,epsilon):
-        if len(l) > max_rank_size and len(r) > max_rank_size:
-            n   = len(all) * 1.0
-            now = len(l)/n*(mu- l.mean())**2 + len(r)/n*(mu- r.mean())**2  
-            if now > before:
-                before,cut,left,right = now,i,l,r
-    return cut,left,right
+    cut = None
+    biggest_delta = 0
+    for i, t in enumerate(leftRight(parts, epsilon)):
+        # import pdb; pdb.set_trace()
+        if len(parts[:i]) >= max_rank_size and len(parts[i:]) >= max_rank_size:
+            current_delta = len(t[0]) / data_size * (data_mean - t[0].mean()) ** 2
+            current_delta += len(t[1]) / data_size * (data_mean - t[1].mean()) ** 2
+
+            if current_delta > biggest_delta and different(t[0], t[1]):
+                biggest_delta, cut = current_delta, i
+    return cut
+
 
 def leftRight(parts,epsilon=0.01):
     """Iterator. For all items in 'parts',
@@ -150,26 +139,11 @@ def leftRight(parts,epsilon=0.01):
     efficiency, take a first pass over the data
     to pre-compute and cache right-hand-sides
     """
-    rights = {}
-    n = j = len(parts) - 1
-    while j > 0:
-        rights[j] = NumberLog(parts[j])
-        if j < n:
-            rights[j] += rights[j+1]
-        j -=1
-    left = NumberLog(parts[0])
-    for i,one in enumerate(parts):
-        if i> 0: 
-            if parts[i].median() - parts[i-1].median() > epsilon:
-                yield i,left,rights[i]
-            left += one
-"""
+    for i in range(1, len(parts)):
+        if parts[i].median() - parts[i - 1].median() > epsilon:
+            yield NumberLog((p for p in parts[:i])), NumberLog((p for p in parts[i:]))
 
-## Putting it All Together
 
-Driver for the demos:
-
-"""
 def rdiv_report(data):
     """
     Generate a tabular report on the data. Assumes data is in lists, where the
@@ -181,7 +155,7 @@ def rdiv_report(data):
 
     # sort by rank & median within each rank
     # sorting is stable, so sort by median first, then rank
-    ranked = sorted((x for x in scottknott(data)), key=lambda y: y.median())
+    ranked = sorted((x for x in scottknott(data, max_rank_size=1)), key=lambda y: y.median())
     ranked = tuple(sorted(ranked, key=lambda y: y.rank))
 
     # get high and low values for entire dataset
