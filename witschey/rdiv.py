@@ -38,7 +38,7 @@ def a12(lst1,lst2):
     return gt/(n1*n2) + eq/2/(n1*n2)
 
 
-def testStatistic(y,z): 
+def testStatistic(y, z): 
     """Checks if two means are different, tempered
      by the sample size of 'y' and 'z'"""
     delta = z.mean() - y.mean()
@@ -66,46 +66,26 @@ def bootstrap(y0,z0,conf=0.01,b=1000):
     zhat   = tuple(z1 - z.mean() + x.mean() for z1 in z.contents())
     bigger = 0
     for i in range(b):
-        samp_with_replacement_yhat = (random.choice(yhat) for _ in yhat)
-        samp_with_replacement_zhat = (random.choice(zhat) for _ in zhat)
-        different_means = testStatistic(
-            NumberLog(samp_with_replacement_yhat, max_size=None),
-            NumberLog(samp_with_replacement_zhat, max_size=None))
-        if different_means > tobs:
+        # sample with replacement for yhat and zhat
+        swr_yhat = (random.choice(yhat) for _ in yhat)
+        swr_zhat = (random.choice(zhat) for _ in zhat)
+        mean_difference = testStatistic(
+            NumberLog(swr_yhat, max_size=None),
+            NumberLog(swr_zhat, max_size=None))
+        if mean_difference > tobs:
             bigger += 1
     return bigger / b < conf
 
+
 def different(l1,l2):
-  #return bootstrap(l1,l2) and a12(l2,l1)
-  return a12(l2,l1) and bootstrap(l1,l2)
-
-"""
-
-## Saner Hypothesis Testing
-
-The following code, which you should use verbatim does the following:
+    """
+    Quick test to see if 2 things are different. A12 is a reasonable first
+    approximation, and fast, and if it gets past A12, run the slower, more
+    authoritative, bootstrap.
+    """
+    return a12(l2,l1) and bootstrap(l1,l2)
 
 
-+ All treatments are clustered into _ranks_. In practice, dozens
-  of treatments end up generating just a handful of ranks.
-+ The numbers of calls to the hypothesis tests are minimized:
-    + Treatments are sorted by their median value.
-    + Treatments are divided into two groups such that the
-      expected value of the mean values _after_ the split is minimized;
-    + Hypothesis tests are called to test if the two groups are truly difference.
-          + All hypothesis tests are non-parametric and include (1) effect size tests
-            and (2) tests for statistically significant numbers;
-          + Slow bootstraps are executed  if the faster _A12_ tests are passed;
-
-In practice, this means that the hypothesis tests (with confidence of say, 95%)
-are called on only a logarithmic number of times. So...
-
-+ With this method, 16 treatments can be studied using less than _&sum;<sub>1,2,4,8,16</sub>log<sub>2</sub>i =15_ hypothesis tests  and confidence _0.99<sup>15</sup>=0.86_.
-+ But if did this with the 120 all-pairs comparisons of the 16 treatments, we would have total confidence _0.99<sup>120</sup>=0.30.
-
-For examples on using this code, see _rdivDemo_ (below).
-
-"""
 def scottknott(data,cohen=0.3,max_rank_size=3,epsilon=0.01):
     """
     Recursively split data, maximizing delta of the expected value of the
@@ -113,11 +93,10 @@ def scottknott(data,cohen=0.3,max_rank_size=3,epsilon=0.01):
     items.
     """
     all_data = NumberLog(inits=data)
-    return rdiv(data, all_data, minMu, max_rank_size, epsilon)
+    return rdiv(data, all_data, max_rank_size, epsilon)
 
-def rdiv(data,  # a list of class Nums
+def rdiv(data,  # a list of NumberLogs
          all,   # all the data combined into one num
-         div,   # function: find the best split
          max_rank_size,   
          epsilon): # small enough to split two parts
     """Looks for ways to split sorted data, 
@@ -126,7 +105,7 @@ def rdiv(data,  # a list of class Nums
     """
     def recurse(parts,all,rank=0):
         "Split, then recurse on each part."
-        cut,left,right = maybeIgnore(div(parts,all,max_rank_size,epsilon),parts)
+        cut,left,right = maybeIgnore(minMu(parts,all,max_rank_size,epsilon),parts)
         if cut: 
             # if cut, rank "right" higher than "left"
             rank = recurse(parts[:cut],left,rank) + 1
@@ -154,8 +133,8 @@ def minMu(parts,all,max_rank_size,epsilon):
     Reject splits that are insignificantly
     different or that generate very small subsets.
     """
-    cut,left,right = None,None,None
-    before, mu     =  0, all.mean()
+    cut, left, right = None,None,None
+    before, mu =  0, all.mean()
     for i,l,r in leftRight(parts,epsilon):
         if len(l) > max_rank_size and len(r) > max_rank_size:
             n   = len(all) * 1.0
