@@ -7,6 +7,7 @@ from log import NumberLog
 import texttable
 from basic_stats import xtile, median
 from witschey import base
+from witschey.base import memo_sqrt
 
 # flake8: noqa
 
@@ -40,27 +41,24 @@ def a12(lst1,lst2):
 def testStatistic(y,z): 
     """Checks if two means are different, tempered
      by the sample size of 'y' and 'z'"""
-    s1 = y.standard_deviation()
-    s2 = z.standard_deviation()
     delta = z.mean() - y.mean()
-    if s1+s2:
-      delta =  delta/((s1/len(y) + s2/len(z))**0.5)
+    sd_y = y.standard_deviation()
+    sd_z = z.standard_deviation()
+
+    if sd_y + sd_z:
+        delta /= memo_sqrt(sd_y / len(y) + sd_z / len(z))
+
     return delta
-"""
 
-The rest is just details:
 
-+ Efron advises
-  to make the mean of the populations the same (see
-  the _yhat,zhat_ stuff shown below).
-+ The class _total_ is a just a quick and dirty accumulation class.
-+ For more details see [the Efron text][efron01].  
-
-"""
 def bootstrap(y0,z0,conf=0.01,b=1000):
-    """The bootstrap hypothesis test from
-       p220 to 223 of Efron's book 'An
-      introduction to the boostrap."""
+    """
+    The bootstrap hypothesis test from p220 to 223 of Efron's book 'An
+    introduction to the boostrap.
+
+    Simple way to describe: "If you randomly generate 1000 similar datasets,
+    is a likely to be significantly different to b?"
+    """
     y, z   = NumberLog(y0), NumberLog(z0)
     x      = NumberLog(inits=(y, z))
     tobs   = testStatistic(y,z)
