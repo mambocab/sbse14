@@ -52,7 +52,7 @@ def testStatistic(y, z):
     return delta
 
 
-def bootstrap(y0,z0,conf=0.01,b=1000):
+def bootstrap(y0, z0, conf=0.01, b=1000):
     """
     The bootstrap hypothesis test from p220 to 223 of Efron's book 'An
     introduction to the boostrap.
