@@ -138,7 +138,9 @@ def leftRight(parts,epsilon=0.01):
     """
     for i in range(1, len(parts)):
         if parts[i].median() - parts[i - 1].median() > epsilon:
-            yield NumberLog((p for p in parts[:i])), NumberLog((p for p in parts[i:]))
+            left = NumberLog((p for p in parts[:i]), max_size=None)
+            right = NumberLog((p for p in parts[i:]), max_size=None)
+            yield i, left, right
 
 
 def rdiv_report(data):
