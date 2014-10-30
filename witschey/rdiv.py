@@ -37,32 +37,6 @@ def a12(lst1,lst2):
     return gt/(n1*n2) + eq/2/(n1*n2)
 
 
-"""## Non-Parametric Hypothesis Testing
-
-The following _bootstrap_ method was introduced in
-1979 by Bradley Efron at Stanford University. It
-was inspired by earlier work on the
-jackknife.
-Improved estimates of the variance were [developed later][efron01].  
-
-[efron01]: http://goo.gl/14n8Wf "Bradley Efron and R.J. Tibshirani. An Introduction to the Bootstrap (Chapman & Hall/CRC Monographs on Statistics & Applied Probability), 1993"
-
-
-To check if two populations _(y0,z0)_
-are different, many times sample with replacement
-from both to generate _(y1,z1), (y2,z2), (y3,z3)_.. etc.
-
-Then, for all those samples,
- check if some *testStatistic* in the original pair
-hold for all the other pairs. If it does more than (say) 99%
-of the time, then we are 99% confident in that the
-populations are the same.
-
-In such a _bootstrap_ hypothesis test, the *some property*
-is the difference between the two populations, muted by the
-joint standard deviation of the populations.
-
-"""
 def testStatistic(y,z): 
     """Checks if two means are different, tempered
      by the sample size of 'y' and 'z'"""
