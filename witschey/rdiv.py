@@ -139,8 +139,8 @@ def scottknott(data,cohen=0.3,max_rank_size=3,epsilon=0.01):
     the expected value of the mean before and 
     after the splits. 
     Reject splits with under 3 items"""
-    all  = reduce(lambda x,y:x+y,data)
-    return rdiv(data,all,minMu,max_rank_size,epsilon)
+    all_data = reduce(lambda x,y:x+y,data)
+    return rdiv(data, all_data, minMu, max_rank_size, epsilon)
 
 def rdiv(data,  # a list of class Nums
          all,   # all the data combined into one num
