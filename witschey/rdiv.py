@@ -90,8 +90,8 @@ def bootstrap(y0,z0,conf=0.01,b=1000):
     y, z   = NumberLog(y0), NumberLog(z0)
     x      = NumberLog(inits=(y, z))
     tobs   = testStatistic(y,z)
-    yhat   = [y1 - y.mean() + x.mean() for y1 in y.contents()]
-    zhat   = [z1 - z.mean() + x.mean() for z1 in z.contents()]
+    yhat   = tuple(y1 - y.mean() + x.mean() for y1 in y.contents())
+    zhat   = tuple(z1 - z.mean() + x.mean() for z1 in z.contents())
     bigger = 0
     for i in range(b):
         samp_with_replacement_yhat = (random.choice(yhat) for _ in yhat)
