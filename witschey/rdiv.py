@@ -220,39 +220,50 @@ Driver for the demos:
 
 """
 def rdiv_report(data):
-    rows = []
-    data = map(lambda lst:NumberLog(label=lst[0], inits=lst[1:], max_size=None),
+    """
+    Generate a tabular report on the data. Assumes data is in lists, where the
+    first element of each list is its name.
+    """
+    # wrap each line in a NumberLog
+    data = map(lambda xs: NumberLog(label=xs[0], inits=xs[1:], max_size=None),
                data)
-    ranks=[]
-    for x in scottknott(data):
-        ranks += [(x.rank,x.median(),x)]
-    all=[]
-    for _,__,x in sorted(ranks): all += x.contents()
-    all = sorted(all)
-    lo, hi = all[0], all[-1]
-    last = None
-    rows.append(['rank', 'name', 'med', 'iqr', '',
-                '10%', '30%', '50%', '70%', '90%'])
-    for _,__,x in sorted(ranks):
+
+    # sort by rank & median within each rank
+    # sorting is stable, so sort by median first, then rank
+    ranked = sorted((x for x in scottknott(data)), key=lambda y: y.median())
+    ranked = tuple(sorted(ranked, key=lambda y: y.rank))
+
+    # get high and low values for entire dataset
+    lo = min(log.lo for log in data)
+    hi = max(log.hi for log in data)
+
+    # generate column names
+    rows = [['rank', 'name', 'med', 'iqr', '',
+            '10%', '30%', '50%', '70%', '90%']]
+
+    # generate rows
+    for x in ranked:
+        # each row starts with 'rank label, median, iqr'
         next_row = [x.rank + 1]
-        next_row.extend(map(lambda y: y + ',', [x.label, '{0:0.2}'.format(x.median())]))
+        next_row.append(x.label + ',')
+        next_row.append('{0:0.2},'.format(x.median()))
         next_row.append('{0:0.2}'.format(x.iqr()))
 
+        # get xtile: '( -* | -- ) ##, ##, ##, ##, ##'
         xtile_out = xtile(x.contents(), lo=lo, hi=hi, width=30, as_list=True)
         # xtile is displayed as the whisker plot, then comma-separated values
         row_xtile = [xtile_out[0]]
-        # don't use `join`, since we want each to be its own list element
+        # don't use `join`, we want each to be its own list element
         row_xtile.extend(map(lambda x: x + ',', xtile_out[1:-1]))
         row_xtile.append(xtile_out[-1])
 
         next_row.extend(row_xtile)
         rows.append(next_row)
 
-        last = x.rank
     table = texttable.Texttable(200)
     table.set_precision(2)
     table.set_cols_dtype(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't'])
-    table.set_cols_align(['r', 'l', 'r', 'r', 'c', 'r', 'r', 'r', 'r', 'r'])
+    table.set_cols_align(['r', 'l', 'l', 'r', 'c', 'r', 'r', 'r', 'r', 'r'])
     table.set_deco(texttable.Texttable.HEADER)
     table.add_rows(rows)
     return table.draw()
