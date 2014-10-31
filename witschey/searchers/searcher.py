@@ -24,7 +24,7 @@ class Searcher(object):
         d = dict(searcher=name, initialized=datetime.now())
 
         # if there are global options for this class or its bases in CONFIG
-        for k in [name] + [k.__name__ for k in cls.__bases__]:
+        for k in [k.__name__ for k in cls.__bases__] + [name]:
             if hasattr(CONFIG, k):
                 # add them to the dict
                 d.update(getattr(CONFIG, k).__dict__)
