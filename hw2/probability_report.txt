@@ -1,6 +1,0 @@
-In my test of MaxWalkSat for the Fonseca model, the algorighm converged on a
-value below my threshold faster when local search was more likely.
-This indicates that the output of the model varies greatly along each input
-variable -- exploring the full space of one variable finds minima more
-effectively than exploring all of them simultaneously.
-
