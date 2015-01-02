@@ -50,49 +50,46 @@ def value_at_proportion(p, xs):
 def percentile(x, xs, is_sorted=False):
     if not is_sorted:
         xs = sorted(xs)
-    before = len(tuple(itertools.ifilter(lambda y: y < x, xs)))
+    before = len(tuple(itertools.takewhile(lambda y: y < x, xs)))
     return before / len(xs)
 
 
-def xtile(xs, lo=None, hi=None, width=50,
-          marks=(' ', '-', ' ', ' ', '-', ' '),
-          bar='|', star='*', show=' {:6.2f}',
+def xtile(xs, lo=0, hi=0.001, width=50,
+          chops=[0.1, 0.3, 0.5, 0.7, 0.9], marks=["-", " ", " ", "-", " "],
+          bar="|", star="*", show=" {: >6.2f}",
           as_list=False):
-    '''Take an iterable of numbers and present them as a horizontal xtile
-    ascii chart. The chart is a contracted quintile showing the 10th, 30th,
-    50th, 70th, and 90th percentiles.
-    '''
+    """Take an iterable of numbers and present them as a horizontal xtile
+    ascii chart. The default is a contracted quintile showing the 10th, 30th,
+    50th, 70th, and 90th percentiles. These breaks can be customized with the
+    chops parameter.
+    """
+
     xs = sorted(xs)
 
-    lo = min(xs) if lo is None else min(lo, *xs)
-    hi = max(xs) if hi is None else max(hi, *xs)
+    lo, hi = min(lo, xs[0]), max(hi, xs[-1])
     if hi == lo:
         hi += .001  # ugh
-    chops_marks = zip((.1, .3, .5, .7, .9, 1), marks)
-    cursor = 0
 
-    out = [None] * width
+    out = [' '] * width
 
-    for i in range(width):
-        xs_at_cursor = value_at_proportion(i / (width - 1), xs)
+    out_index_for_value = lambda x: min(width-1,
+                                        int(len(out) * norm(x, lo, hi)))
 
-        rank = percentile(xs_at_cursor, xs, is_sorted=True)
+    values_at_chops = tuple(xs[int(len(xs) * p)] for p in chops)
+    where = [out_index_for_value(n) for n in values_at_chops]
 
-        while rank > chops_marks[cursor][0]:
-            cursor += 1
-        out[i] = chops_marks[cursor][1]
+    for one, two in base.pairs(where):
+        for i in range(one, two):
+            out[i] = marks[0]
+        marks = marks[1:]
 
-    out[width // 2] = bar
-
-    ind = int(norm(value_at_proportion(.5, xs), lo, hi) * width)
-    out[ind] = star
+    out[int(width / 2)] = bar
+    out[out_index_for_value(xs[int(len(xs) * 0.5)])] = star
 
     if as_list:
         rv = ['(' + ''.join(out) + ")"]
-        rv.extend((show.format(value_at_proportion(x, xs))
-                  for x in (.1, .3, .5, .7, .9)))
+        rv.extend(show.format(x) for x in values_at_chops)
         return rv
 
-    return ''.join(out) + "," + ','.join(
-        [show.format(value_at_proportion(x, xs))
-         for x in (.1, .3, .5, .7, .9)])
+    return ''.join(out) + "," + ','.join([show.format(x)
+                                         for x in values_at_chops])

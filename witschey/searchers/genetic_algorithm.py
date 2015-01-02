@@ -87,7 +87,7 @@ class GeneticAlgorithm(Searcher):
                 try:
                     child = self.model(xs, io=True)
                 except ModelInputException:
-                    pass
+                    failures += 1
             children.append(child)
         self._evals += len(children)
         return tuple(children[:self.spec.population_size])

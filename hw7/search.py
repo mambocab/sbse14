@@ -8,6 +8,8 @@ from witschey.models import Model
 from witschey import models
 from witschey.searchers import Searcher
 
+from witschey import searchers
+
 from witschey.rdiv import rdiv_report
 
 import timeit
@@ -49,4 +51,4 @@ def run(n=30, text_report=False):
         print(rdiv_report(time_rdiv_in), end='\n\n')
 
 if __name__ == '__main__':
-    run(n=15, text_report=False)
+    run(n=50, text_report=False)

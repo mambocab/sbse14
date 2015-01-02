@@ -2,11 +2,11 @@
 %%Title: base.py, basic_stats.py, log.py, numberlog.py, __init__.py, model.py, independent_variable.py, dtlz7.py, fonseca.py, kursawe.py
 %%For: Jim Witschey
 %%Creator: a2ps version 4.14
-%%CreationDate: Wed Oct 29 16:02:08 2014
+%%CreationDate: Thu Nov  6 13:27:29 2014
 %%BoundingBox: 24 24 588 768
 %%DocumentData: Clean7Bit
 %%Orientation: Landscape
-%%Pages: 17
+%%Pages: 18
 %%PageOrder: Ascend
 %%DocumentMedia: Letter 612 792 0 () ()
 %%DocumentNeededResources: font Courier
@@ -771,7 +771,7 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/base.py) (1/17) (Wednesday October 29, 2014) footer
+(witschey/base.py) (1/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -815,85 +815,84 @@ x0 y0 moveto
 0 T (    return xs[int\(n * .75\)] - xs[int\(n * .25\)]) N
 0 T () N
 0 T () N
-0 T (def standard_deviation\(xs, mean_val=None\):) N
-(30) # (    if mean_val is None:) N
-0 T (        mean_val = mean\(xs\)) N
-0 T (    return base.memo_sqrt\(sum\(\(x - mean_val\) ** 2 for x in xs\)\)) N
+0 T (_mean = mean  # `mean` alias for use by standard_deviation, which shadows it) N
+(30) # () N
+0 T () N
+0 T (def standard_deviation\(xs, mean=None\):) N
+0 T (    if mean is None:) N
+0 T (        mean = _mean\(xs\)) N
+(35) # (    return base.memo_sqrt\(sum\(\(x - mean\) ** 2 for x in xs\)\)) N
 0 T () N
 0 T () N
-(35) # (def norm\(x, a, b\):) N
+0 T (def norm\(x, a, b\):) N
 0 T (    lo, hi = min\(a, b\), max\(a, b\)) N
-0 T (    try:) N
+(40) # (    try:) N
 0 T (        return \(x - lo\) / \(hi - lo\)) N
 0 T (    except ZeroDivisionError:) N
-(40) # (        return .5) N
+0 T (        return .5) N
 0 T () N
-0 T () N
+(45) # () N
 0 T (def value_at_proportion\(p, xs\):) N
 0 T (    return xs[int\(round\(len\(xs\) - 1\) * p\)]) N
-(45) # () N
 0 T () N
-0 T (def percentile\(x, xs, is_sorted=False\):) N
+0 T () N
+(50) # (def percentile\(x, xs, is_sorted=False\):) N
 0 T (    if not is_sorted:) N
 0 T (        xs = sorted\(xs\)) N
-(50) # (    before = len\(tuple\(itertools.ifilter\(lambda y: y < x, xs\)\)\)) N
+0 T (    before = len\(tuple\(itertools.takewhile\(lambda y: y < x, xs\)\)\)) N
 0 T (    return before / len\(xs\)) N
+(55) # () N
 0 T () N
+0 T (def xtile\(xs, lo=0, hi=0.001, width=50,) N
+0 T (          chops=[0.1, 0.3, 0.5, 0.7, 0.9], marks=["-", " ", " ", "-", " "],) N
+0 T (          bar="|", star="*", show=" {: >6.2f}",) N
+(60) # (          as_list=False\):) N
+0 T (    """Take an iterable of numbers and present them as a horizontal xtile) N
+0 T (    ascii chart. The default is a contracted quintile showing the 10th, 30th,) N
+0 T (    50th, 70th, and 90th percentiles. These breaks can be customized with the) N
+0 T (    chops parameter.) N
+(65) # (    """) N
 0 T () N
-0 T (def xtile\(xs, lo=None, hi=None, width=50,) N
-(55) # (          marks=\(' ', '-', ' ', ' ', '-', ' '\),) N
-0 T (          bar='|', star='*', show=' {:6.2f}',) N
-0 T (          as_list=False\):) N
-0 T (    '''Take an iterable of numbers and present them as a horizontal xtile) N
-0 T (    ascii chart. The chart is a contracted quintile showing the 10th, 30th,) N
-(60) # (    50th, 70th, and 90th percentiles.) N
-0 T (    ''') N
 0 T (    xs = sorted\(xs\)) N
 0 T () N
-0 T (    lo = min\(xs\) if lo is None else min\(lo, *xs\)) N
-(65) # (    hi = max\(xs\) if hi is None else max\(hi, *xs\)) N
-0 T (    if hi == lo:) N
+0 T (    lo, hi = min\(lo, xs[0]\), max\(hi, xs[-1]\)) N
+(70) # (    if hi == lo:) N
 0 T (        hi += .001  # ugh) N
-0 T (    chops_marks = zip\(\(.1, .3, .5, .7, .9, 1\), marks\)) N
-0 T (    cursor = 0) N
-(70) # () N
-0 T (    out = [None] * width) N
 0 T () N
-0 T (    for i in range\(width\):) N
-("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 26, 14 2:42) title
+0 T (    out = [' '] * width) N
+("csc710sbse: hw7: Witschey") (Page 1/2) (Nov 05, 14 15:22) title
 border
 /v 1 store
 /x0 x v get 2.965278 add sx cw mul add store
 /y0 y v get bfs th add sub store
 x0 y0 moveto
 0 T () p n
-(75) # (        xs_at_cursor = value_at_proportion\(i / \(width - 1\), xs\)) N
+(75) # (    out_index_for_value = lambda x: min\(width-1,) N
+0 T (                                        int\(len\(out\) * norm\(x, lo, hi\)\)\)) N
 0 T () N
-0 T (        rank = percentile\(xs_at_cursor, xs, is_sorted=True\)) N
-0 T () N
-0 T (        while rank > chops_marks[cursor][0]:) N
-(80) # (            cursor += 1) N
-0 T (        out[i] = chops_marks[cursor][1]) N
-0 T () N
-0 T (    out[width // 2] = bar) N
-0 T () N
-(85) # (    ind = int\(norm\(value_at_proportion\(.5, xs\), lo, hi\) * width\)) N
-0 T (    out[ind] = star) N
+0 T (    values_at_chops = tuple\(xs[int\(len\(xs\) * p\)] for p in chops\)) N
+0 T (    where = [out_index_for_value\(n\) for n in values_at_chops]) N
+(80) # () N
+0 T (    for one, two in base.pairs\(where\):) N
+0 T (        for i in range\(one, two\):) N
+0 T (            out[i] = marks[0]) N
+0 T (        marks = marks[1:]) N
+(85) # () N
+0 T (    out[int\(width / 2\)] = bar) N
+0 T (    out[out_index_for_value\(xs[int\(len\(xs\) * 0.5\)]\)] = star) N
 0 T () N
 0 T (    if as_list:) N
-0 T (        rv = ['\(' + ''.join\(out\) + "\)"]) N
-(90) # (        rv.extend\(\(show.format\(value_at_proportion\(x, xs\)\)) N
-0 T (                  for x in \(.1, .3, .5, .7, .9\)\)\)) N
+(90) # (        rv = ['\(' + ''.join\(out\) + "\)"]) N
+0 T (        rv.extend\(show.format\(x\) for x in values_at_chops\)) N
 0 T (        return rv) N
 0 T () N
-0 T (    return ''.join\(out\) + "," + ','.join\() N
-(95) # (        [show.format\(value_at_proportion\(x, xs\)\)) N
-0 T (         for x in \(.1, .3, .5, .7, .9\)]\)) N
-("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 26, 14 2:42) title
+0 T (    return ''.join\(out\) + "," + ','.join\([show.format\(x\)) N
+(95) # (                                         for x in values_at_chops]\)) N
+("csc710sbse: hw7: Witschey") (Page 2/2) (Nov 05, 14 15:22) title
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/basic_stats.py) (2/17) (Wednesday October 29, 2014) footer
+(witschey/basic_stats.py) (2/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -961,100 +960,101 @@ x0 y0 moveto
 (50) # () N
 0 T (        self._n += 1) N
 0 T () N
-0 T (        if isinstance\(x, Log\):) N
+0 T (        if issubclass\(x.__class__, Log\):) N
 0 T (            map\(self.__iadd__, x._cache\)) N
-(55) # () N
+(55) # (            return self) N
+0 T () N
 0 T (        changed = False) N
 0 T () N
 0 T (        # if cache has room, add item) N
-0 T (        if self.max_size is None or len\(self._cache\) < self.max_size:) N
-(60) # (            changed = True) N
+(60) # (        if self.max_size is None or len\(self._cache\) < self.max_size:) N
+0 T (            changed = True) N
 0 T (            self._cache.add\(x\)) N
 0 T (        # cache is full: maybe replace an old item) N
 0 T (        else:) N
-0 T (            # items less likely to be replaced later in the run:) N
-(65) # (            # leads to uniform sample of entire run) N
+(65) # (            # items less likely to be replaced later in the run:) N
+0 T (            # leads to uniform sample of entire run) N
 0 T (            if random.random\(\) <= self.max_size / len\(self\):) N
 0 T (                changed = True) N
 0 T (                self._cache.remove\(random.choice\(self._cache\)\)) N
-0 T (                self._cache.add\(x\)) N
-(70) # () N
+(70) # (                self._cache.add\(x\)) N
+0 T () N
 0 T (        if changed:) N
 0 T (            self._invalidate_statistics\(\)) N
-0 T (            self._change\(x\)) N
-("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 26, 14 0:14) title
+("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 29, 14 17:14) title
 border
 /v 1 store
 /x0 x v get 2.965278 add sx cw mul add store
 /y0 y v get bfs th add sub store
 x0 y0 moveto
-0 T () p n
-(75) # (        return self) N
+0 T (            self._change\(x\)) p n
+(75) # () N
+0 T (        return self) N
 0 T () N
 0 T (    def __add__\(self, x, max_size=MAX_SIZE\):) N
 0 T (        inits = itertools.chain\(self._cache, x._cache\)) N
-0 T (        return self.__class__\(inits=inits, max_size=max_size\)) N
-(80) # () N
+(80) # (        return self.__class__\(inits=inits, max_size=max_size\)) N
+0 T () N
 0 T (    def any\(self\):) N
 0 T (        return random.choice\(self._cache\)) N
 0 T () N
-0 T (    def report\(self\):) N
-(85) # (        if self._report is None:) N
+(85) # (    def report\(self\):) N
+0 T (        if self._report is None:) N
 0 T (            self._report = self._generate_report\(\)) N
 0 T (        return self._report) N
 0 T () N
-0 T (    def setup\(self\):) N
-(90) # (        raise NotImplementedError\(\)) N
+(90) # (    def setup\(self\):) N
+0 T (        raise NotImplementedError\(\)) N
 0 T () N
 0 T (    def as_list\(self\):) N
 0 T (        return self._cache.as_list\(\)) N
-0 T () N
-(95) # (    def _invalidate_statistics\(self\):) N
+(95) # () N
+0 T (    def _invalidate_statistics\(self\):) N
 0 T (        ''') N
 0 T (        default implementation. if _valid_statistics is something other than) N
 0 T (        a boolean, reimplement!) N
-0 T (        ''') N
-(100) # (        self._valid_statistics = False) N
+(100) # (        ''') N
+0 T (        self._valid_statistics = False) N
 0 T () N
 0 T (    def ish\(self, *args, **kwargs\):) N
 0 T (        raise NotImplementedError\(\)) N
-0 T () N
-(105) # (    def _change\(self, x\):) N
+(105) # () N
+0 T (    def _change\(self, x\):) N
 0 T (        ''') N
 0 T (        override to add incremental updating functionality) N
 0 T (        ''') N
-0 T (        pass) N
-(110) # () N
+(110) # (        pass) N
+0 T () N
 0 T (    def _prepare_data\(self\):) N
 0 T (        s = '_prepare_data\(\) not implemented for ' + self.__class__.__name__) N
 0 T (        raise NotImplementedError\(s\)) N
-0 T () N
-(115) # (    def __iter__\(self\):) N
+(115) # () N
+0 T (    def __iter__\(self\):) N
 0 T (        return iter\(self._cache\)) N
 0 T () N
 0 T (    def contents\(self\):) N
-0 T (        return self._cache.as_list\(\)) N
-(120) # () N
+(120) # (        return self._cache.as_list\(\)) N
+0 T () N
 0 T () N
 0 T (def statistic\(f\):) N
 0 T (    ''') N
-0 T (    decorator for log functions that return statistics about contents.) N
-(125) # (    if _valid_statistics is False, generate valid stats before calling) N
+(125) # (    decorator for log functions that return statistics about contents.) N
+0 T (    if _valid_statistics is False, generate valid stats before calling) N
 0 T (    the wrapped function.) N
 0 T (    ''') N
 0 T (    @functools.wraps\(f\)) N
-0 T (    def wrapper\(*args, **kwargs\):) N
-(130) # (        self = args[0]) N
+(130) # (    def wrapper\(*args, **kwargs\):) N
+0 T (        self = args[0]) N
 0 T (        if not self._valid_statistics:) N
 0 T (            self._prepare_data\(\)) N
 0 T (        return f\(*args, **kwargs\)) N
-0 T () N
-(135) # (    return wrapper) N
-("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 26, 14 0:14) title
+(135) # () N
+0 T (    return wrapper) N
+("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 29, 14 17:14) title
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/log/log.py) (3/17) (Wednesday October 29, 2014) footer
+(witschey/log/log.py) (3/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -1143,7 +1143,7 @@ x0 y0 moveto
 0 T (        self._cached_iqr = basic_stats.iqr\(self._cache\)) N
 0 T (        return self._cached_iqr) N
 0 T () N
-("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 26, 14 0:05) title
+("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 29, 14 17:27) title
 border
 /v 1 store
 /x0 x v get 2.965278 add sx cw mul add store
@@ -1152,21 +1152,24 @@ x0 y0 moveto
 0 T (    def xtile\(self, *args, **kw\):) p n
 (75) # (        return basic_stats.xtile\(self._cache, *args, **kw\)) N
 0 T () N
-0 T (    def better\(self, log2\):) N
+0 T (    def value_at_proportion\(self, p\):) N
+0 T (        return basic_stats.value_at_proportion\(p, self._cache\)) N
+0 T () N
+(80) # (    def better\(self, log2\):) N
 0 T (        if log2 is None:) N
 0 T (            return ValueError) N
-(80) # (        if not self._cache or not log2._cache:) N
+0 T (        if not self._cache or not log2._cache:) N
 0 T (            return False) N
-0 T (        if self.median\(\) < log2.median\(\):) N
+(85) # (        if self.median\(\) < log2.median\(\):) N
 0 T (            return True) N
 0 T (        if self.iqr\(\) < log2.iqr\(\):) N
-(85) # (            return True) N
+0 T (            return True) N
 0 T (        return False) N
-("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 26, 14 0:05) title
+("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 29, 14 17:27) title
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/log/numberlog.py) (4/17) (Wednesday October 29, 2014) footer
+(witschey/log/numberlog.py) (4/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -1281,7 +1284,7 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/models/__init__.py, witschey/models/model.py) (5/17) (Wednesday October 29, 2014) footer
+(witschey/models/__init__.py, witschey/models/model.py) (5/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -1409,7 +1412,7 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/models/model.py, witschey/models/independent_variable.py) (6/17) (Wednesday October 29, 2014) footer
+(witschey/models/model.py, witschey/models/independent_variable.py) (6/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -1484,7 +1487,7 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/models/independent_variable.py, witschey/models/dtlz7.py) (7/17) (Wednesday October 29, 2014) footer
+(witschey/models/independent_variable.py, witschey/models/dtlz7.py) (7/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -1562,7 +1565,7 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/models/fonseca.py, witschey/models/kursawe.py) (8/17) (Wednesday October 29, 2014) footer
+(witschey/models/fonseca.py, witschey/models/kursawe.py) (8/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -1649,7 +1652,7 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/models/schaffer.py, witschey/models/viennet3.py) (9/17) (Wednesday October 29, 2014) footer
+(witschey/models/schaffer.py, witschey/models/viennet3.py) (9/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
@@ -1731,11 +1734,113 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/models/zdt1.py, witschey/models/zdt3.py) (10/17) (Wednesday October 29, 2014) footer
+(witschey/models/zdt1.py, witschey/models/zdt3.py) (10/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
 %%Page: (1-2) 11
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, print_function) p n
+0 T () N
+0 T (import inspect) N
+0 T () N
+(5) # (from model import Model, ModelInputException) N
+0 T (from independent_variable import IndependentVariable as IV  # noqa) N
+0 T () N
+0 T () N
+0 T (def _lambda_string_strip\(s\):) N
+(10) # (    return inspect.getsource\(s\).split\('lambda x: '\)[1][:-2]) N
+0 T () N
+0 T () N
+0 T (class Osyczka\(Model\):) N
+0 T () N
+(15) # (    def __init__\(self\):) N
+0 T (        self.checks = []) N
+0 T (        self.checks.append\(lambda x: x[0] + x[1] - 2 >= 0\)) N
+0 T (        self.checks.append\(lambda x: 6 - x[0] - x[1] >= 0\)) N
+0 T (        self.checks.append\(lambda x: 2 - x[1] + x[0] >= 0\)) N
+(20) # (        self.checks.append\(lambda x: 2 - x[0] + 3 * x[1] >= 0\)) N
+0 T (        self.checks.append\(lambda x: 4 - \(x[2] - 3\) ** 2 - x[3] >= 0\)) N
+0 T (        self.checks.append\(lambda x: \(x[4] - 3\) ** 2 + x[5] - 4 >= 0\)) N
+0 T () N
+0 T (        independents = tuple\(IV\(lo=lo, hi=hi\) for lo, hi in) N
+(25) # (                             \(\(0, 10\), \(0, 10\), \(1, 5\),) N
+0 T (                              \(0, 6\), \(1, 5\), \(0, 10\)\)\)) N
+0 T () N
+0 T (        def f1\(xs\):) N
+0 T (            return sum\(\(\(-25 * \(xs[0] - 2\) ** 2\),) N
+(30) # (                        \(- \(xs[1] - 2\) ** 2\),) N
+0 T (                        \(- \(xs[2] - 1\) ** 2\),) N
+0 T (                        \(- \(xs[3] - 4\) ** 2\),) N
+0 T (                        \(- \(xs[4] - 1\) ** 2\)\)\)) N
+0 T () N
+(35) # (        def f2\(xs\):) N
+0 T (            return sum\(x ** 2 for x in xs\)) N
+0 T () N
+0 T (        super\(Osyczka, self\).__init__\(independents=independents,) N
+0 T (                                      dependents=\(f1, f2\)\)) N
+(40) # () N
+0 T (    def random_input_vector\(self\):) N
+0 T (        while True:) N
+0 T (            candidate = super\(Osyczka, self\).random_input_vector\(\)) N
+0 T (            try:) N
+(45) # (                self._fail_on_constraint_violations\(candidate, no_msg=True\)) N
+0 T (                return candidate) N
+0 T (            except ModelInputException:) N
+0 T (                pass) N
+0 T () N
+(50) # (    def valid_input\(self, xs\):) N
+0 T (        try:) N
+0 T (            self._fail_on_constraint_violations\(xs, no_msg=True\)) N
+0 T (        except ModelInputException:) N
+0 T (            return False) N
+(55) # (        return True) N
+0 T () N
+0 T (    def _fail_on_constraint_violations\(self, xs, no_msg=False\):) N
+0 T (        msgs = []) N
+0 T (        for check in self.checks:) N
+(60) # (            if not check\(xs\):) N
+0 T (                if no_msg:) N
+0 T (                    raise ModelInputException\(xs\)) N
+0 T (                msgs.append\(_lambda_string_strip\(check\)\)) N
+0 T () N
+(65) # (        if msgs:) N
+0 T (            err = "{} failed on input {}:".format\(self.__class__.__name__, xs\)) N
+0 T (            if len\(msgs\) == 1:) N
+0 T (                err += ' {}'.format\(msgs[0]\)) N
+0 T (            else:) N
+(70) # (                pre = '\\n\\tviolated constraint: ') N
+0 T (                err += pre + pre.join\(msgs\)) N
+0 T (            raise ModelInputException\(err\)) N
+0 T () N
+("csc710sbse: hw7: Witschey") (Page 1/2) (Nov 05, 14 21:05) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (    def __call__\(self, xs, io=False\):) p n
+(75) # (        self._fail_on_constraint_violations\(xs\)) N
+0 T (        return super\(Osyczka, self\).__call__\(xs, io=io\)) N
+("csc710sbse: hw7: Witschey") (Page 2/2) (Nov 05, 14 21:05) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/models/osyczka.py) (11/18) (Thursday November 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 12
 %%BeginPageSetup
 /pagesave save def
 sh 0 translate 90 rotate
@@ -1773,7 +1878,7 @@ x0 y0 moveto
 0 T (        d = dict\(searcher=name, initialized=datetime.now\(\)\)) N
 (25) # () N
 0 T (        # if there are global options for this class or its bases in CONFIG) N
-0 T (        for k in [name] + [k.__name__ for k in cls.__bases__]:) N
+0 T (        for k in [k.__name__ for k in cls.__bases__] + [name]:) N
 0 T (            if hasattr\(CONFIG, k\):) N
 0 T (                # add them to the dict) N
 (30) # (                d.update\(getattr\(CONFIG, k\).__dict__\)) N
@@ -1820,7 +1925,7 @@ x0 y0 moveto
 0 T () N
 0 T (    @property) N
 0 T (    def model\(self\):) N
-("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 25, 14 20:58) title
+("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 31, 14 15:53) title
 border
 /v 1 store
 /x0 x v get 2.965278 add sx cw mul add store
@@ -1856,15 +1961,15 @@ x0 y0 moveto
 0 T (SearchReport = namedtuple\('SearchReport',) N
 0 T (                          ['best', 'best_era', 'evaluations', 'searcher',) N
 0 T (                           'spec', 'report']\)) N
-("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 25, 14 20:58) title
+("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 31, 14 15:53) title
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/searchers/searcher.py) (11/17) (Wednesday October 29, 2014) footer
+(witschey/searchers/searcher.py) (12/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
-%%Page: (1-2) 12
+%%Page: (1-2) 13
 %%BeginPageSetup
 /pagesave save def
 sh 0 translate 90 rotate
@@ -2012,11 +2117,11 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/searchers/simulated_annealer.py) (12/17) (Wednesday October 29, 2014) footer
+(witschey/searchers/simulated_annealer.py) (13/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
-%%Page: (1-2) 13
+%%Page: (1-2) 14
 %%BeginPageSetup
 /pagesave save def
 sh 0 translate 90 rotate
@@ -2156,11 +2261,11 @@ x0 y0 moveto
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/searchers/maxwalksat.py) (13/17) (Wednesday October 29, 2014) footer
+(witschey/searchers/maxwalksat.py) (14/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
-%%Page: (1-2) 14
+%%Page: (1-2) 15
 %%BeginPageSetup
 /pagesave save def
 sh 0 translate 90 rotate
@@ -2245,7 +2350,7 @@ x0 y0 moveto
 0 T (        Return an iterator with 2 copies of each pair of parents in the) N
 0 T (        population) N
 0 T (        """) N
-("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 25, 14 20:59) title
+("csc710sbse: hw7: Witschey") (Page 1/2) (Nov 05, 14 21:05) title
 border
 /v 1 store
 /x0 x v get 2.965278 add sx cw mul add store
@@ -2267,7 +2372,7 @@ x0 y0 moveto
 0 T (                try:) N
 0 T (                    child = self.model\(xs, io=True\)) N
 0 T (                except ModelInputException:) N
-(90) # (                    pass) N
+(90) # (                    failures += 1) N
 0 T (            children.append\(child\)) N
 0 T (        self._evals += len\(children\)) N
 0 T (        return tuple\(children[:self.spec.population_size]\)) N
@@ -2324,15 +2429,161 @@ x0 y0 moveto
 0 T (                            searcher=self.__class__,) N
 (145) # (                            spec=self.spec,) N
 0 T (                            report=None\)) N
-("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 25, 14 20:59) title
+("csc710sbse: hw7: Witschey") (Page 2/2) (Nov 05, 14 21:05) title
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/searchers/genetic_algorithm.py) (14/17) (Wednesday October 29, 2014) footer
+(witschey/searchers/genetic_algorithm.py) (15/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage
-%%Page: (1-2) 15
+%%Page: (1-2) 16
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (from __future__ import division, print_function) p n
+0 T () N
+0 T (import random) N
+0 T (from itertools import izip) N
+(5) # () N
+0 T (from searcher import Searcher, SearchReport) N
+0 T (from witschey.base import memo_sqrt as sqrt) N
+0 T (from witschey.log import NumberLog) N
+0 T (from witschey.models import ModelInputException) N
+(10) # () N
+0 T () N
+0 T (def _random_scaled_velocity\(a, b, scale=.1\):) N
+0 T (    magnitude = max\(a, b\) - min\(a, b\)) N
+0 T (    return random.uniform\(-magnitude, magnitude\) * scale) N
+(15) # () N
+0 T () N
+0 T (class ParticleSwarmOptimizer\(Searcher\):) N
+0 T (    """) N
+0 T (    A searcher that models a "flock" of individuals roaming the search space.) N
+(20) # (    Individuals make decisions about where to go next based both on their) N
+0 T (    own experience and on the experience of the whole group. For more) N
+0 T (    information, see https://github.com/timm/sbse14/wiki/pso#details and) N
+0 T (    http://en.wikipedia.org/wiki/Particle_swarm_optimization) N
+0 T (    """) N
+(25) # () N
+0 T (    def __init__\(self, *args, **kwargs\):) N
+0 T (        super\(ParticleSwarmOptimizer, self\).__init__\(*args, **kwargs\)) N
+0 T () N
+0 T (        self._flock = tuple\(self._new_particle\(\)) N
+(30) # (                            for _ in range\(self.spec.population_size\)\)) N
+0 T (        self._evals = len\(self._flock\)) N
+0 T (        self._current_flock_energies = NumberLog\(p.energy) N
+0 T (                                                 for p in self._flock\)) N
+0 T (        self._best = min\(self._flock, key=lambda x: x.energy\)) N
+(35) # (        self._lives = 4) N
+0 T () N
+0 T (    def _new_particle\(self\):) N
+0 T (        return Particle\(self.model, self.spec.phi1, self.spec.phi2\)) N
+0 T () N
+(40) # (    def _update\(self\):) N
+0 T (        self._prev_flock_energies = self._current_flock_energies) N
+0 T () N
+0 T (        for p in self._flock:) N
+0 T (            p._update\(self._best\)) N
+(45) # (        self._evals += len\(self._flock\)) N
+0 T (        self._current_flock_energies = NumberLog\(p.energy) N
+0 T (                                                 for p in self._flock\)) N
+0 T () N
+0 T (        self._best = min\(self._best, *self._flock, key=lambda x: x.energy\)) N
+(50) # (        if self._current_flock_energies.better\(self._prev_flock_energies\):) N
+0 T (            self._best_flock = self._flock) N
+0 T (        else:) N
+0 T (            self._lives -= 1) N
+0 T () N
+(55) # (    def run\(self, text_report=False\):) N
+0 T (        for i in range\(self.spec.generations\):) N
+0 T (            self._update\(\)) N
+0 T (            if self._lives <= 0 or self._evals >= self.spec.iterations:) N
+0 T (                break) N
+(60) # () N
+0 T (        best_flock_energies = NumberLog\(p.energy for p in self._best_flock\)) N
+0 T (        return SearchReport\(best=self._best,) N
+0 T (                            best_era=best_flock_energies,) N
+0 T (                            evaluations=self._evals,) N
+(65) # (                            searcher=self.__class__,) N
+0 T (                            spec=self.spec,) N
+0 T (                            report=None\)) N
+0 T () N
+0 T () N
+(70) # (class Particle\(object\):) N
+0 T (    """) N
+0 T (    A particle in the "flock".) N
+0 T (    """) N
+("csc710sbse: hw7: Witschey") (Page 1/2) (Oct 26, 14 1:59) title
+border
+/v 1 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T () p n
+(75) # (    def __init__\(self, model, phi1, phi2\):) N
+0 T (        self._model = model) N
+0 T (        self._current = model.random_model_io\(\)) N
+0 T (        self._best = self._current) N
+0 T (        self._phi1, self._phi2 = phi1, phi2) N
+(80) # () N
+0 T (        # calculate constriction factor) N
+0 T (        phi = phi1 + phi2) N
+0 T (        self._k = 2 / abs\(2 - phi - sqrt\(phi * phi\) - 4 * phi\)) N
+0 T () N
+(85) # (        # initialize velocities) N
+0 T (        self._velocity = tuple\(_random_scaled_velocity\(iv.lo, iv.hi\)) N
+0 T (                               for iv in model.xs\)) N
+0 T () N
+0 T (    @property) N
+(90) # (    def energy\(self\):) N
+0 T (        return self._current.energy) N
+0 T () N
+0 T (    def _compute_new_velocity\(self, local_best\):) N
+0 T (        to_local = tuple\(a - b) N
+(95) # (                             for a, b in izip\(local_best.xs, self._current.xs\)\)) N
+0 T (        to_personal = tuple\(a - b) N
+0 T (                            for a, b in izip\(self._best.xs, self._current.xs\)\)) N
+0 T (        v = tuple\(\(self._k * \(v + self._phi1 * loc + self._phi2 * pers\)) N
+0 T (                   for v, loc, pers in izip\() N
+(100) # (                       self._velocity, to_local, to_personal\)\)\)) N
+0 T (        return v) N
+0 T () N
+0 T (    def _update\(self, local_best\):) N
+0 T (        """) N
+(105) # (        Given local_best, the best value seen by this particle's neighbors,) N
+0 T (        find the particle's new velocity.) N
+0 T (        """) N
+0 T (        init_loc = self._current.xs) N
+0 T (        init_vel = self._velocity) N
+(110) # (        candidate_xs = tuple\(p + v for p, v in izip\(init_loc, init_vel\)\)) N
+0 T () N
+0 T (        updated = False) N
+0 T (        while not updated:) N
+0 T (            try:) N
+(115) # (                self._current = self._model.compute_model_io\(candidate_xs\)) N
+0 T (                updated = True) N
+0 T (            except ModelInputException:) N
+0 T (                candidate_xs = self._model.random_replace\(candidate_xs\)) N
+0 T () N
+(120) # (        self._velocity = self._compute_new_velocity\(self._best\)) N
+("csc710sbse: hw7: Witschey") (Page 2/2) (Oct 26, 14 1:59) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/searchers/particle_swarm_optimizer.py) (16/18) (Thursday November 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (1-2) 17
 %%BeginPageSetup
 /pagesave save def
 sh 0 translate 90 rotate
@@ -2345,386 +2596,251 @@ llx lly 12 add translate
 /y0 y v get bfs th add sub store
 x0 y0 moveto
 0 T (from __future__ import division) p n
-0 T (import sys) N
+0 T () N
+0 T () N
 0 T (import random) N
-0 T (import math) N
-(5) # () N
+(5) # (from itertools import repeat, izip) N
+0 T () N
+0 T (from log import NumberLog) N
 0 T (import texttable) N
-0 T (from basic_stats import xtile, median) N
-0 T (from witschey import base) N
-0 T () N
-(10) # (# flake8: noqa) N
-0 T () N
-0 T (""") N
-0 T () N
-0 T (### Standard Accumulator for Numbers) N
-(15) # () N
-0 T (Note the _lt_ method: this accumulator can be sorted by median values.) N
-0 T () N
-0 T (Warning: this accumulator keeps _all_ numbers. Might be better to use) N
-0 T (a bounded cache.) N
-(20) # () N
-0 T (""") N
-0 T (class Num:) N
-0 T (  "An Accumulator for numbers") N
-0 T (  def __init__\(i,name,inits=[]\): ) N
-(25) # (    i.n = i.m2 = i.mu = 0.0) N
-0 T (    i.all=[]) N
-0 T (    i._median=None) N
-0 T (    i.name = name) N
-0 T (    i.rank = 0) N
-(30) # (    for x in inits: i.add\(x\)) N
-0 T (  def s\(i\)       : return \(i.m2/\(i.n - 1\)\)**0.5) N
-0 T (  def add\(i,x\):) N
-0 T (    i._median=None) N
-0 T (    i.n   += 1   ) N
-(35) # (    i.all += [x]) N
-0 T (    delta  = x - i.mu) N
-0 T (    i.mu  += delta*1.0/i.n) N
-0 T (    i.m2  += delta*\(x - i.mu\)) N
-0 T (  def __add__\(i,j\):) N
-(40) # (    return Num\(i.name + j.name,i.all + j.all\)) N
-0 T (  def quartiles\(i\):) N
-0 T (    i.all = sorted\(i.all\)) N
-0 T (    n  = int\(len\(i.all\)*0.25\)) N
-0 T (    return i.all[n] , i.all[n * 2], i.all[n * 3]) N
-(45) # (  def median\(i\):) N
-0 T (    if not i._median:) N
-0 T (      i.all = sorted\(i.all\)) N
-0 T (      i._median=median\(i.all\)) N
-0 T (    return i._median) N
-(50) # (  def __lt__\(i,j\):) N
-0 T (    return i.median\(\) < j.median\(\) ) N
-0 T (  def spread\(i\):) N
-0 T (    i.all=sorted\(i.all\)) N
-0 T (    n1=i.n*0.25) N
-(55) # (    n2=i.n*0.75) N
-0 T (    if len\(i.all\) <= 1:) N
-0 T (      return 0) N
-0 T (    if len\(i.all\) == 2:) N
-0 T (      return i.all[1] - i.all[0]) N
-(60) # (    else:) N
-0 T (      return i.all[int\(n2\)] - i.all[int\(n1\)]) N
+0 T (from basic_stats import xtile) N
+(10) # (from witschey import basic_stats) N
+0 T (from witschey.base import memo_sqrt) N
 0 T () N
 0 T () N
-0 T (def a12\(lst1,lst2\):) N
-(65) # (    "how often is x in lst1 more than y in lst2?") N
-0 T (    def loop\(t,t1,t2\): ) N
-0 T (        while t1.j < t1.n and t2.j < t2.n:) N
-0 T (            h1 = t1.l[t1.j]) N
-0 T (            h2 = t2.l[t2.j]) N
-(70) # (            h3 = t2.l[t2.j+1] if t2.j+1 < t2.n else None ) N
-0 T (            if h1>  h2:) N
-0 T (                t1.j  += 1; t1.gt += t2.n - t2.j) N
-0 T (            elif h1 == h2:) N
-("csc710sbse: hw7: Witschey") (Page 1/5) (Oct 26, 14 2:02) title
-border
-/v 1 store
-/x0 x v get 2.965278 add sx cw mul add store
-/y0 y v get bfs th add sub store
-x0 y0 moveto
-0 T (                if h3 and h1 > h3 :) p n
-(75) # (                    t1.gt += t2.n - t2.j  - 1) N
-0 T (                t1.j  += 1; t1.eq += 1; t2.eq += 1) N
+0 T (def a12\(xs, ys\):) N
+(15) # (    gt, eq = 0, 0) N
+0 T (    for x in xs:) N
+0 T (        for y in ys:) N
+0 T (            if x > y:) N
+0 T (                gt += 1) N
+(20) # (            if x == y:) N
+0 T (                eq += 1) N
+0 T () N
+0 T (    return \(gt + eq / 2\) / \(len\(xs\) * len\(ys\)\)) N
+0 T () N
+(25) # () N
+0 T (def a12_fast\(xs, ys\):) N
+0 T (    """) N
+0 T (    Non-parametric statistical test. Answers the question: "If you pick a) N
+0 T (    random x from xs, and a random y from ys, what's the probability that) N
+(30) # (    x will be greater than y?") N
+0 T (    """) N
+0 T () N
+0 T (    xs_i = izip\(sorted\(xs, reverse=True\), repeat\(0\)\)) N
+0 T (    ys_i = izip\(sorted\(ys, reverse=True\), xrange\(len\(ys\), 0, -1\)\)) N
+(35) # () N
+0 T (    gt, eq = 0, 0) N
+0 T () N
+0 T (    cs, ds = xs_i, ys_i) N
+0 T (    c, d = cs.next\(\), ds.next\(\)) N
+(40) # (    while True:) N
+0 T (        try:) N
+0 T (            while d[0] < c[0]:) N
+0 T (                gt += d[1]) N
+0 T (                # gt += 1) N
+(45) # (                print\(d\)) N
+0 T (                d = ds.next\(\)) N
 0 T (            else:) N
-0 T (                t2,t1  = t1,t2) N
-0 T (        return t.gt*1.0, t.eq*1.0) N
-(80) # (    #--------------------------) N
-0 T (    lst1 = sorted\(lst1, reverse=True\)) N
-0 T (    lst2 = sorted\(lst2, reverse=True\)) N
-0 T (    n1   = len\(lst1\)) N
-0 T (    n2   = len\(lst2\)) N
-(85) # (    t1   = base.memo\(l=lst1,j=0,eq=0,gt=0,n=n1\)) N
-0 T (    t2   = base.memo\(l=lst2,j=0,eq=0,gt=0,n=n2\)) N
-0 T (    gt,eq= loop\(t1, t1, t2\)) N
-0 T (    return gt/\(n1*n2\) + eq/2/\(n1*n2\)) N
+0 T (                if d[0] == c[0]:) N
+0 T (                    eq += 1) N
+(50) # (                    d = ds.next\(\)) N
+0 T (                else:) N
+0 T (                    cs, ds = ds, cs) N
+0 T (        except StopIteration:) N
+0 T (            break) N
+(55) # () N
+0 T (    gt += sum\(1 for _ in xs_i\)) N
 0 T () N
-(90) # () N
-0 T ("""## Non-Parametric Hypothesis Testing) N
+0 T (    print\('gt: {}\\t eq: {}'.format\(gt, eq\)\)) N
+0 T (    return \(gt + eq / 2\) / \(len\(xs\) * len\(ys\)\)) N
+(60) # () N
 0 T () N
-0 T (The following _bootstrap_ method was introduced in) N
-0 T (1979 by Bradley Efron at Stanford University. It) N
-(95) # (was inspired by earlier work on the) N
-0 T (jackknife.) N
-0 T (Improved estimates of the variance were [developed later][efron01].  ) N
-0 T () N
-0 T ([efron01]: http://goo.gl/14n8Wf "Bradley Efron and R.J. Tibshirani. An Introduct) N
-0 T (ion to the Bootstrap \(Chapman & Hall/CRC Monographs on Statistics & Applied Prob) N
-0 T (ability\), 1993") N
-(100) # () N
-0 T () N
-0 T (To check if two populations _\(y0,z0\)_) N
-0 T (are different, many times sample with replacement) N
-0 T (from both to generate _\(y1,z1\), \(y2,z2\), \(y3,z3\)_.. etc.) N
-(105) # () N
-0 T (""") N
-0 T (def sampleWithReplacement\(xs\):) N
-0 T (    "returns a list same size as list") N
-0 T (    return [random.choice\(xs\) for _ in xs]) N
-(110) # (""") N
-0 T () N
-0 T () N
-0 T (Then, for all those samples,) N
-0 T ( check if some *testStatistic* in the original pair) N
-(115) # (hold for all the other pairs. If it does more than \(say\) 99%) N
-0 T (of the time, then we are 99% confident in that the) N
-0 T (populations are the same.) N
-0 T () N
-0 T (In such a _bootstrap_ hypothesis test, the *some property*) N
-(120) # (is the difference between the two populations, muted by the) N
-0 T (joint standard deviation of the populations.) N
-0 T () N
-0 T (""") N
-0 T (def testStatistic\(y,z\): ) N
-(125) # (    """Checks if two means are different, tempered) N
+0 T (def test_statistic\(y, z\):) N
+0 T (    """Checks if two means are different, tempered) N
 0 T (     by the sample size of 'y' and 'z'""") N
-0 T (    tmp1 = tmp2 = 0) N
-0 T (    for y1 in y.all: tmp1 += \(y1 - y.mu\)**2 ) N
-0 T (    for z1 in z.all: tmp2 += \(z1 - z.mu\)**2) N
-(130) # (    s1    = \(float\(tmp1\)/\(y.n - 1\)\)**0.5) N
-0 T (    s2    = \(float\(tmp2\)/\(z.n - 1\)\)**0.5) N
-0 T (    delta = z.mu - y.mu) N
-0 T (    if s1+s2:) N
-0 T (      delta =  delta/\(\(s1/y.n + s2/z.n\)**0.5\)) N
-(135) # (    return delta) N
-0 T (""") N
+(65) # (    delta = z.mean\(\) - y.mean\(\)) N
+0 T (    sd_y = y.standard_deviation\(\)) N
+0 T (    sd_z = z.standard_deviation\(\)) N
 0 T () N
-0 T (The rest is just details:) N
+0 T (    if sd_y + sd_z:) N
+(70) # (        delta /= memo_sqrt\(sd_y / len\(y\) + sd_z / len\(z\)\)) N
 0 T () N
-(140) # (+ Efron advises) N
-0 T (  to make the mean of the populations the same \(see) N
-0 T (  the _yhat,zhat_ stuff shown below\).) N
-0 T (+ The class _total_ is a just a quick and dirty accumulation class.) N
-0 T (+ For more details see [the Efron text][efron01].  ) N
-("csc710sbse: hw7: Witschey") (Page 2/5) (Oct 26, 14 2:02) title
-border
-grestore
-(Printed by Jim Witschey) rhead
-(witschey/rdiv.py) (15/17) (Wednesday October 29, 2014) footer
-end % of iso1dict
-pagesave restore
-showpage
-%%Page: (3-4) 16
-%%BeginPageSetup
-/pagesave save def
-sh 0 translate 90 rotate
-%%EndPageSetup
-iso1dict begin
-gsave
-llx lly 12 add translate
-/v 0 store
-/x0 x v get 2.965278 add sx cw mul add store
-/y0 y v get bfs th add sub store
-x0 y0 moveto
-(145) # () p n
-0 T (""") N
-0 T (def bootstrap\(y0,z0,conf=0.01,b=1000\):) N
-0 T (    """The bootstrap hypothesis test from) N
-0 T (       p220 to 223 of Efron's book 'An) N
-(150) # (      introduction to the boostrap.""") N
-0 T (    class total\(\):) N
-0 T (        "quick and dirty data collector") N
-0 T (        def __init__\(i,some=[]\):) N
-0 T (            i.sum = i.n = i.mu = 0 ; i.all=[]) N
-(155) # (            for one in some: i.put\(one\)) N
-0 T (        def put\(i,x\):) N
-0 T (            i.all.append\(x\);) N
-0 T (            i.sum +=x; i.n += 1; i.mu = float\(i.sum\)/i.n) N
-0 T (        def __add__\(i1,i2\): return total\(i1.all + i2.all\)) N
-(160) # (    y, z   = total\(y0\), total\(z0\)) N
-0 T (    x      = y + z) N
-0 T (    tobs   = testStatistic\(y,z\)) N
-0 T (    yhat   = [y1 - y.mu + x.mu for y1 in y.all]) N
-0 T (    zhat   = [z1 - z.mu + x.mu for z1 in z.all]) N
-(165) # (    bigger = 0.0) N
-0 T (    for i in range\(b\):) N
-0 T (        if testStatistic\(total\(sampleWithReplacement\(yhat\)\),) N
-0 T (                         total\(sampleWithReplacement\(zhat\)\)\) > tobs:) N
-0 T (            bigger += 1) N
-(170) # (    return bigger / b < conf) N
+0 T (    return delta) N
 0 T () N
-0 T (def different\(l1,l2\):) N
-0 T (  #return bootstrap\(l1,l2\) and a12\(l2,l1\)) N
-0 T (  return a12\(l2,l1\) and bootstrap\(l1,l2\)) N
-(175) # () N
-0 T (""") N
-0 T () N
-0 T (## Saner Hypothesis Testing) N
-0 T () N
-(180) # (The following code, which you should use verbatim does the following:) N
-0 T () N
-0 T () N
-0 T (+ All treatments are clustered into _ranks_. In practice, dozens) N
-0 T (  of treatments end up generating just a handful of ranks.) N
-(185) # (+ The numbers of calls to the hypothesis tests are minimized:) N
-0 T (    + Treatments are sorted by their median value.) N
-0 T (    + Treatments are divided into two groups such that the) N
-0 T (      expected value of the mean values _after_ the split is minimized;) N
-0 T (    + Hypothesis tests are called to test if the two groups are truly difference) N
-0 T (.) N
-(190) # (          + All hypothesis tests are non-parametric and include \(1\) effect size ) N
-0 T (tests) N
-0 T (            and \(2\) tests for statistically significant numbers;) N
-0 T (          + Slow bootstraps are executed  if the faster _A12_ tests are passed;) N
-0 T () N
-0 T (In practice, this means that the hypothesis tests \(with confidence of say, 95%\)) N
-(195) # (are called on only a logarithmic number of times. So...) N
-0 T () N
-0 T (+ With this method, 16 treatments can be studied using less than _&sum;<sub>1,2,) N
-0 T (4,8,16</sub>log<sub>2</sub>i =15_ hypothesis tests  and confidence _0.99<sup>15<) N
-0 T (/sup>=0.86_.) N
-0 T (+ But if did this with the 120 all-pairs comparisons of the 16 treatments, we wo) N
-0 T (uld have total confidence _0.99<sup>120</sup>=0.30.) N
-0 T () N
-(200) # (For examples on using this code, see _rdivDemo_ \(below\).) N
-0 T () N
-0 T (""") N
-0 T (def scottknott\(data,cohen=0.3,small=3,epsilon=0.01\):) N
-0 T (    """Recursively split data, maximizing delta of) N
-(205) # (    the expected value of the mean before and ) N
-0 T (    after the splits. ) N
-0 T (    Reject splits with under 3 items""") N
-0 T (    all  = reduce\(lambda x,y:x+y,data\)) N
-0 T (    same = lambda l, r:   not different\(l.all,r.all\) ) N
-(210) # (    big  = lambda    n: n > small    ) N
-0 T (    return rdiv\(data,all,minMu,big,same,epsilon\)) N
-0 T () N
-("csc710sbse: hw7: Witschey") (Page 3/5) (Oct 26, 14 2:02) title
+("csc710sbse: hw7: Witschey") (Page 1/3) (Nov 05, 14 19:45) title
 border
 /v 1 store
-/x0 x v get 2.965278 add sx cw mul add store
-/y0 y v get bfs th add sub store
-x0 y0 moveto
-0 T (def rdiv\(data,  # a list of class Nums) p n
-0 T (         all,   # all the data combined into one num) N
-(215) # (         div,   # function: find the best split) N
-0 T (         big,   # function: rejects small splits) N
-0 T (         same, # function: rejects similar splits) N
-0 T (         epsilon\): # small enough to split two parts) N
-0 T (    """Looks for ways to split sorted data, ) N
-(220) # (    Recurses into each split. Assigns a 'rank' number) N
-0 T (    to all the leaf splits found in this way. ) N
-0 T (    """) N
-0 T (    def recurse\(parts,all,rank=0\):) N
-0 T (        "Split, then recurse on each part.") N
-(225) # (        cut,left,right = maybeIgnore\(div\(parts,all,big,epsilon\),) N
-0 T (                                     same,parts\)) N
-0 T (        if cut: ) N
-0 T (            # if cut, rank "right" higher than "left") N
-0 T (            rank = recurse\(parts[:cut],left,rank\) + 1) N
-(230) # (            rank = recurse\(parts[cut:],right,rank\)) N
-0 T (        else: ) N
-0 T (            # if no cut, then all get same rank) N
-0 T (            for part in parts: ) N
-0 T (                part.rank = rank) N
-(235) # (        return rank) N
-0 T (    recurse\(sorted\(data\),all\)) N
-0 T (    return data) N
-0 T () N
-0 T (def maybeIgnore\(\(cut,left,right\), same,parts\):) N
-(240) # (    if cut:) N
-0 T (        if same\(sum\(parts[:cut],Num\('upto'\)\), sum\(parts[cut:],Num\('above'\)\)\):) N
-0 T (            cut = left = right = None) N
-0 T (    return cut,left,right) N
-0 T () N
-(245) # (def minMu\(parts,all,big,epsilon\):) N
-0 T (    """Find a cut in the parts that maximizes) N
-0 T (    the expected value of the difference in) N
-0 T (    the mean before and after the cut.) N
-0 T (    Reject splits that are insignificantly) N
-(250) # (    different or that generate very small subsets.) N
-0 T (    """) N
-0 T (    cut,left,right = None,None,None) N
-0 T (    before, mu     =  0, all.mu) N
-0 T (    for i,l,r in leftRight\(parts,epsilon\):) N
-(255) # (        if big\(l.n\) and big\(r.n\):) N
-0 T (            n   = all.n * 1.0) N
-0 T (            now = l.n/n*\(mu- l.mu\)**2 + r.n/n*\(mu- r.mu\)**2  ) N
-0 T (            if now > before:) N
-0 T (                before,cut,left,right = now,i,l,r) N
-(260) # (    return cut,left,right) N
-0 T () N
-0 T (def leftRight\(parts,epsilon=0.01\):) N
-0 T (    """Iterator. For all items in 'parts',) N
-0 T (    return everything to the left and everything) N
-(265) # (    from here to the end. For reasons of) N
-0 T (    efficiency, take a first pass over the data) N
-0 T (    to pre-compute and cache right-hand-sides) N
-0 T (    """) N
-0 T (    rights = {}) N
-(270) # (    n = j = len\(parts\) - 1) N
-0 T (    while j > 0:) N
-0 T (        rights[j] = parts[j]) N
-0 T (        if j < n: rights[j] += rights[j+1]) N
-0 T (        j -=1) N
-(275) # (    left = parts[0]) N
-0 T (    for i,one in enumerate\(parts\):) N
-0 T (        if i> 0: ) N
-0 T (            if parts[i]._median - parts[i-1]._median > epsilon:) N
-0 T (                yield i,left,rights[i]) N
-(280) # (            left += one) N
-0 T (""") N
-0 T () N
-0 T (## Putting it All Together) N
-0 T () N
-(285) # (Driver for the demos:) N
-("csc710sbse: hw7: Witschey") (Page 4/5) (Oct 26, 14 2:02) title
-border
-grestore
-(Printed by Jim Witschey) rhead
-(witschey/rdiv.py) (16/17) (Wednesday October 29, 2014) footer
-end % of iso1dict
-pagesave restore
-showpage
-%%Page: (5) 17
-%%BeginPageSetup
-/pagesave save def
-sh 0 translate 90 rotate
-%%EndPageSetup
-iso1dict begin
-gsave
-llx lly 12 add translate
-/v 0 store
 /x0 x v get 2.965278 add sx cw mul add store
 /y0 y v get bfs th add sub store
 x0 y0 moveto
 0 T () p n
-0 T (""") N
-0 T (def rdiv_report\(data\):) N
-0 T (    rows = []) N
-(290) # (    def z\(x\):) N
-0 T (        return int\(100 * \(x - lo\) / \(hi - lo + 0.00001\)\)) N
-0 T (    data = map\(lambda lst:Num\(lst[0],lst[1:]\),) N
-0 T (               data\)) N
-0 T (    ranks=[]) N
-(295) # (    for x in scottknott\(data\):) N
-0 T (        ranks += [\(x.rank,x.median\(\),x\)]) N
-0 T (    all=[]) N
-0 T (    for _,__,x in sorted\(ranks\): all += x.all) N
-0 T (    all = sorted\(all\)) N
-(300) # (    lo, hi = all[0], all[-1]) N
-0 T (    last = None) N
-0 T (    rows.append\(['rank', 'name', 'med', 'iqr', '',) N
-0 T (                '10%', '30%', '50%', '70%', '90%']\)) N
-0 T (    for _,__,x in sorted\(ranks\):) N
-(305) # (        q1,q2,q3 = \(round\(q, 2\) for q in x.quartiles\(\)\)) N
-0 T (        xtile_out = xtile\(x.all, lo=lo, hi=hi, width=30, as_list=True\)) N
-0 T (        row_xtile = [xtile_out[0]] + map\(lambda x: x + ',', xtile_out[1:-1]\) +\\) N
-0 T (                    [xtile_out[-1]]) N
-0 T (        rows.append\([x.rank+1] +) N
-(310) # (          map\(lambda y: str\(y\) + ',', [x.name, q2]\) + [q3 - q1] + row_xtile\)) N
-0 T (        last = x.rank) N
-0 T (    table = texttable.Texttable\(200\)) N
-0 T (    table.set_cols_dtype\(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't']\)) N
-0 T (    table.set_cols_align\(['r', 'l', 'r', 'r', 'c', 'r', 'r', 'r', 'r', 'r']\)) N
-(315) # (    table.set_deco\(texttable.Texttable.HEADER\)) N
-0 T (    table.add_rows\(rows\)) N
-0 T (    return table.draw\(\)) N
-("csc710sbse: hw7: Witschey") (Page 5/5) (Oct 26, 14 2:02) title
+(75) # (def bootstrap\(y0, z0, conf=0.01, b=1000\):) N
+0 T (    """) N
+0 T (    The bootstrap hypothesis test from p220 to 223 of Efron's book 'An) N
+0 T (    introduction to the boostrap.) N
+0 T () N
+(80) # (    Simple way to describe: "If you randomly generate 1000 similar datasets,) N
+0 T (    is a likely to be significantly different to b?") N
+0 T (    """) N
+0 T (    y, z = NumberLog\(y0\), NumberLog\(z0\)) N
+0 T (    x = NumberLog\(inits=\(y, z\)\)) N
+(85) # (    observed_mean_difference = test_statistic\(y, z\)) N
+0 T (    yhat = tuple\(y1 - y.mean\(\) + x.mean\(\) for y1 in y.contents\(\)\)) N
+0 T (    zhat = tuple\(z1 - z.mean\(\) + x.mean\(\) for z1 in z.contents\(\)\)) N
+0 T (    bigger = 0) N
+0 T (    for i in range\(b\):) N
+(90) # (        # sample with replacement for yhat and zhat) N
+0 T (        swr_yhat = \(random.choice\(yhat\) for _ in yhat\)) N
+0 T (        swr_zhat = \(random.choice\(zhat\) for _ in zhat\)) N
+0 T (        sampled_mean_difference = test_statistic\() N
+0 T (            NumberLog\(swr_yhat, max_size=None\),) N
+(95) # (            NumberLog\(swr_zhat, max_size=None\)\)) N
+0 T (        if sampled_mean_difference > observed_mean_difference:) N
+0 T (            bigger += 1) N
+0 T (    return bigger / b < conf) N
+0 T () N
+(100) # () N
+0 T (def different\(xs, ys\):) N
+0 T (    """) N
+0 T (    Quick test to see if 2 things are different. A12 is a reasonable first) N
+0 T (    approximation, and fast, and if it gets past A12, run the slower, more) N
+(105) # (    authoritative, bootstrap.) N
+0 T (    """) N
+0 T (    return a12\(xs, ys\) and bootstrap\(xs, ys\)) N
+0 T () N
+0 T () N
+(110) # (def scottknott\(data, max_rank_size=3, epsilon=0.01\):) N
+0 T (    """) N
+0 T (    Recursively split data, maximizing delta of the expected value of the) N
+0 T (    mean before and after the splits. Reject splits with under max_rank_size) N
+0 T (    items.) N
+(115) # (    """) N
+0 T (    flat_data = [x for log in data for x in log.contents\(\)]) N
+0 T (    data_mean = basic_stats.mean\(flat_data\)) N
+0 T () N
+0 T (    def recurse_and_rank\(parts, rank=0\):) N
+(120) # (        "Split, then recurse_and_rank on each part.") N
+0 T () N
+0 T (        cut = min_mu\(parts, data_mean, len\(flat_data\), max_rank_size, epsilon\)) N
+0 T (        if cut:) N
+0 T (            # if cut, rank "right" higher than "left") N
+(125) # (            rank = recurse_and_rank\(parts[:cut], rank\) + 1) N
+0 T (            rank = recurse_and_rank\(parts[cut:], rank\)) N
+0 T (        else:) N
+0 T (            # if no cut, then all get same rank) N
+0 T (            for part in parts:) N
+(130) # (                part.rank = rank) N
+0 T (        return rank) N
+0 T () N
+0 T (    recurse_and_rank\(sorted\(data, key=lambda x: x.median\(\)\)\)) N
+0 T () N
+(135) # (    return data) N
+0 T () N
+0 T () N
+0 T (def min_mu\(parts, data_mean, data_size, max_rank_size, epsilon\):) N
+0 T (    """Find a cut in the parts that maximizes the expected value of the) N
+(140) # (    difference in the mean before and after the cut. Reject splits that are) N
+0 T (    insignificantly different or that generate very small subsets.) N
+0 T (    """) N
+0 T (    cut = None) N
+0 T (    max_delta = 0) N
+(145) # (    mrs = max_rank_size) N
+0 T (    for i, left, right in left_right\(parts, epsilon\):) N
+("csc710sbse: hw7: Witschey") (Page 2/3) (Nov 05, 14 19:45) title
 border
 grestore
 (Printed by Jim Witschey) rhead
-(witschey/rdiv.py) (17/17) (Wednesday October 29, 2014) footer
+(witschey/rdiv.py) (17/18) (Thursday November 06, 2014) footer
+end % of iso1dict
+pagesave restore
+showpage
+%%Page: (3) 18
+%%BeginPageSetup
+/pagesave save def
+sh 0 translate 90 rotate
+%%EndPageSetup
+iso1dict begin
+gsave
+llx lly 12 add translate
+/v 0 store
+/x0 x v get 2.965278 add sx cw mul add store
+/y0 y v get bfs th add sub store
+x0 y0 moveto
+0 T (        if len\(parts[:i]\) >= mrs and len\(parts[i:]\) >= mrs:) p n
+0 T (            delta = len\(left\) / data_size * \(data_mean - left.mean\(\)\) ** 2) N
+0 T (            delta += len\(right\) / data_size * \(data_mean - right.mean\(\)\) ** 2) N
+(150) # () N
+0 T (            if abs\(delta\) > max_delta and different\(parts[i-1], parts[i]\):) N
+0 T (                max_delta, cut = abs\(delta\), i) N
+0 T (    return cut) N
+0 T () N
+(155) # () N
+0 T (def left_right\(parts, epsilon=0.01\):) N
+0 T (    """For each item in 'parts', yield the splitting index, everything to the) N
+0 T (    beginning \(including the item\) and everything to the end.) N
+0 T (    """) N
+(160) # (    for i in range\(1, len\(parts\)\):) N
+0 T (        if parts[i].median\(\) - parts[i - 1].median\(\) > epsilon:) N
+0 T (            left = NumberLog\(\(p for p in parts[:i]\), max_size=None\)) N
+0 T (            right = NumberLog\(\(p for p in parts[i:]\), max_size=None\)) N
+0 T (            yield i, left, right) N
+(165) # () N
+0 T () N
+0 T (def rdiv_report\(data\):) N
+0 T (    """) N
+0 T (    Generate a tabular report on the data. Assumes data is in lists, where the) N
+(170) # (    first element of each list is its name.) N
+0 T (    """) N
+0 T (    # wrap each line in a NumberLog) N
+0 T (    data = map\(lambda xs: NumberLog\(label=xs[0], inits=xs[1:], max_size=None\),) N
+0 T (               data\)) N
+(175) # () N
+0 T (    # sort by rank & median within each rank) N
+0 T (    # sorting is stable, so sort by median first, then rank) N
+0 T (    ranked = sorted\(\(x for x in scottknott\(data, max_rank_size=1\)\),) N
+0 T (                    key=lambda y: y.median\(\)\)) N
+(180) # (    ranked = tuple\(sorted\(ranked, key=lambda y: y.rank\)\)) N
+0 T () N
+0 T (    # get high and low values for entire dataset) N
+0 T (    lo = min\(log.lo for log in data\)) N
+0 T (    hi = max\(log.hi for log in data\)) N
+(185) # () N
+0 T (    # generate column names) N
+0 T (    rows = [['rank', 'name', 'med', 'iqr', '',) N
+0 T (            '10%', '30%', '50%', '70%', '90%']]) N
+0 T () N
+(190) # (    # generate rows) N
+0 T (    for x in ranked:) N
+0 T (        # each row starts with 'rank label, median, iqr') N
+0 T (        next_row = [x.rank + 1]) N
+0 T (        next_row.append\(x.label + ','\)) N
+(195) # (        next_row.append\('{0:0.2},'.format\(float\(x.median\(\)\)\)\)) N
+0 T (        next_row.append\('{0:0.2}'.format\(float\(x.iqr\(\)\)\)\)) N
+0 T () N
+0 T (        # get xtile: '\( -* | -- \) ##, ##, ##, ##, ##') N
+0 T (        xtile_out = xtile\(x.contents\(\), lo=lo, hi=hi, width=30, as_list=True\)) N
+(200) # (        # xtile is displayed as the whisker plot, then comma-separated values) N
+0 T (        row_xtile = [xtile_out[0]]) N
+0 T (        # don't use `join`, we want each to be its own list element) N
+0 T (        row_xtile.extend\(map\(lambda x: x + ',', xtile_out[1:-1]\)\)) N
+0 T (        row_xtile.append\(xtile_out[-1]\)) N
+(205) # () N
+0 T (        next_row.extend\(row_xtile\)) N
+0 T (        rows.append\(next_row\)) N
+0 T () N
+0 T (    table = texttable.Texttable\(200\)) N
+(210) # (    table.set_precision\(2\)) N
+0 T (    table.set_cols_dtype\(['t', 't', 't', 't', 't', 't', 't', 't', 't', 't']\)) N
+0 T (    table.set_cols_align\(['r', 'l', 'l', 'r', 'c', 'r', 'r', 'r', 'r', 'r']\)) N
+0 T (    table.set_deco\(texttable.Texttable.HEADER\)) N
+0 T (    table.add_rows\(rows\)) N
+(215) # (    return table.draw\(\)) N
+("csc710sbse: hw7: Witschey") (Page 3/3) (Nov 05, 14 19:45) title
+border
+grestore
+(Printed by Jim Witschey) rhead
+(witschey/rdiv.py) (18/18) (Thursday November 06, 2014) footer
 end % of iso1dict
 pagesave restore
 showpage

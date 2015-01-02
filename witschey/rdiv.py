@@ -1,42 +1,62 @@
 from __future__ import division
+
+
 import random
+from itertools import repeat, izip
 
 from log import NumberLog
 import texttable
 from basic_stats import xtile
-from witschey import base, basic_stats
+from witschey import basic_stats
 from witschey.base import memo_sqrt
 
 
-def a12(lst1, lst2):
-    "how often is x in lst1 more than y in lst2?"
+def a12(xs, ys):
+    gt, eq = 0, 0
+    for x in xs:
+        for y in ys:
+            if x > y:
+                gt += 1
+            if x == y:
+                eq += 1
 
-    def loop(t, t1, t2):
-        while t1.j < t1.n and t2.j < t2.n:
-            h1 = t1.l[t1.j]
-            h2 = t2.l[t2.j]
-            h3 = t2.l[t2.j+1] if t2.j+1 < t2.n else None
-            if h1 > h2:
-                t1.j += 1
-                t1.gt += t2.n - t2.j
-            elif h1 == h2:
-                if h3 and h1 > h3:
-                    t1.gt += t2.n - t2.j - 1
-                t1.j += 1
-                t1.eq += 1
-                t2.eq += 1
+    return (gt + eq / 2) / (len(xs) * len(ys))
+
+
+def a12_fast(xs, ys):
+    """
+    Non-parametric statistical test. Answers the question: "If you pick a
+    random x from xs, and a random y from ys, what's the probability that
+    x will be greater than y?"
+    """
+
+    xs_i = izip(sorted(xs, reverse=True), repeat(0))
+    ys_i = izip(sorted(ys, reverse=True), xrange(len(ys), 0, -1))
+
+    gt, eq = 0, 0
+
+    cs, ds = xs_i, ys_i
+    c, d = cs.next(), ds.next()
+    while True:
+        try:
+            while d[0] < c[0]:
+                gt += d[1]
+                # gt += 1
+                print(d)
+                d = ds.next()
             else:
-                t2, t1 = t1, t2
-        return t.gt*1.0, t.eq*1.0
+                if d[0] == c[0]:
+                    eq += 1
+                    d = ds.next()
+                else:
+                    cs, ds = ds, cs
+        except StopIteration:
+            break
 
-    lst1.sort(reverse=True)
-    lst2.sort(reverse=True)
-    n1 = len(lst1)
-    n2 = len(lst2)
-    t1 = base.memo(l=lst1, j=0, eq=0, gt=0, n=n1)
-    t2 = base.memo(l=lst2, j=0, eq=0, gt=0, n=n2)
-    gt, eq = loop(t1, t1, t2)
-    return gt/(n1*n2) + eq/2/(n1*n2)
+    gt += sum(1 for _ in xs_i)
+
+    print('gt: {}\t eq: {}'.format(gt, eq))
+    return (gt + eq / 2) / (len(xs) * len(ys))
 
 
 def test_statistic(y, z):
@@ -172,8 +192,8 @@ def rdiv_report(data):
         # each row starts with 'rank label, median, iqr'
         next_row = [x.rank + 1]
         next_row.append(x.label + ',')
-        next_row.append('{0:0.2},'.format(x.median()))
-        next_row.append('{0:0.2}'.format(x.iqr()))
+        next_row.append('{0:0.2},'.format(float(x.median())))
+        next_row.append('{0:0.2}'.format(float(x.iqr())))
 
         # get xtile: '( -* | -- ) ##, ##, ##, ##, ##'
         xtile_out = xtile(x.contents(), lo=lo, hi=hi, width=30, as_list=True)
