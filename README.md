@@ -25,5 +25,4 @@ then,
 cd witschey
 nosetests
 ```
-[![Build Status](https://travis-ci.org/mambocab/sbse14.svg?branch=master)](https://travis-ci.org/mambocab/sbse14)
-[![Coverage Status](https://img.shields.io/coveralls/mambocab/sbse14.svg)](https://coveralls.io/r/mambocab/sbse14?branch=master)
+
